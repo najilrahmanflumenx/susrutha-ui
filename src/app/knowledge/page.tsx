@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { Breadcrumbs, CardLink, PageHero, Pagination, SkeletonCard } from '../../components/ui';
 import { pageTitle } from '../../lib/seo';
