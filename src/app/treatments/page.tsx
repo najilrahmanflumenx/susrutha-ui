@@ -97,7 +97,7 @@ export default function TreatmentsPage() {
 
       {/* Loading state with Skeletons */}
       {loading && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 py-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <TreatmentCardSkeleton key={i} />
           ))}
@@ -118,7 +118,7 @@ export default function TreatmentsPage() {
 
       {/* Grid */}
       {!loading && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {treatments.map((treatment, idx) => {
             const id = treatment.id || treatment._id || `tr-${idx}`;
             const slug = treatment.slug || id;

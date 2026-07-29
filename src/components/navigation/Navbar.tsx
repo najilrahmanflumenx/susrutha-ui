@@ -39,18 +39,18 @@ export const Navbar: React.FC = () => {
     <>
       <header
         className={cn(
-          'fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 rounded-full flex items-center justify-between px-6 sm:px-8 py-3.5',
+          'fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 rounded-full flex items-center justify-between px-3.5 sm:px-8 py-2 sm:py-3.5',
           isScrolled
-            ? 'w-[94%] max-w-7xl glass-panel shadow-2xl border-primary/20 bg-surface/90 py-2.5'
+            ? 'w-[95%] sm:w-[94%] max-w-7xl glass-panel shadow-2xl border-primary/20 bg-surface/90 py-2 sm:py-2.5'
             : 'w-[96%] max-w-7xl bg-surface/60 backdrop-blur-md border border-primary/10 shadow-lg'
         )}
       >
-        {/* Brand Logo ONLY - Requirement Rule 5 */}
+        {/* Brand Logo */}
         <Link href="/" className="flex items-center group cursor-pointer" aria-label="Susrutha Home">
           <img
             src="/images/logo.png"
             alt="Susrutha Institute of Ayurvedic Sciences"
-            className="h-10 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm"
+            className="h-8 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm"
           />
         </Link>
 
@@ -76,10 +76,10 @@ export const Navbar: React.FC = () => {
         </nav>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="w-10 h-10 rounded-full bg-primary/5 text-primary flex items-center justify-center hover:bg-gold hover:text-primary transition-all active:scale-95"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/5 text-primary flex items-center justify-center hover:bg-gold hover:text-primary transition-all active:scale-95"
             aria-label="Search"
           >
             <Search className="w-4 h-4" />
@@ -87,14 +87,16 @@ export const Navbar: React.FC = () => {
 
           <Link href="/booking">
             <Button variant="gold" size="sm" icon={<Calendar className="w-4 h-4" />}>
-              RESERVE
+              <span className="hidden xs:inline">RESERVE</span>
+              <span className="xs:hidden">BOOK</span>
             </Button>
           </Link>
 
           {/* Mobile Menu Trigger */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden w-10 h-10 rounded-full bg-primary text-surface flex items-center justify-center"
+            className="md:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary text-surface flex items-center justify-center"
+            aria-label="Toggle Menu"
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>

@@ -69,9 +69,9 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="flex flex-col gap-24 sm:gap-36 pb-20 overflow-hidden">
+    <div className="flex flex-col gap-16 sm:gap-36 pb-20 overflow-hidden">
       {/* SECTION 1: CINEMATIC HERO */}
-      <section className="relative min-h-[85vh] flex items-center justify-center px-6 sm:px-12 text-center pt-8">
+      <section className="relative min-h-[85vh] flex items-center justify-center px-4 sm:px-12 text-center pt-8">
         {/* Dynamic Hero Cover Image Background if provided */}
         {heroSettings.bgImageUrl && (
           <div
@@ -86,11 +86,11 @@ export default function HomePage() {
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
-          <Badge variant="gold" icon={<Sparkles className="w-3.5 h-3.5" />} className="mb-6 animate-fade-in">
+          <Badge variant="gold" icon={<Sparkles className="w-3.5 h-3.5" />} className="mb-6 animate-fade-in text-[10px] sm:text-xs">
             {heroSettings.badgeText || 'ESTABLISHED 1970 • 55 YEARS OF EXCELLENCE'}
           </Badge>
 
-          <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl font-medium text-primary mb-8 leading-[1.05] tracking-tight">
+          <h1 className="font-display text-3xl xs:text-4xl sm:text-7xl lg:text-8xl font-medium text-primary mb-6 sm:mb-8 leading-[1.1] sm:leading-[1.05] tracking-tight">
             {heroSettings.highlightTitle || 'Ancient Wisdom.'}<br />
             <span className="italic font-light gold-gradient-text">
               {heroSettings.headline || 'Modern Healing.'}

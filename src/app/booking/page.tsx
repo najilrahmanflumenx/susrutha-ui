@@ -5,6 +5,7 @@ import { Calendar as CalendarIcon, Clock, User, CheckCircle2, ArrowRight, Loader
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/Input';
+import { InfiniteSelect } from '@/components/ui/InfiniteSelect';
 import { Badge } from '@/components/ui/Badge';
 import { createAppointment, fetchDoctorsList, fetchTreatmentsList, DoctorItem, TreatmentItem } from '@/lib/api';
 import { useApiData } from '@/hooks/useApiData';
@@ -111,7 +112,7 @@ export default function BookingPage() {
         </span>
       </div>
 
-      <Card variant="default" className="p-8 border-gold/30">
+      <Card variant="default" className="p-5 sm:p-8 border-gold/30">
         {step === 1 && (
           <div className="flex flex-col gap-6">
             <h3 className="font-display text-2xl font-bold text-primary">Choose Treatment Ritual</h3>
@@ -149,14 +150,19 @@ export default function BookingPage() {
         {step === 2 && (
           <div className="flex flex-col gap-6">
             <h3 className="font-display text-2xl font-bold text-primary">Select Doctor & Time Slot</h3>
-            <Select
+            <InfiniteSelect
               label="ATTENDING PHYSICIAN"
+              placeholder="Search & select physician..."
               options={doctors.map((d, idx) => {
                 const id = d.id || d._id || d.name || `d-${idx}`;
-                return { label: `${d.name} (${d.specialization || d.designation || 'Consultant'})`, value: id };
+                return {
+                  label: d.name,
+                  value: id,
+                  sublabel: d.specialization || d.designation || 'Consultant Physician',
+                };
               })}
               value={selectedDoctorId || (doctors[0]?.id || doctors[0]?._id || '')}
-              onChange={(e) => setSelectedDoctorId(e.target.value)}
+              onChange={(val) => setSelectedDoctorId(val)}
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input

@@ -142,6 +142,7 @@ export interface FetchOptions {
   type?: string;
   search?: string;
   q?: string;
+  all?: boolean;
 }
 
 export interface PaginatedResult<T> {
@@ -155,12 +156,13 @@ export interface PaginatedResult<T> {
 }
 
 // API Service Callers
-export async function fetchTreatments(options: FetchOptions = {}): Promise<PaginatedResult<TreatmentItem>> {
+export async function fetchTreatments(options: FetchOptions & { all?: boolean } = {}): Promise<PaginatedResult<TreatmentItem>> {
   try {
     const params: any = {
       page: options.page || 1,
-      limit: options.limit || 10,
+      limit: options.all ? 1000 : options.limit || 50,
     };
+    if (options.all) params.all = 'true';
     if (options.category && options.category !== 'ALL') params.category = options.category;
     if (options.search || options.q) params.q = options.search || options.q;
 
@@ -169,7 +171,7 @@ export async function fetchTreatments(options: FetchOptions = {}): Promise<Pagin
     const meta = response.data?.meta || { total: data.length, page: params.page, limit: params.limit, totalPages: Math.ceil(data.length / params.limit) || 1 };
     return { data, meta };
   } catch (error) {
-    return { data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 } };
+    return { data: [], meta: { total: 0, page: 1, limit: 50, totalPages: 1 } };
   }
 }
 
@@ -182,12 +184,13 @@ export async function fetchTreatmentBySlug(slug: string): Promise<TreatmentItem>
   }
 }
 
-export async function fetchDoctors(options: FetchOptions = {}): Promise<PaginatedResult<DoctorItem>> {
+export async function fetchDoctors(options: FetchOptions & { all?: boolean } = {}): Promise<PaginatedResult<DoctorItem>> {
   try {
     const params: any = {
       page: options.page || 1,
-      limit: options.limit || 10,
+      limit: options.all ? 1000 : options.limit || 50,
     };
+    if (options.all) params.all = 'true';
     if (options.category && options.category !== 'ALL') params.category = options.category;
     if (options.search || options.q) params.q = options.search || options.q;
 
@@ -196,7 +199,7 @@ export async function fetchDoctors(options: FetchOptions = {}): Promise<Paginate
     const meta = response.data?.meta || { total: data.length, page: params.page, limit: params.limit, totalPages: Math.ceil(data.length / params.limit) || 1 };
     return { data, meta };
   } catch (error) {
-    return { data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 } };
+    return { data: [], meta: { total: 0, page: 1, limit: 50, totalPages: 1 } };
   }
 }
 
@@ -244,13 +247,13 @@ export async function fetchCarePackages(options: FetchOptions = {}): Promise<Pag
 }
 
 // Array List Helpers for hook compatibility
-export async function fetchTreatmentsList(options: FetchOptions = {}): Promise<TreatmentItem[]> {
-  const res = await fetchTreatments(options);
+export async function fetchTreatmentsList(options: FetchOptions = { all: true }): Promise<TreatmentItem[]> {
+  const res = await fetchTreatments({ all: true, ...options });
   return res.data;
 }
 
-export async function fetchDoctorsList(options: FetchOptions = {}): Promise<DoctorItem[]> {
-  const res = await fetchDoctors(options);
+export async function fetchDoctorsList(options: FetchOptions = { all: true }): Promise<DoctorItem[]> {
+  const res = await fetchDoctors({ all: true, ...options });
   return res.data;
 }
 

@@ -158,7 +158,7 @@ export default function DoctorsPage() {
 
       {/* Loading state with Skeletons */}
       {loading && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 py-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <DoctorCardSkeleton key={i} />
           ))}
@@ -199,7 +199,7 @@ export default function DoctorsPage() {
             <DoctorCarousel doctors={doctors} autoPlayInterval={4000} />
           ) : (
             /* GRID CATALOG VIEW */
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {doctors.map((doctor, idx) => {
                 const id = doctor.id || doctor._id || `doc-${idx}`;
                 const slug = doctor.slug || id;
