@@ -105,7 +105,7 @@ export function Badge({ children, variant = 'ochre' }: { children: ReactNode; va
         'inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-semibold uppercase tracking-wider',
         variant === 'ochre' && 'bg-ochre/20 text-[#FFC86B] border border-ochre/40',
         variant === 'crimson' && 'bg-crimson/20 text-white border border-crimson/40',
-        variant === 'green' && 'bg-botanical-500/20 text-botanical-100 border border-botanical-400/40',
+        variant === 'green' && 'bg-crimson/15 text-crimson-100 border border-crimson/30',
         variant === 'ivory' && 'bg-white/10 text-ivory-100 border border-white/20',
       )}
     >

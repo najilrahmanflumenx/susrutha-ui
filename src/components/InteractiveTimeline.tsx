@@ -62,7 +62,7 @@ export default function InteractiveTimeline({ compact = false }: { compact?: boo
           </div>
           <div className="h-1.5 rounded-full bg-sus-sand overflow-hidden">
             <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-sus-green to-sus-gold"
+              className="h-full rounded-full bg-gradient-to-r from-sus-crimson to-sus-gold"
               initial={false}
               animate={{ width: `${progress}%` }}
               transition={{ duration: reduce ? 0 : 0.35 }}
@@ -165,7 +165,7 @@ export default function InteractiveTimeline({ compact = false }: { compact?: boo
             onClick={() => scrollToIndex(i)}
             className={cn(
               'h-2 rounded-full transition-all',
-              i === active ? 'w-6 bg-sus-gold' : 'w-2 bg-sus-green/20 hover:bg-sus-green/40',
+              i === active ? 'w-6 bg-sus-gold' : 'w-2 bg-ochre/20 hover:bg-ochre/40',
             )}
           />
         ))}

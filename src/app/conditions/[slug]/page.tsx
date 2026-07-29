@@ -137,35 +137,35 @@ export default function ConditionDetailPage() {
             </section>
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep mb-4">FAQ</h2>
+              <h2 className="font-display text-3xl text-sus-ink mb-4">FAQ</h2>
               <FaqList items={condition.faqs} />
             </section>
           </div>
 
           <aside className="space-y-5">
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
+            <div className="rounded-2xl border border-ochre/20 bg-white p-5">
               <p className="text-xs uppercase tracking-wider text-sus-gold">Who often seeks care</p>
               <ul className="mt-2 space-y-2 text-sm text-sus-muted list-disc pl-5">
                 {condition.whoNeeds.map((w: any) => <li key={w}>{w}</li>)}
               </ul>
             </div>
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
+            <div className="rounded-2xl border border-ochre/20 bg-white p-5">
               <p className="text-xs uppercase tracking-wider text-sus-gold">Relevant doctors</p>
               <ul className="mt-2 space-y-2">
                 {docs.map((d) => (
                   <li key={d.id}>
-                    <Link href={`/doctors/${d.slug}`} className="text-sm font-medium text-sus-green hover:underline">{d.name}</Link>
+                    <Link href={`/doctors/${d.slug}`} className="text-sm font-medium text-sus-crimson hover:underline">{d.name}</Link>
                   </li>
                 ))}
               </ul>
             </div>
             {pkgs.length > 0 && (
-              <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
+              <div className="rounded-2xl border border-ochre/20 bg-white p-5">
                 <p className="text-xs uppercase tracking-wider text-sus-gold">Related packages</p>
                 <ul className="mt-2 space-y-2">
                   {pkgs.map((p) => (
                     <li key={p.id}>
-                      <Link href={`/packages/${p.slug}`} className="text-sm font-medium text-sus-green hover:underline">{p.name}</Link>
+                      <Link href={`/packages/${p.slug}`} className="text-sm font-medium text-sus-crimson hover:underline">{p.name}</Link>
                     </li>
                   ))}
                 </ul>

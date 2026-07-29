@@ -79,7 +79,7 @@ export default function HorizontalStorytelling() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative min-h-[300vh] bg-botanical-900 text-ivory-50">
+    <section ref={containerRef} className="relative min-h-[300vh] bg-[#120A0B] text-ivory-50">
       {/* Sticky Fullscreen Storytelling Canvas */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
         {/* Background Visual Layer with Smooth Crossfade */}
@@ -92,7 +92,7 @@ export default function HorizontalStorytelling() {
             transition={{ duration: 0.8 }}
           >
             <img src={stage.image} alt={stage.title} className="h-full w-full object-cover opacity-20 filter blur-sm scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-botanical-900 via-botanical-900/80 to-botanical-900/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#120A0B] via-[#120A0B]/80 to-[#120A0B]/40" />
           </motion.div>
         ))}
 
@@ -135,7 +135,7 @@ export default function HorizontalStorytelling() {
               initial={{ opacity: 0, y: 30, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-3xl border border-ochre/30 bg-botanical-800/80 backdrop-blur-xl p-8 sm:p-12 shadow-soft-lg grid gap-8 md:grid-cols-2 items-center"
+              className="rounded-3xl border border-ochre/30 bg-[#1C1214]/80 backdrop-blur-xl p-8 sm:p-12 shadow-soft-lg grid gap-8 md:grid-cols-2 items-center"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -161,7 +161,7 @@ export default function HorizontalStorytelling() {
                   alt={stages[activeStage].title}
                   className="h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-botanical-900/60 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#120A0B]/60 to-transparent" />
               </div>
             </motion.div>
           </div>

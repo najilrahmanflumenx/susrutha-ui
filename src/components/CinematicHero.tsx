@@ -9,7 +9,7 @@ export default function CinematicHero() {
   const titleWords = 'Authentic Kerala Ayurveda. Held to Hospital Excellence.'.split(' ');
 
   return (
-    <section className="relative min-h-[92vh] overflow-hidden bg-botanical-900 text-ivory-50 flex items-center justify-center">
+    <section className="relative min-h-[92vh] overflow-hidden bg-[#120A0B] text-ivory-50 flex items-center justify-center">
       {/* Background Ambient Video / Volumetric Layer */}
       <div className="absolute inset-0 overflow-hidden">
         <video
@@ -23,9 +23,9 @@ export default function CinematicHero() {
           <source src="https://assets.mixkit.co/videos/preview/mixkit-warm-sunlight-shining-through-green-leaves-41556-large.mp4" type="video/mp4" />
         </video>
         {/* Volumetric Radial Light Beams & Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-t from-botanical-900 via-botanical-900/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#120A0B] via-[#120A0B]/60 to-transparent" />
         <div className="absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-ochre/20 blur-[120px] pointer-events-none" />
-        <div className="absolute -right-32 bottom-1/4 h-96 w-96 rounded-full bg-botanical-500/30 blur-[140px] pointer-events-none" />
+        <div className="absolute -right-32 bottom-1/4 h-96 w-96 rounded-full bg-crimson/20 blur-[140px] pointer-events-none" />
       </div>
 
       {/* Floating Canvas Particles */}
@@ -80,7 +80,7 @@ export default function CinematicHero() {
         >
           <Link
             href="/book"
-            className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-ochre px-8 py-4 text-base font-bold text-botanical-900 shadow-ochre-glow transition-all duration-300 hover:scale-105 hover:bg-ochre-400"
+            className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-ochre px-8 py-4 text-base font-bold text-[#120A0B] shadow-ochre-glow transition-all duration-300 hover:scale-105 hover:bg-ochre-400"
           >
             <CalendarHeart className="h-5 w-5 transition-transform group-hover:rotate-12" />
             <span>Book Consultation</span>

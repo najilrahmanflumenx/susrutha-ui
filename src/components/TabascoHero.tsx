@@ -116,7 +116,7 @@ export default function TabascoHero() {
             <span>55+ Years Ayurvedic Lineage</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-botanical-400" />
+            <span className="h-2 w-2 rounded-full bg-ochre-400" />
             <span>40-Bed Hospital Facility</span>
           </div>
           <div className="flex items-center gap-2">

@@ -72,7 +72,7 @@ export default function TestimonialCarousel() {
 
   if (stories.length === 0) {
     return (
-      <div className="rounded-2xl border border-sus-green/10 bg-white/50 p-8 text-center">
+      <div className="rounded-2xl border border-ochre/20 bg-white/50 p-8 text-center">
         <p className="text-sm text-sus-muted">No patient testimonials are currently published in the database.</p>
       </div>
     );
@@ -159,7 +159,7 @@ export default function TestimonialCarousel() {
             >
               <button
                 type="button"
-                className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white border border-sus-green/10"
+                className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white border border-ochre/20"
                 onClick={() => setOpenId(null)}
                 aria-label="Close"
               >
@@ -167,7 +167,7 @@ export default function TestimonialCarousel() {
               </button>
               <Quote className="h-7 w-7 text-sus-gold" />
               <p className="mt-4 text-lg text-sus-ink leading-relaxed">“{active.full}”</p>
-              <p className="mt-6 font-medium text-sus-green-deep">{active.name}</p>
+              <p className="mt-6 font-medium text-sus-crimson">{active.name}</p>
               <p className="text-sm text-sus-muted">{active.context} · {active.location}</p>
             </motion.div>
           </motion.div>

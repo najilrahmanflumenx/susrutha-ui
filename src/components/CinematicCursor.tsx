@@ -57,7 +57,7 @@ export default function CinematicCursor() {
       />
       {/* Center Botanical Core Dot */}
       <motion.div
-        className="absolute h-2.5 w-2.5 rounded-full bg-botanical-500 shadow-spa-glow"
+        className="absolute h-2.5 w-2.5 rounded-full bg-ochre shadow-ochre-glow"
         animate={{
           x: pos.x - 5,
           y: pos.y - 5,

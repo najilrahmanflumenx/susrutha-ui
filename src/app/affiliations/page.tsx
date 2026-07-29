@@ -60,7 +60,7 @@ export default function AffiliationsPage() {
           <ul className="mt-4 space-y-2">
             {verticals.map((v) => (
               <li key={v.name} className="text-sm text-sus-muted">
-                <span className="text-sus-green-deep font-medium">{v.name}</span> — {v.detail}
+                <span className="text-sus-ink font-medium">{v.name}</span> — {v.detail}
               </li>
             ))}
           </ul>

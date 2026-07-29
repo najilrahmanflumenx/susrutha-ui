@@ -99,7 +99,7 @@ export default function VideoGalleryPage() {
       <AnimatePresence>
         {active && (
           <motion.div
-            className="fixed inset-0 z-[70] flex items-center justify-center bg-sus-green-deep/70 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -132,7 +132,7 @@ export default function VideoGalleryPage() {
                   allowFullScreen
                 />
               </div>
-              <div className="bg-sus-green-deep px-5 py-4 text-sus-cream">
+              <div className="bg-[#1C1214] border-t border-ochre/20 px-5 py-4 text-sus-cream">
                 <h3 className="font-display text-xl">{active.title}</h3>
                 <p className="mt-1 text-sm text-sus-sand/85">{active.description}</p>
               </div>

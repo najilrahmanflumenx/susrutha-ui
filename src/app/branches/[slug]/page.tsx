@@ -138,7 +138,7 @@ export default function BranchDetailPage() {
                 ))}
               </ul>
             </div>
-            <div className="overflow-hidden rounded-2xl border border-sus-green/10 bg-sus-sand/30 aspect-video">
+            <div className="overflow-hidden rounded-2xl border border-ochre/20 bg-sus-sand/30 aspect-video">
               <iframe
                 title={`Map of ${branch.name}`}
                 className="h-full w-full"

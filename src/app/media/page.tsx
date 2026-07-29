@@ -58,7 +58,7 @@ export default function MediaPage() {
           </div>
         ) : null}
 
-        <h2 className="font-display text-2xl text-sus-green-deep mb-6">Campus & Facility Gallery</h2>
+        <h2 className="font-display text-2xl text-sus-ink mb-6">Campus & Facility Gallery</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {fallbackGallery.map((g) => (
             <figure key={g.src} className="overflow-hidden rounded-2xl bg-sus-sand">

@@ -85,7 +85,7 @@ export default function VerticalDetailPage() {
         <h1 className="font-display text-3xl">Vertical not found</h1>
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {ecosystemVerticals.map((v) => (
-            <Link key={v.id} href={`/ecosystem/${v.slug}`} className="rounded-xl border border-sus-green/10 bg-white p-4">
+            <Link key={v.id} href={`/ecosystem/${v.slug}`} className="rounded-xl border border-ochre/20 bg-white p-4">
               {v.shortName}
             </Link>
           ))}

@@ -87,7 +87,7 @@ export default function PackageDetailPage() {
           <div className="lg:col-span-2 space-y-10">
             <AiSummary text={pkg.summary} />
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep">Who it is for</h2>
+              <h2 className="font-display text-3xl text-sus-ink">Who it is for</h2>
               <ul className="mt-4 space-y-2 text-sus-muted list-disc pl-5">
                 {pkg.whoFor.map((w: any) => <li key={w}>{w}</li>)}
               </ul>
@@ -142,11 +142,11 @@ export default function PackageDetailPage() {
               </div>
             )}
             {txs.length > 0 && (
-              <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
+              <div className="rounded-2xl border border-ochre/20 bg-white p-5">
                 <p className="text-xs uppercase tracking-wider text-sus-gold">Therapies often involved</p>
                 <ul className="mt-2 space-y-1">
                   {txs.map((t) => t && (
-                    <li key={t.id}><Link href={`/treatments/${t.slug}`} className="text-sm text-sus-green hover:underline">{t.name}</Link></li>
+                    <li key={t.id}><Link href={`/treatments/${t.slug}`} className="text-sm text-sus-crimson hover:underline">{t.name}</Link></li>
                   ))}
                 </ul>
               </div>

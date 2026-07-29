@@ -36,7 +36,7 @@ export default function InteractiveFacilities({ showCta = true }: { showCta?: bo
 
   if (facilitiesList.length === 0) {
     return (
-      <div className="rounded-2xl border border-sus-green/10 bg-white/50 p-8 text-center">
+      <div className="rounded-2xl border border-ochre/20 bg-white/50 p-8 text-center">
         <p className="text-sm text-sus-muted">No facility showcases currently listed in the database.</p>
       </div>
     );

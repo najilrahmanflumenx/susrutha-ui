@@ -190,10 +190,10 @@ export default function DoctorProfilePage() {
 
             {specs.length > 0 && (
               <section>
-                <h2 className="font-display text-3xl text-sus-green-deep">Conditions & pathways led</h2>
+                <h2 className="font-display text-3xl text-ochre">Conditions & pathways led</h2>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {specs.map((s) => (
-                    <Link key={s.id} href={`/conditions/${s.slug}`} className="rounded-full border border-sus-green/15 px-3 py-1.5 text-sm text-sus-green hover:bg-sus-sand">
+                    <Link key={s.id} href={`/conditions/${s.slug}`} className="rounded-full border border-ochre/30 px-3 py-1.5 text-sm text-ochre hover:bg-ochre/10">
                       {s.shortName}
                     </Link>
                   ))}
@@ -203,11 +203,11 @@ export default function DoctorProfilePage() {
 
             {docsArticles.length > 0 && (
               <section>
-                <h2 className="font-display text-3xl text-sus-green-deep">Articles</h2>
+                <h2 className="font-display text-3xl text-sus-ink">Articles</h2>
                 <ul className="mt-4 space-y-3">
                   {docsArticles.map((a) => (
                     <li key={a.id}>
-                      <Link href={`/knowledge/${a.slug}`} className="text-sus-green-deep hover:text-sus-green font-medium">
+                      <Link href={`/knowledge/${a.slug}`} className="text-sus-ink hover:text-sus-crimson font-medium">
                         {a.title}
                       </Link>
                       <p className="text-sm text-sus-muted">{a.excerpt}</p>
@@ -218,7 +218,7 @@ export default function DoctorProfilePage() {
             )}
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep mb-4">FAQ</h2>
+              <h2 className="font-display text-3xl text-sus-ink mb-4">FAQ</h2>
               <FaqList
                 items={[
                   {
@@ -233,7 +233,7 @@ export default function DoctorProfilePage() {
               />
             </section>
 
-            <div className="rounded-2xl bg-sus-green-deep text-sus-cream p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="rounded-2xl bg-crimson-800 text-sus-cream p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h2 className="font-display text-2xl">Request a consultation</h2>
                 <p className="text-sm text-sus-sand/80 mt-1">Respect published availability · confirmation required</p>
