@@ -266,8 +266,8 @@ export default function Header() {
 
   return (
     <header
-      style={{ backgroundColor: 'rgba(22, 5, 6, 0.55)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', color: '#FFFFFF' }}
-      className="sticky top-0 z-40 border-b border-ochre/25 shadow-glass-dark transition-all duration-300 font-body"
+      style={{ backgroundColor: 'rgba(22, 5, 6, 0.85)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', color: '#FFFFFF' }}
+      className="sticky top-0 z-40 border-b border-ochre/30 shadow-2xl backdrop-blur-2xl transition-all duration-300 font-body bg-[#160506]/85"
     >
       <div className="container-wide section-pad flex items-center justify-between gap-4 py-3.5">
         <Logo />
