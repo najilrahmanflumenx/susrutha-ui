@@ -4,9 +4,18 @@ import { useEffect, useState } from 'react';
 import { Breadcrumbs, CardLink, PageHero } from '../../components/ui';
 import { pageTitle } from '../../lib/seo';
 import { getBlogs } from '../../lib/api';
+import { articles as staticArticles } from '../../data/content';
 
 export default function KnowledgePage() {
-  const [articleList, setArticleList] = useState<any[]>([]);
+  const [articleList, setArticleList] = useState<any[]>(
+    staticArticles.map((a) => ({
+      id: a.id,
+      slug: a.slug,
+      title: a.title,
+      excerpt: a.excerpt,
+      meta: `${a.readTime} · Susrutha Medical Team`,
+    }))
+  );
 
   useEffect(() => {
     document.title = pageTitle('Knowledge Centre');
@@ -16,7 +25,7 @@ export default function KnowledgePage() {
           id: b._id || b.slug,
           slug: b.slug,
           title: b.title,
-          excerpt: b.excerpt,
+          excerpt: b.excerpt || b.summary,
           meta: `${b.readTimeMinutes || 5} min read · ${b.authorName || 'Susrutha Medical Team'}`,
         }));
         setArticleList(mapped);
@@ -25,7 +34,7 @@ export default function KnowledgePage() {
   }, []);
 
   return (
-    <div>
+    <div className="bg-[#FDFBF7] min-h-screen text-ivory-900 font-body">
       <PageHero
         eyebrow="Knowledge Centre"
         title="Clinical writing with accountable bylines"
@@ -46,9 +55,9 @@ export default function KnowledgePage() {
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-sus-green/10 bg-white p-8 text-center">
-            <h2 className="font-display text-xl text-sus-green-deep">No Articles Published</h2>
-            <p className="mt-2 text-sm text-sus-muted">No knowledge articles are currently published in the database.</p>
+          <div className="rounded-2xl border border-ochre/25 bg-white p-8 text-center shadow-soft-sm">
+            <h2 className="font-display text-xl text-crimson-900 font-bold">No Articles Published</h2>
+            <p className="mt-2 text-sm text-ivory-600">No knowledge articles are currently published in the database.</p>
           </div>
         )}
       </div>

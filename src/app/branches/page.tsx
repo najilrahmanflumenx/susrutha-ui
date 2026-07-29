@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState } from 'react';
 import { Breadcrumbs, Button, PageHero } from '../../components/ui';
 import { pageTitle } from '../../lib/seo';
@@ -9,7 +11,9 @@ export default function BranchesPage() {
   const [branchList, setBranchList] = useState<any[]>([]);
 
   useEffect(() => {
-    document.title = pageTitle('Branches');
+    if (typeof window !== 'undefined') {
+      document.title = pageTitle('Branches');
+    }
     getBranches().then((apiBranches) => {
       if (apiBranches && Array.isArray(apiBranches) && apiBranches.length > 0) {
         const mapped = apiBranches.map((b: any) => ({

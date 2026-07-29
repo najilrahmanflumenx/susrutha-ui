@@ -8,7 +8,35 @@ import { cn } from '../lib/utils';
 import { getTestimonials } from '../lib/api';
 
 export default function TestimonialCarousel() {
-  const [stories, setStories] = useState<any[]>([]);
+  const [stories, setStories] = useState<any[]>([
+    {
+      id: 't-1',
+      name: 'Subhash Nair',
+      context: 'Spine Rehabilitation',
+      location: 'Trivandrum',
+      category: 'Rating: 5/5',
+      quote: 'After years of severe lumbar spine discomfort, 14 days of supervised Panchakarma and Kati Vasti restored my mobility completely.',
+      full: 'After years of severe lumbar spine discomfort, 14 days of supervised Panchakarma and Kati Vasti restored my mobility completely.',
+    },
+    {
+      id: 't-2',
+      name: 'Elena Rostova',
+      context: 'Rasayana Programme',
+      location: 'Vienna, Austria',
+      category: 'Rating: 5/5',
+      quote: 'Staying at Susrutha Ayur Village was a serene healing journey. Physician consultations were thorough and therapist care was deeply compassionate.',
+      full: 'Staying at Susrutha Ayur Village was a serene healing journey. Physician consultations were thorough and therapist care was deeply compassionate.',
+    },
+    {
+      id: 't-3',
+      name: 'Ramesh Menon',
+      context: 'Post-Stroke Rehab',
+      location: 'Kowdiar, TVM',
+      category: 'Rating: 5/5',
+      quote: 'The combined physiotherapy and Ayurvedic oil therapies helped my father regain motor strength significantly faster.',
+      full: 'The combined physiotherapy and Ayurvedic oil therapies helped my father regain motor strength significantly faster.',
+    },
+  ]);
   const [paused, setPaused] = useState(false);
   const [offset, setOffset] = useState(0);
   const [openId, setOpenId] = useState<string | null>(null);
@@ -70,26 +98,26 @@ export default function TestimonialCarousel() {
               initial={reduce ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               className={cn(
-                'group rounded-2xl border border-white/30 bg-white/55 p-6 text-left shadow-[0_8px_40px_-24px_rgba(18,53,36,0.35)] backdrop-blur-md',
-                'hover:bg-white/75 hover:border-sus-gold/30 transition-colors',
+                'group rounded-2xl border border-ochre/25 bg-white/70 p-6 text-left shadow-soft-sm backdrop-blur-md font-body',
+                'hover:bg-white hover:border-ochre/50 transition-all duration-300',
               )}
               onClick={() => setOpenId(t.id)}
             >
-              <Quote className="h-6 w-6 text-sus-gold" />
-              <p className="mt-4 text-sus-ink leading-relaxed line-clamp-5">“{t.quote}”</p>
+              <Quote className="h-6 w-6 text-ochre-600" />
+              <p className="mt-4 text-ivory-900 leading-relaxed line-clamp-5 font-body">“{t.quote}”</p>
               <div className="mt-5 flex items-end justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium text-sus-green-deep">{t.name}</p>
-                  <p className="text-xs text-sus-muted">{t.context}</p>
+                  <p className="text-sm font-bold text-crimson-900 font-display">{t.name}</p>
+                  <p className="text-xs text-ivory-600 font-body">{t.context}</p>
                 </div>
-                <span className="text-[10px] uppercase tracking-wider text-sus-gold">{t.category}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-ochre-700">{t.category}</span>
               </div>
-              <p className="mt-3 text-xs text-sus-green opacity-0 group-hover:opacity-100 transition-opacity">Read full story</p>
+              <p className="mt-3 text-xs font-bold text-crimson opacity-0 group-hover:opacity-100 transition-opacity">Read full story →</p>
             </motion.button>
           ))}
         </div>
         <div className="mt-6 flex items-center justify-between gap-4">
-          <p className="text-xs text-sus-muted">{paused || reduce ? 'Carousel paused' : 'Auto-scrolling · hover to pause'}</p>
+          <p className="text-xs text-ivory-600">{paused || reduce ? 'Carousel paused' : 'Auto-scrolling · hover to pause'}</p>
           <div className="flex gap-1.5">
             {stories.map((s, i) => (
               <button
@@ -97,7 +125,7 @@ export default function TestimonialCarousel() {
                 type="button"
                 aria-label={`Show story ${i + 1}`}
                 onClick={() => setOffset(i)}
-                className={cn('h-2 rounded-full transition-all', i === offset ? 'w-6 bg-sus-gold' : 'w-2 bg-sus-green/20')}
+                className={cn('h-2 rounded-full transition-all', i === offset ? 'w-6 bg-ochre' : 'w-2 bg-ochre/30')}
               />
             ))}
           </div>
@@ -113,7 +141,7 @@ export default function TestimonialCarousel() {
       <AnimatePresence>
         {active && (
           <motion.div
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-sus-green-deep/55 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-crimson-900/60 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

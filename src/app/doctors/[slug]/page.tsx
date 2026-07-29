@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -48,8 +50,10 @@ export default function DoctorProfilePage() {
         }
       });
     }
+  }, [slug]);
 
-    if (!doctor) return;
+  useEffect(() => {
+    if (!doctor || typeof window === 'undefined') return;
     document.title = pageTitle(`${doctor.name} — ${doctor.qual}`);
     const scripts = [
       { id: 'schema-physician', data: physicianSchema(doctor) },

@@ -4,9 +4,18 @@ import { useEffect, useState } from 'react';
 import { Breadcrumbs, CardLink, PageHero } from '../../components/ui';
 import { pageTitle } from '../../lib/seo';
 import { getConditions } from '../../lib/api';
+import { specialties } from '../../data/specialties';
 
 export default function ConditionsPage() {
-  const [conditionList, setConditionList] = useState<any[]>([]);
+  const [conditionList, setConditionList] = useState<any[]>(
+    specialties.map((s) => ({
+      id: s.id,
+      slug: s.slug,
+      name: s.shortName || s.name,
+      tagline: s.tagline,
+      meta: 'Speciality Pathway',
+    }))
+  );
 
   useEffect(() => {
     document.title = pageTitle('Conditions & Specialities');

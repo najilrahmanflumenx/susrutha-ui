@@ -12,7 +12,10 @@ import {
   Phone,
   Star,
 } from 'lucide-react';
-import { brand } from '../data/site';
+import { brand, branches } from '../data/site';
+import { doctors } from '../data/doctors';
+import { specialties } from '../data/specialties';
+import { packages } from '../data/packages';
 import { Button, FieldError, inputClass, Label } from './ui';
 import { cn } from '../lib/utils';
 import { bookAppointment, submitLead, submitFeedback as submitFeedbackApi, getDoctors, getConditions, getPackages, getBranches } from '../lib/api';
@@ -32,10 +35,31 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
   const [done, setDone] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const [availableDoctors, setAvailableDoctors] = useState<any[]>([]);
-  const [availableSpecialties, setAvailableSpecialties] = useState<any[]>([]);
-  const [availablePackages, setAvailablePackages] = useState<any[]>([]);
-  const [availableBranches, setAvailableBranches] = useState<any[]>([]);
+  const [availableDoctors, setAvailableDoctors] = useState<any[]>(
+    doctors.map((d) => ({ id: d.id, slug: d.slug, name: d.name }))
+  );
+  const [availableSpecialties, setAvailableSpecialties] = useState<any[]>(
+    specialties.map((s) => ({ id: s.id, name: s.name }))
+  );
+  const [availablePackages, setAvailablePackages] = useState<any[]>(
+    packages.map((p) => ({ id: p.id, slug: p.slug, name: p.name }))
+  );
+  const [availableBranches, setAvailableBranches] = useState<any[]>(
+    branches.map((b) => ({
+      _id: b.id,
+      id: b.id,
+      code: b.code,
+      name: b.name,
+      slug: b.slug,
+      type: b.type,
+      city: b.city,
+      address: b.address,
+      description: b.description,
+      features: b.features,
+      opdTimings: b.hours.op,
+      contact: { phone: ['+91 96566 56736'], email: 'info@susruthaayurveda.com' },
+    }))
+  );
 
   const [appt, setAppt] = useState({
     name: '',
@@ -63,9 +87,15 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
 
   useEffect(() => {
     Promise.all([getDoctors(), getConditions(), getPackages(), getBranches()]).then(([docs, conds, pkgs, brs]) => {
-      if (docs && Array.isArray(docs)) setAvailableDoctors(docs.map((d: any) => ({ id: d._id || d.slug, slug: d.slug, name: d.name })));
-      if (conds && Array.isArray(conds)) setAvailableSpecialties(conds.map((c: any) => ({ id: c._id || c.slug, name: c.title || c.name })));
-      if (pkgs && Array.isArray(pkgs)) setAvailablePackages(pkgs.map((p: any) => ({ id: p._id || p.slug, slug: p.slug, name: p.title || p.name })));
+      if (docs && Array.isArray(docs) && docs.length > 0) {
+        setAvailableDoctors(docs.map((d: any) => ({ id: d._id || d.slug || d.id, slug: d.slug, name: d.name })));
+      }
+      if (conds && Array.isArray(conds) && conds.length > 0) {
+        setAvailableSpecialties(conds.map((c: any) => ({ id: c._id || c.slug || c.id, name: c.title || c.name })));
+      }
+      if (pkgs && Array.isArray(pkgs) && pkgs.length > 0) {
+        setAvailablePackages(pkgs.map((p: any) => ({ id: p._id || p.slug || p.id, slug: p.slug, name: p.title || p.name })));
+      }
       if (brs && Array.isArray(brs) && brs.length > 0) {
         setAvailableBranches(brs);
         setAppt((a) => ({ ...a, branch: a.branch === 'KATT' || a.branch === 'KTK' ? (brs[0].code || 'KTK') : a.branch }));
@@ -230,10 +260,10 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
             ? 'Your message has been received. We will respond using your phone or email.'
             : 'Thank you for your feedback. It is queued for internal review.';
     return (
-      <div className="rounded-[1.5rem] border border-sus-green/10 bg-white p-8 text-center">
-        <h3 className="font-display text-3xl text-sus-green-deep">Request received</h3>
-        <p className="mt-3 text-sus-muted max-w-lg mx-auto">{copy}</p>
-        <p className="mt-4 text-sm text-sus-muted">
+      <div className="rounded-[1.5rem] border border-ochre/30 bg-white p-8 text-center shadow-soft-sm">
+        <h3 className="font-display text-3xl text-crimson-900">Request received</h3>
+        <p className="mt-3 text-ivory-600 max-w-lg mx-auto">{copy}</p>
+        <p className="mt-4 text-sm text-ivory-500">
           Call {brand.contact.mobile} · Emergency {brand.contact.emergency[0]}
         </p>
         <Button
@@ -252,7 +282,7 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
   return (
     <div className="grid gap-8 xl:grid-cols-12">
       <div className="xl:col-span-7 space-y-5">
-        <div className="flex flex-wrap gap-2 rounded-2xl border border-sus-green/10 bg-white p-2">
+        <div className="flex flex-wrap gap-2 rounded-2xl border border-ochre/20 bg-white p-2 shadow-soft-sm">
           {tabs.map((t) => {
             const Icon = t.icon;
             const active = tab === t.id;
@@ -265,8 +295,8 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
                   setErrors({});
                 }}
                 className={cn(
-                  'inline-flex flex-1 min-w-[9rem] items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-medium transition-colors',
-                  active ? 'bg-sus-green text-sus-cream' : 'text-sus-green-deep hover:bg-sus-cream',
+                  'inline-flex flex-1 min-w-[9rem] items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-bold transition-all duration-300',
+                  active ? 'bg-crimson text-ivory-50 shadow-soft-sm' : 'text-crimson-900 hover:bg-ochre-50/60 hover:text-crimson',
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -276,12 +306,12 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
           })}
         </div>
 
-        <div className="rounded-[1.5rem] border border-sus-green/10 bg-white p-6 sm:p-8">
+        <div className="rounded-[1.5rem] border border-ochre/20 bg-white p-6 sm:p-8 shadow-soft-sm">
           {tab === 'appointment' && (
             <form onSubmit={submitAppointment} className="space-y-5" noValidate>
               <div>
-                <h2 className="font-display text-2xl text-sus-green-deep">Book Appointment</h2>
-                <p className="mt-1 text-sm text-sus-muted">Requests are confirmed against live roster before you travel.</p>
+                <h2 className="font-display text-2xl text-crimson-900">Book Appointment</h2>
+                <p className="mt-1 text-sm text-ivory-600">Requests are confirmed against live roster before you travel.</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
@@ -362,8 +392,8 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
           {tab === 'package' && (
             <form onSubmit={submitPackage} className="space-y-5" noValidate>
               <div>
-                <h2 className="font-display text-2xl text-sus-green-deep">Package Enquiry</h2>
-                <p className="mt-1 text-sm text-sus-muted">All twelve programmes — tariffs confirmed after clinical review.</p>
+                <h2 className="font-display text-2xl text-crimson-900">Package Enquiry</h2>
+                <p className="mt-1 text-sm text-ivory-600">All twelve programmes — tariffs confirmed after clinical review.</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
@@ -418,8 +448,8 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
           {tab === 'contact' && (
             <form onSubmit={submitContact} className="space-y-5" noValidate>
               <div>
-                <h2 className="font-display text-2xl text-sus-green-deep">Contact Us</h2>
-                <p className="mt-1 text-sm text-sus-muted">General questions, coordination and media notes.</p>
+                <h2 className="font-display text-2xl text-crimson-900">Contact Us</h2>
+                <p className="mt-1 text-sm text-ivory-600">General questions, coordination and media notes.</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
@@ -451,8 +481,8 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
           {tab === 'feedback' && (
             <form onSubmit={submitFeedback} className="space-y-5" noValidate>
               <div>
-                <h2 className="font-display text-2xl text-sus-green-deep">Feedback</h2>
-                <p className="mt-1 text-sm text-sus-muted">Help us improve hospital experience. Not published automatically.</p>
+                <h2 className="font-display text-2xl text-crimson-900">Feedback</h2>
+                <p className="mt-1 text-sm text-ivory-600">Help us improve hospital experience. Not published automatically.</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
@@ -487,21 +517,18 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
       </div>
 
       <aside className="xl:col-span-5 space-y-5">
-        <h3 className="font-display text-2xl text-sus-green-deep">Branches & quick actions</h3>
+        <h3 className="font-display text-2xl text-crimson-900">Branches & quick actions</h3>
         {availableBranches.map((b: any) => {
-          // Normalise address: API returns object, fallback returns string
           const addressStr = typeof b.address === 'string'
             ? b.address
             : b.address
               ? [b.address.street, b.address.city, b.address.state, b.address.pincode].filter(Boolean).join(', ')
               : '';
 
-          // Normalise phone: API returns contact.phone[], fallback uses brand
           const phone = b.contact?.phone?.[0] ?? b.contact?.phone ?? brand.contact.mobileTel;
           const phoneDisplay = b.contact?.phone?.[0] ?? brand.contact.mobile;
           const email = b.contact?.email ?? brand.contact.email;
 
-          // Normalise timings: API uses opdTimings, fallback uses hours.op
           const opTiming = b.opdTimings ?? (b.hours && 'op' in b.hours ? b.hours.op : brand.hours.op);
           const hospitalTiming = b.hours && 'hospital' in b.hours
             ? b.hours.hospital
@@ -509,7 +536,6 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
               ? brand.hours.hospital
               : 'OP centre — see doctor schedule';
 
-          // Normalise map query
           const mapQuery = b.mapQuery ?? (b.address?.coordinates
             ? `${b.address.coordinates.lat},${b.address.coordinates.lng}`
             : encodeURIComponent(addressStr));
@@ -517,28 +543,28 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
           const key = b._id ?? b.id ?? b.code;
 
           return (
-            <div key={key} className="rounded-[1.5rem] border border-sus-green/10 bg-white p-6">
-              <p className="text-xs uppercase tracking-[0.16em] text-sus-gold">{b.type}</p>
-              <h4 className="mt-1 font-display text-2xl text-sus-green-deep">{b.name}</h4>
-              <ul className="mt-4 space-y-2.5 text-sm text-sus-muted">
-                <li className="flex gap-2"><MapPin className="h-4 w-4 shrink-0 text-sus-green mt-0.5" /><span>{addressStr}</span></li>
-                <li className="flex gap-2"><Phone className="h-4 w-4 shrink-0 text-sus-green mt-0.5" /><a className="hover:text-sus-green" href={`tel:${phone}`}>{phoneDisplay}</a></li>
-                <li className="flex gap-2"><Mail className="h-4 w-4 shrink-0 text-sus-green mt-0.5" /><a className="hover:text-sus-green" href={`mailto:${email}`}>{email}</a></li>
-                <li><span className="text-sus-ink font-medium">OP timing:</span> {opTiming}</li>
-                <li><span className="text-sus-ink font-medium">Hospital timing:</span> {hospitalTiming}</li>
+            <div key={key} className="rounded-[1.5rem] border border-ochre/25 bg-white p-6 shadow-soft-sm">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-ochre-700">{b.type}</p>
+              <h4 className="mt-1 font-display text-2xl text-crimson-900">{b.name}</h4>
+              <ul className="mt-4 space-y-2.5 text-sm text-ivory-700">
+                <li className="flex gap-2"><MapPin className="h-4 w-4 shrink-0 text-ochre mt-0.5" /><span>{addressStr}</span></li>
+                <li className="flex gap-2"><Phone className="h-4 w-4 shrink-0 text-ochre mt-0.5" /><a className="hover:text-crimson font-medium" href={`tel:${phone}`}>{phoneDisplay}</a></li>
+                <li className="flex gap-2"><Mail className="h-4 w-4 shrink-0 text-ochre mt-0.5" /><a className="hover:text-crimson font-medium" href={`mailto:${email}`}>{email}</a></li>
+                <li><span className="text-crimson-900 font-bold">OP timing:</span> {opTiming}</li>
+                <li><span className="text-crimson-900 font-bold">Hospital timing:</span> {hospitalTiming}</li>
               </ul>
               <div className="mt-5 grid grid-cols-2 gap-2">
-                <a href={`tel:${phone}`} className="inline-flex items-center justify-center gap-1.5 rounded-full border border-sus-green/15 px-3 py-2 text-xs font-medium text-sus-green-deep hover:bg-sus-cream">
-                  <Phone className="h-3.5 w-3.5" /> Call
+                <a href={`tel:${phone}`} className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/30 px-3 py-2 text-xs font-bold text-crimson-900 hover:bg-ochre-50 hover:border-crimson transition-colors">
+                  <Phone className="h-3.5 w-3.5 text-ochre-600" /> Call
                 </a>
-                <a href={brand.contact.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-sus-green/15 px-3 py-2 text-xs font-medium text-sus-green-deep hover:bg-sus-cream">
-                  <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
+                <a href={brand.contact.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/30 px-3 py-2 text-xs font-bold text-crimson-900 hover:bg-ochre-50 hover:border-crimson transition-colors">
+                  <MessageCircle className="h-3.5 w-3.5 text-ochre-600" /> WhatsApp
                 </a>
-                <a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-sus-green/15 px-3 py-2 text-xs font-medium text-sus-green-deep hover:bg-sus-cream">
-                  <MapPin className="h-3.5 w-3.5" /> Directions
+                <a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/30 px-3 py-2 text-xs font-bold text-crimson-900 hover:bg-ochre-50 hover:border-crimson transition-colors">
+                  <MapPin className="h-3.5 w-3.5 text-ochre-600" /> Directions
                 </a>
-                <a href={brand.contact.googleReview} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-sus-green/15 px-3 py-2 text-xs font-medium text-sus-green-deep hover:bg-sus-cream">
-                  <Star className="h-3.5 w-3.5" /> Leave Review
+                <a href={brand.contact.googleReview} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/30 px-3 py-2 text-xs font-bold text-crimson-900 hover:bg-ochre-50 hover:border-crimson transition-colors">
+                  <Star className="h-3.5 w-3.5 text-ochre-600" /> Leave Review
                 </a>
               </div>
             </div>

@@ -9,7 +9,11 @@ import {
   Phone,
   Search,
   ChevronDown,
-  CalendarHeart,
+  Calendar,
+  Sparkles,
+  MapPin,
+  Clock,
+  ArrowUpRight,
 } from 'lucide-react';
 import { brand } from '../data/site';
 import { searchSite } from '../lib/search';
@@ -17,34 +21,38 @@ import { cn } from '../lib/utils';
 import { getTreatments, getConditions, getDoctors } from '../lib/api';
 
 export function Logo({ light = false }: { light?: boolean }) {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <Link href="/" className="flex items-center gap-3 group" aria-label="Susrutha Ayurveda home">
-      <span
-        className={cn(
-          'flex h-11 w-11 items-center justify-center rounded-full border',
-          light ? 'border-sus-gold-soft/50 bg-sus-green text-sus-gold-soft' : 'border-sus-gold/30 bg-sus-green-deep text-sus-gold-soft',
-        )}
-      >
-        <svg viewBox="0 0 40 40" className="h-7 w-7" aria-hidden="true">
-          <path
-            d="M20 6c-1.2 5-5 8.8-10 10 5 1.2 8.8 5 10 10 1.2-5 5-8.8 10-10-5-1.2-8.8-5-10-10z"
-            fill="currentColor"
-            opacity="0.95"
+      {!imgError ? (
+        <div className="relative flex items-center justify-center p-0.5 transition-transform duration-300 group-hover:scale-105">
+          <img
+            src="/images/logo.png"
+            alt="Susrutha Institute of Ayurvedic Sciences"
+            onError={() => setImgError(true)}
+            className="h-10 sm:h-12 w-auto object-contain mix-blend-screen filter brightness-110 drop-shadow-md"
           />
-          <circle cx="20" cy="20" r="3" fill="currentColor" opacity="0.55" />
-        </svg>
-      </span>
-      <span className="leading-tight">
-        <span className={cn('block font-display text-xl sm:text-2xl tracking-wide', light ? 'text-sus-cream' : 'text-sus-green-deep')}>
-          Susrutha
-        </span>
-        <span className={cn('block text-[10px] uppercase tracking-[0.2em]', light ? 'text-sus-sand/80' : 'text-sus-muted')}>
-          Ayurveda · Since 1986
-        </span>
-      </span>
+        </div>
+      ) : (
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-[#FCAB28]/15 border border-[#FCAB28]/50 text-[#FCAB28] shadow-soft-sm transition-transform duration-300 group-hover:scale-105">
+            <Sparkles className="h-5 w-5 text-[#FCAB28]" />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-display text-lg sm:text-xl font-bold tracking-tight text-white leading-none group-hover:text-[#FCAB28] transition-colors">
+              Susrutha
+            </span>
+            <span className="text-[9px] uppercase tracking-[0.22em] text-[#FCAB28] font-bold mt-0.5">
+              Ayurveda Hospital
+            </span>
+          </div>
+        </div>
+      )}
     </Link>
   );
 }
+
 
 export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
   const [q, setQ] = useState('');
@@ -65,8 +73,11 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
       <label htmlFor="site-search" className="sr-only">
         Search the site
       </label>
-      <div className="flex items-center gap-2 rounded-full border border-sus-green/15 bg-white/90 px-3 py-2">
-        <Search className="h-4 w-4 text-sus-muted" aria-hidden="true" />
+      <div
+        style={{ backgroundColor: 'rgba(34, 8, 9, 0.65)', backdropFilter: 'blur(16px)', borderColor: 'rgba(252, 171, 40, 0.35)' }}
+        className="flex items-center gap-2.5 rounded-full border px-4 py-2.5 text-white shadow-soft-sm focus-within:border-ochre focus-within:ring-2 focus-within:ring-ochre/20 transition-all duration-300"
+      >
+        <Search className="h-4 w-4 text-ochre-400 shrink-0" aria-hidden="true" />
         <input
           id="site-search"
           value={q}
@@ -76,16 +87,19 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
           }}
           onFocus={() => setOpen(true)}
           placeholder="Search treatments, doctors…"
-          className="w-full bg-transparent text-sm text-sus-ink placeholder:text-sus-muted/70 focus:outline-none"
+          className="w-full bg-transparent text-sm text-white placeholder:text-ivory-300/60 focus:outline-none font-body"
           autoComplete="off"
         />
       </div>
       {open && q.trim().length >= 2 && (
-        <div className="absolute right-0 z-50 mt-2 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-sus-green/10 bg-white shadow-xl">
+        <div
+          style={{ backgroundColor: 'rgba(28, 7, 8, 0.92)', backdropFilter: 'blur(24px)', borderColor: 'rgba(252, 171, 40, 0.4)' }}
+          className="absolute right-0 z-50 mt-2.5 w-[min(100vw-2rem,24rem)] overflow-hidden rounded-3xl border shadow-glass-card text-white"
+        >
           {results.length === 0 ? (
-            <p className="px-4 py-3 text-sm text-sus-muted">No matches. Try Panchakarma, fertility, Kowdiar…</p>
+            <div className="px-5 py-4 text-sm text-ivory-300 font-body">No matches found. Try searching for Panchakarma, Spine, Doctor, or Kowdiar…</div>
           ) : (
-            <ul className="max-h-80 overflow-auto py-2">
+            <ul className="max-h-80 overflow-auto py-2 divide-y divide-white/10">
               {results.map((r) => (
                 <li key={r.path + r.title}>
                   <Link
@@ -95,11 +109,14 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
                       setQ('');
                       onNavigate?.();
                     }}
-                    className="block px-4 py-2.5 hover:bg-sus-cream"
+                    className="block px-5 py-3 hover:bg-[#351012] transition-colors group"
                   >
-                    <span className="text-[10px] uppercase tracking-wider text-sus-gold">{r.type}</span>
-                    <span className="block text-sm font-medium text-sus-green-deep">{r.title}</span>
-                    <span className="block text-xs text-sus-muted line-clamp-1">{r.description}</span>
+                    <span className="text-[10px] uppercase tracking-wider text-[#FCAB28] font-bold">{r.type}</span>
+                    <span className="flex items-center justify-between text-sm font-semibold text-white group-hover:text-[#FCAB28]">
+                      {r.title}
+                      <ArrowUpRight className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-[#FCAB28]" />
+                    </span>
+                    <span className="block text-xs text-ivory-200/70 line-clamp-1 font-body mt-0.5">{r.description}</span>
                   </Link>
                 </li>
               ))}
@@ -149,7 +166,7 @@ function DesktopMega() {
       to: '/doctors',
       cols: [
         ...doctorsList.filter((d) => d.isDirector).map((d) => ({ label: d.name, to: `/doctors/${d.slug}` })),
-        { label: 'Full roster', to: '/doctors' },
+        { label: 'View All Physicians', to: '/doctors' },
       ],
     },
     {
@@ -157,22 +174,21 @@ function DesktopMega() {
       label: 'Explore',
       to: '/about',
       cols: [
-        { label: 'About & legacy', to: '/about' },
-        { label: 'Branches', to: '/branches' },
-        { label: 'Ayur Village', to: '/ayur-village' },
-        { label: 'Packages', to: '/packages' },
+        { label: 'Our Heritage & Legacy', to: '/about' },
+        { label: 'Ayur Village Retreat', to: '/ayur-village' },
+        { label: 'Curative Packages', to: '/packages' },
+        { label: 'Care Locations', to: '/branches' },
         { label: 'Knowledge Centre', to: '/knowledge' },
-        { label: 'International patients', to: '/international-patients' },
-        { label: 'Ecosystem', to: '/ecosystem' },
-        { label: 'Facilities', to: '/facilities' },
-        { label: 'Video gallery', to: '/videos' },
-        { label: 'Media', to: '/media' },
+        { label: 'International Patients', to: '/international-patients' },
+        { label: 'Hospital Infrastructure', to: '/facilities' },
+        { label: 'Video Showcase', to: '/videos' },
+        { label: 'Press & Media', to: '/media' },
       ],
     },
   ];
 
   return (
-    <nav className="hidden lg:flex items-center gap-1" aria-label="Primary">
+    <nav className="hidden lg:flex items-center gap-1.5" aria-label="Primary">
       {menus.map((menu) => {
         const isActive = pathname.startsWith(menu.to);
         return (
@@ -185,25 +201,31 @@ function DesktopMega() {
             <Link
               href={menu.to}
               className={cn(
-                'inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium transition-colors',
-                isActive ? 'text-sus-green' : 'text-sus-ink/80 hover:text-sus-green',
+                'inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 font-body',
+                isActive
+                  ? 'text-[#FCAB28] bg-[#240809] border border-[#FCAB28]/50'
+                  : 'text-[#FDFBF7] hover:text-[#FCAB28] hover:bg-white/10',
               )}
             >
               {menu.label}
-              <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+              <ChevronDown className={cn('h-3.5 w-3.5 opacity-70 transition-transform duration-300', openMenu === menu.key && 'rotate-180 text-[#FCAB28]')} />
             </Link>
             {openMenu === menu.key && (
-              <div className="absolute left-0 top-full z-50 pt-2">
-                <div className="min-w-[16rem] rounded-2xl border border-sus-green/10 bg-white p-3 shadow-xl">
-                  <ul className="space-y-0.5">
+              <div className="absolute left-0 top-full z-50 pt-2 animate-fadeIn">
+                <div
+                  style={{ backgroundColor: '#240809', borderColor: 'rgba(252, 171, 40, 0.4)' }}
+                  className="min-w-[18rem] rounded-3xl border p-3.5 shadow-2xl backdrop-blur-xl"
+                >
+                  <ul className="space-y-1">
                     {menu.cols.map((item) => (
                       <li key={item.to}>
                         <Link
                           href={item.to}
-                          className="block rounded-xl px-3 py-2 text-sm text-sus-ink hover:bg-sus-cream hover:text-sus-green"
+                          className="flex items-center justify-between rounded-2xl px-4 py-2.5 text-sm text-[#FDFBF7] font-semibold hover:bg-[#351012] hover:text-[#FCAB28] transition-all font-body group"
                           onClick={() => setOpenMenu(null)}
                         >
-                          {item.label}
+                          <span>{item.label}</span>
+                          <ArrowUpRight className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-[#FCAB28]" />
                         </Link>
                       </li>
                     ))}
@@ -217,8 +239,8 @@ function DesktopMega() {
       <Link
         href="/contact"
         className={cn(
-          'rounded-full px-3 py-2 text-sm font-medium',
-          pathname === '/contact' ? 'text-sus-green' : 'text-sus-ink/80 hover:text-sus-green',
+          'rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 font-body',
+          pathname === '/contact' ? 'text-[#FCAB28] bg-[#240809] border border-[#FCAB28]/50' : 'text-[#FDFBF7] hover:text-[#FCAB28] hover:bg-white/10',
         )}
       >
         Contact
@@ -243,75 +265,72 @@ export default function Header() {
   }, [mobileOpen]);
 
   return (
-    <>
-      <div className="bg-sus-green-deep text-sus-sand/90">
-        <div className="container-wide section-pad flex flex-wrap items-center justify-between gap-2 py-2 text-xs">
-          <p className="hidden sm:block">{brand.legacyFraming}</p>
-          <div className="flex flex-wrap items-center gap-4">
-            <a href={`tel:${brand.contact.mobileTel}`} className="inline-flex items-center gap-1.5 hover:text-white">
-              <Phone className="h-3.5 w-3.5" /> {brand.contact.mobile}
-            </a>
-            <span className="hidden md:inline text-sus-sand/60">OP {brand.hours.op}</span>
-            <span className="text-sus-gold-soft">Hospital {brand.hours.hospital}</span>
-          </div>
+    <header
+      style={{ backgroundColor: 'rgba(22, 5, 6, 0.55)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', color: '#FFFFFF' }}
+      className="sticky top-0 z-40 border-b border-ochre/25 shadow-glass-dark transition-all duration-300 font-body"
+    >
+      <div className="container-wide section-pad flex items-center justify-between gap-4 py-3.5">
+        <Logo />
+        <DesktopMega />
+        <div className="hidden md:block">
+          <SearchBox />
+        </div>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/book"
+            className="hidden sm:inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-crimson-600 via-crimson to-crimson-700 px-6 py-2.5 text-sm font-bold text-ivory-50 shadow-soft-md hover:shadow-ochre-glow hover:bg-crimson-700 transition-all duration-300 transform hover:-translate-y-0.5 border border-ochre/50"
+          >
+            <Calendar className="h-4 w-4 text-ochre-300" />
+            <span>Book Appointment</span>
+          </Link>
+          <button
+            type="button"
+            className="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-ochre/40 bg-[#240809] text-white shadow-soft-sm hover:border-ochre transition-colors"
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen((v) => !v)}
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
 
-      <header className="sticky top-0 z-40 border-b border-sus-green/10 bg-sus-cream/90 backdrop-blur-md">
-        <div className="container-wide section-pad flex items-center justify-between gap-4 py-3">
-          <Logo />
-          <DesktopMega />
-          <div className="hidden md:block">
-            <SearchBox />
-          </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/book"
-              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-sus-green px-4 py-2.5 text-sm font-medium text-sus-cream hover:bg-sus-green-deep transition-colors"
-            >
-              <CalendarHeart className="h-4 w-4" /> Book
-            </Link>
-            <button
-              type="button"
-              className="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-full border border-sus-green/15 bg-white"
-              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen((v) => !v)}
-            >
-              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-          </div>
-        </div>
-
-        {mobileOpen && (
-          <div className="lg:hidden border-t border-sus-green/10 bg-sus-cream">
-            <div className="section-pad space-y-4 py-4">
-              <SearchBox onNavigate={() => setMobileOpen(false)} />
-              <div className="grid gap-1">
-                {[
-                  ['Treatments', '/treatments'],
-                  ['Conditions', '/conditions'],
-                  ['Doctors', '/doctors'],
-                  ['Packages', '/packages'],
-                  ['Branches', '/branches'],
-                  ['Ayur Village', '/ayur-village'],
-                  ['Knowledge', '/knowledge'],
-                  ['About', '/about'],
-                  ['International', '/international-patients'],
-                  ['Ecosystem', '/ecosystem'],
-                  ['Videos', '/videos'],
-                  ['Contact', '/contact'],
-                  ['Book appointment', '/book'],
-                ].map(([label, to]) => (
-                  <Link key={to} href={to} className="rounded-xl px-3 py-3 text-sus-green-deep hover:bg-white font-medium">
-                    {label}
-                  </Link>
-                ))}
-              </div>
+      {/* Mobile Navigation Drawer */}
+      {mobileOpen && (
+        <div style={{ backgroundColor: '#1A0707' }} className="lg:hidden border-t border-ochre/30 backdrop-blur-2xl max-h-[calc(100vh-5rem)] overflow-y-auto">
+          <div className="section-pad space-y-5 py-6">
+            <SearchBox onNavigate={() => setMobileOpen(false)} />
+            <div className="grid gap-1.5 font-body">
+              {[
+                ['Treatments', '/treatments'],
+                ['Conditions', '/conditions'],
+                ['Doctors', '/doctors'],
+                ['Packages', '/packages'],
+                ['Branches', '/branches'],
+                ['Ayur Village', '/ayur-village'],
+                ['Knowledge Centre', '/knowledge'],
+                ['About & Legacy', '/about'],
+                ['International Patients', '/international-patients'],
+                ['Hospital Facilities', '/facilities'],
+                ['Videos', '/videos'],
+                ['Contact Us', '/contact'],
+                ['Book Appointment', '/book'],
+              ].map(([label, to]) => (
+                <Link
+                  key={to}
+                  href={to}
+                  className="flex items-center justify-between rounded-2xl px-4 py-3 text-white hover:bg-[#240809] font-semibold transition-colors border border-transparent hover:border-ochre/30"
+                >
+                  <span>{label}</span>
+                  <ArrowUpRight className="h-4 w-4 text-ochre-400" />
+                </Link>
+              ))}
             </div>
           </div>
-        )}
-      </header>
-    </>
+        </div>
+      )}
+    </header>
   );
 }
+
+

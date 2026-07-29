@@ -93,49 +93,49 @@ export default function InternationalPage() {
   }
 
   return (
-    <div>
-      <section className="relative min-h-[70vh] overflow-hidden bg-sus-green-deep text-sus-cream">
+    <div className="bg-[#FDFBF7] text-ivory-900 font-body min-h-screen">
+      <section className="relative min-h-[70vh] overflow-hidden bg-[#1E1B1B] text-ivory-50">
         <img
           src="/images/kerala-nature.jpg"
-          alt="Serene Kerala landscape for medical travellers"
-          className="absolute inset-0 h-full w-full object-cover opacity-45"
+          alt="Serene Kerala landscape for international medical travellers"
+          className="absolute inset-0 h-full w-full object-cover opacity-30"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-sus-green-deep via-sus-green-deep/85 to-sus-green-deep/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1E1B1B] via-[#1E1B1B]/85 to-[#1E1B1B]/40" />
         <div className="container-wide section-pad relative flex min-h-[70vh] flex-col justify-center py-20">
-          <p className="text-xs uppercase tracking-[0.28em] text-sus-gold-soft">International patients · Kerala</p>
-          <h1 className="mt-4 max-w-3xl font-display text-4xl sm:text-5xl lg:text-6xl text-balance leading-[1.05]">
-            Luxury of clarity. Authenticity of hospital Ayurveda.
+          <p className="text-xs uppercase tracking-[0.28em] font-bold text-ochre">International Patient Concierge · Kerala</p>
+          <h1 className="mt-4 max-w-3xl font-display text-4xl sm:text-5xl lg:text-6xl text-balance leading-[1.05] font-bold text-ivory-50">
+            Luxury of Clarity. Authenticity of Institutional Hospital Care.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-sus-sand/90 leading-relaxed">
+          <p className="mt-6 max-w-2xl text-lg text-ivory-200/90 leading-relaxed font-light">
             Plan medical travel to Thiruvananthapuram with airport-aware logistics, Ayur Village privacy, physician-directed packages and honest expectations — not brochure theatre.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button href="#intl-enquiry" variant="secondary">
-              Start travel enquiry
+          <div className="mt-8 flex flex-wrap gap-4">
+            <Button href="#intl-enquiry" variant="primary">
+              Start International Travel Enquiry
             </Button>
-            <Button to="/packages" variant="ghost" className="!text-sus-cream hover:!bg-white/10">
-              View packages
+            <Button to="/packages" variant="glass">
+              Explore Care Packages
             </Button>
           </div>
         </div>
       </section>
 
-      <div className="container-wide section-pad py-12">
-        <Breadcrumbs items={[{ label: 'International patients' }]} />
+      <div className="container-wide section-pad py-16">
+        <Breadcrumbs items={[{ label: 'International Patients' }]} />
 
         <AiSummary text="Susrutha Ayurveda welcomes international patients for authentic Kerala Panchakarma and specialty programmes at its Kattakada hospital, with Ayur Village stays about 20 km from Trivandrum International Airport and case-by-case visa and interpreter coordination." />
 
-        <section className="mt-16 grid gap-6 lg:grid-cols-2">
+        <section className="mt-16 grid gap-10 lg:grid-cols-2 items-center">
           <div>
-            <SectionHeading eyebrow="Why Kerala" title="A living geography of classical care" />
-            <p className="mt-4 text-sus-muted leading-relaxed">
+            <SectionHeading eyebrow="Why Kerala" title="A Living Sanctuary of Classical Medical Care" />
+            <p className="mt-4 text-ivory-700 leading-relaxed text-base sm:text-lg">
               Kerala remains a global reference for Panchakarma because the tradition is still practised as medicine, not only hospitality. Climate, diet culture and trained therapy ecosystems support multi-day supervised programmes.
             </p>
-            <p className="mt-4 text-sus-muted leading-relaxed">
-              Susrutha adds hospital infrastructure: beds, OT-backed specialty pathways, director-led clinics and an ecosystem spanning pharma, lab and nursing education.
+            <p className="mt-4 text-ivory-700 leading-relaxed text-base sm:text-lg">
+              Susrutha adds hospital infrastructure: 40 beds, OT-backed specialty pathways, director-led clinics and an ecosystem spanning pharma, lab and nursing education.
             </p>
           </div>
-          <div className="rounded-[1.75rem] overflow-hidden">
+          <div className="rounded-3xl overflow-hidden border border-ivory-300 shadow-soft-lg">
             <img src="/images/ayur-village.jpg" alt="Ayur Village stay setting" className="h-full w-full object-cover aspect-[5/4]" />
           </div>
         </section>

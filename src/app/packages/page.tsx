@@ -25,18 +25,18 @@ export default function PackagesPage() {
   }, []);
 
   return (
-    <div>
+    <div className="bg-[#FDFBF7] text-ivory-900 font-body min-h-screen">
       <PageHero
-        eyebrow="Packages"
-        title="Structured Care Programmes"
-        description="From occupational Tekky care to 14/21-day hospital programmes and specialty pathways. Clinical Ayurvedic care tailored to your needs."
+        eyebrow="Curative & Rejuvenation Programmes"
+        title="Structured Care & Recovery Packages"
+        description="From occupational spinal wellness to 14/21-day inpatient Panchakarma and Rasayana vitality stays. Classical Ayurvedic care tailored to your needs."
       >
-        <Button to="/package-enquiry">Enquire about a package</Button>
+        <Button to="/package-enquiry" variant="primary">Enquire About a Package</Button>
       </PageHero>
-      <div className="container-wide section-pad py-12">
-        <Breadcrumbs items={[{ label: 'Packages' }]} />
+      <div className="container-wide section-pad py-16">
+        <Breadcrumbs items={[{ label: 'Care Packages' }]} />
         {packageList.length > 0 ? (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {packageList.map((p) => (
               <CardLink
                 key={p.id}
@@ -48,14 +48,15 @@ export default function PackagesPage() {
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-sus-green/10 bg-white p-8 text-center">
-            <h2 className="font-display text-xl text-sus-green-deep">No Care Packages Listed</h2>
-            <p className="mt-2 text-sm text-sus-muted">No care packages are currently published in the database.</p>
+          <div className="rounded-3xl border border-ivory-300 bg-white p-12 text-center shadow-soft-sm">
+            <h2 className="font-display text-2xl font-bold text-ivory-900">No Care Packages Listed</h2>
+            <p className="mt-2 text-sm text-ivory-700">No care packages are currently published in the database.</p>
           </div>
         )}
       </div>
     </div>
   );
 }
+
 
 

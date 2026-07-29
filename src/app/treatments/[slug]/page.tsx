@@ -87,122 +87,104 @@ export default function TreatmentDetailPage() {
   }
 
   const docs: any[] = [];
-  const pkgs: any[] = [];
-
   return (
-    <div>
+    <div className="bg-[#FDFBF7] text-ivory-900 font-body min-h-screen">
       <PageHero eyebrow={treatment.category} title={treatment.name} description={treatment.malayalam ? `${treatment.malayalam} · Physician-directed therapy` : 'Physician-directed therapy'}>
-        <Button to="/book">Book consultation</Button>
+        <Button to="/book" variant="primary">Book consultation</Button>
       </PageHero>
-      <div className="container-wide section-pad py-12">
+      <div className="container-wide section-pad py-16">
         <Breadcrumbs items={[{ label: 'Treatments', to: '/treatments' }, { label: treatment.name }]} />
 
         <div className="grid gap-10 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-10">
             <AiSummary text={treatment.aiSummary} reviewedBy={docs[0]?.name} />
             <section className="prose-sus">
-              <h2 className="font-display text-3xl text-sus-green-deep">What it is</h2>
-              <p>{treatment.overview}</p>
+              <h2 className="font-display text-3xl font-bold text-ivory-900">What it is</h2>
+              <p className="text-ivory-700 leading-relaxed text-base sm:text-lg">{treatment.overview}</p>
             </section>
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep mb-4">Procedure</h2>
-              <ol className="grid gap-3 sm:grid-cols-2">
+              <h2 className="font-display text-3xl font-bold text-ivory-900 mb-6">Procedure Sequence</h2>
+              <ol className="grid gap-4 sm:grid-cols-2">
                 {treatment.procedure.map((step: any, i: number) => (
-                  <li key={step.step} className="rounded-2xl border border-sus-green/10 bg-white p-5">
-                    <span className="text-xs text-sus-gold uppercase tracking-wider">Step {i + 1}</span>
-                    <h3 className="mt-1 text-lg text-sus-green-deep">{step.step}</h3>
-                    <p className="mt-2 text-sm text-sus-muted">{step.detail}</p>
+                  <li key={step.step} className="rounded-3xl border border-ivory-300 border-t-2 border-t-ochre bg-white p-6 shadow-soft-sm">
+                    <span className="text-xs text-ochre-800 font-bold uppercase tracking-wider">Phase {i + 1}</span>
+                    <h3 className="mt-1 font-display text-xl font-bold text-ivory-900">{step.step}</h3>
+                    <p className="mt-2 text-sm text-ivory-700 leading-relaxed">{step.detail}</p>
                   </li>
                 ))}
               </ol>
             </section>
 
             <section className="grid sm:grid-cols-2 gap-6">
-              <div>
-                <h2 className="font-display text-2xl text-sus-green-deep">Benefits (educational)</h2>
-                <ul className="mt-3 space-y-2 text-sm text-sus-muted list-disc pl-5">
+              <div className="rounded-3xl border border-ivory-300 bg-white p-6 shadow-soft-sm">
+                <h2 className="font-display text-2xl font-bold text-ivory-900">Clinical Benefits</h2>
+                <ul className="mt-3 space-y-2 text-sm text-ivory-700 list-disc pl-5">
                   {treatment.benefits.map((b: any) => <li key={b}>{b}</li>)}
                 </ul>
               </div>
-              <div>
-                <h2 className="font-display text-2xl text-sus-green-deep">Who may need it</h2>
-                <ul className="mt-3 space-y-2 text-sm text-sus-muted list-disc pl-5">
+              <div className="rounded-3xl border border-ivory-300 bg-white p-6 shadow-soft-sm">
+                <h2 className="font-display text-2xl font-bold text-ivory-900">Who May Need It</h2>
+                <ul className="mt-3 space-y-2 text-sm text-ivory-700 list-disc pl-5">
                   {treatment.whoNeeds.map((b: any) => <li key={b}>{b}</li>)}
                 </ul>
               </div>
             </section>
 
             <section className="grid sm:grid-cols-2 gap-6">
-              <div className="rounded-2xl bg-white border border-sus-green/10 p-5">
-                <h3 className="text-lg text-sus-green-deep">Preparation</h3>
-                <ul className="mt-2 space-y-1 text-sm text-sus-muted list-disc pl-5">
+              <div className="rounded-3xl bg-white border border-ivory-300 border-t-2 border-t-ochre p-6 shadow-soft-sm">
+                <h3 className="font-display text-xl font-bold text-ivory-900">Preparation Protocol</h3>
+                <ul className="mt-3 space-y-1 text-sm text-ivory-700 list-disc pl-5">
                   {treatment.preparation.map((x: any) => <li key={x}>{x}</li>)}
                 </ul>
               </div>
-              <div className="rounded-2xl bg-white border border-sus-green/10 p-5">
-                <h3 className="text-lg text-sus-green-deep">Recovery / aftercare</h3>
-                <ul className="mt-2 space-y-1 text-sm text-sus-muted list-disc pl-5">
+              <div className="rounded-3xl bg-white border border-ivory-300 border-t-2 border-t-ochre p-6 shadow-soft-sm">
+                <h3 className="font-display text-xl font-bold text-ivory-900">Recovery & Aftercare</h3>
+                <ul className="mt-3 space-y-1 text-sm text-ivory-700 list-disc pl-5">
                   {treatment.aftercare.map((x: any) => <li key={x}>{x}</li>)}
                 </ul>
               </div>
             </section>
 
-            <section className="rounded-2xl border border-sus-terracotta/20 bg-sus-cream p-5">
-              <h2 className="font-display text-2xl text-sus-green-deep">Safety & who should avoid</h2>
-              <div className="mt-3 grid sm:grid-cols-2 gap-4 text-sm text-sus-muted">
+            <section className="rounded-3xl border border-ochre/40 bg-ochre-50/70 p-7 shadow-soft-sm">
+              <h2 className="font-display text-2xl font-bold text-ivory-900">Safety & Contraindications</h2>
+              <div className="mt-4 grid sm:grid-cols-2 gap-6 text-sm text-ivory-800">
                 <div>
-                  <p className="text-xs uppercase tracking-wider text-sus-gold mb-2">Safety notes</p>
-                  <ul className="space-y-1 list-disc pl-5">{treatment.safety.map((x: any) => <li key={x}>{x}</li>)}</ul>
+                  <p className="text-xs uppercase tracking-wider font-bold text-ochre-800 mb-2">Physician Safety Directives</p>
+                  <ul className="space-y-1 list-disc pl-5 font-medium">{treatment.safety.map((x: any) => <li key={x}>{x}</li>)}</ul>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-wider text-sus-gold mb-2">Use caution / avoid without advice</p>
-                  <ul className="space-y-1 list-disc pl-5">{treatment.avoid.map((x: any) => <li key={x}>{x}</li>)}</ul>
+                  <p className="text-xs uppercase tracking-wider font-bold text-crimson mb-2">Use Caution / Contraindications</p>
+                  <ul className="space-y-1 list-disc pl-5 font-medium">{treatment.avoid.map((x: any) => <li key={x}>{x}</li>)}</ul>
                 </div>
               </div>
             </section>
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep mb-4">FAQ</h2>
+              <h2 className="font-display text-3xl font-bold text-ivory-900 mb-6">Frequently Asked Questions</h2>
               <FaqList items={treatment.faqs} />
             </section>
           </div>
 
-          <aside className="space-y-5">
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
-              <p className="text-xs uppercase tracking-wider text-sus-gold">Duration</p>
-              <p className="mt-2 text-sm text-sus-ink leading-relaxed">{treatment.duration}</p>
+          <aside className="space-y-6">
+            <div className="rounded-3xl border border-ivory-300 border-t-2 border-t-ochre bg-white p-6 shadow-soft-sm">
+              <p className="text-xs uppercase tracking-wider font-bold text-ochre-800">Session Duration & Course</p>
+              <p className="mt-2 text-sm text-ivory-900 font-bold leading-relaxed">{treatment.duration}</p>
             </div>
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
-              <p className="text-xs uppercase tracking-wider text-sus-gold">Conditions often discussed</p>
-              <ul className="mt-2 space-y-1 text-sm text-sus-muted">
-                {treatment.conditions.map((c: any) => <li key={c}>{c}</li>)}
+            <div className="rounded-3xl border border-ivory-300 bg-white p-6 shadow-soft-sm">
+              <p className="text-xs uppercase tracking-wider font-bold text-ochre-800">Target Clinical Conditions</p>
+              <ul className="mt-3 space-y-1 text-sm text-ivory-700">
+                {treatment.conditions.map((c: any) => <li key={c} className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-crimson" />
+                  <span>{c}</span>
+                </li>)}
               </ul>
             </div>
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
-              <p className="text-xs uppercase tracking-wider text-sus-gold">Doctors</p>
-              <ul className="mt-2 space-y-2">
-                {docs.map((d) => (
-                  <li key={d.id}>
-                    <Link href={`/doctors/${d.slug}`} className="text-sm font-medium text-sus-green hover:underline">{d.name}</Link>
-                    <span className="block text-xs text-sus-muted">{d.qual}</span>
-                  </li>
-                ))}
-              </ul>
+            <div className="rounded-3xl border border-ivory-300 bg-white p-6 shadow-soft-sm">
+              <Button to="/book" variant="primary" className="w-full">
+                Book Consultation
+              </Button>
             </div>
-            {pkgs.length > 0 && (
-              <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
-                <p className="text-xs uppercase tracking-wider text-sus-gold">Related packages</p>
-                <ul className="mt-2 space-y-2">
-                  {pkgs.map((p) => (
-                    <li key={p.id}>
-                      <Link href={`/packages/${p.slug}`} className="text-sm font-medium text-sus-green hover:underline">{p.name}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <Button to="/book" className="w-full">Book consultation</Button>
           </aside>
         </div>
       </div>
