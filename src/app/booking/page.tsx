@@ -6,14 +6,14 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
-import { createAppointment, fetchDoctorsList, fetchTreatmentsList, MOCK_DOCTORS, MOCK_TREATMENTS, DoctorItem, TreatmentItem } from '@/lib/api';
+import { createAppointment, fetchDoctorsList, fetchTreatmentsList, DoctorItem, TreatmentItem } from '@/lib/api';
 import { useApiData } from '@/hooks/useApiData';
 import { formatCurrency } from '@/lib/utils';
 
 export default function BookingPage() {
   const [step, setStep] = useState(1);
-  const { data: treatments } = useApiData<TreatmentItem[]>(fetchTreatmentsList, MOCK_TREATMENTS);
-  const { data: doctors } = useApiData<DoctorItem[]>(fetchDoctorsList, MOCK_DOCTORS);
+  const { data: treatments } = useApiData<TreatmentItem[]>(fetchTreatmentsList, []);
+  const { data: doctors } = useApiData<DoctorItem[]>(fetchDoctorsList, []);
 
   const [selectedTreatmentId, setSelectedTreatmentId] = useState('');
   const [selectedDoctorId, setSelectedDoctorId] = useState('');
@@ -23,8 +23,8 @@ export default function BookingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingResult, setBookingResult] = useState<any>(null);
 
-  const activeTreatment = treatments.find((t) => (t.id || t._id || t.title) === selectedTreatmentId) || treatments[0] || MOCK_TREATMENTS[0];
-  const activeDoctor = doctors.find((d) => (d.id || d._id || d.name) === selectedDoctorId) || doctors[0] || MOCK_DOCTORS[0];
+  const activeTreatment = treatments.find((t) => (t.id || t._id || t.title) === selectedTreatmentId) || treatments[0];
+  const activeDoctor = doctors.find((d) => (d.id || d._id || d.name) === selectedDoctorId) || doctors[0];
 
   const handleCompleteBooking = async (e: React.FormEvent) => {
     e.preventDefault();

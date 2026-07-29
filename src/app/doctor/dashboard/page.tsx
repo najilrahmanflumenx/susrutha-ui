@@ -9,10 +9,11 @@ import { Badge } from '@/components/ui/Badge';
 import { Table } from '@/components/ui/Table';
 import { Input, Select } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
-import { MOCK_APPOINTMENTS } from '@/lib/api';
 
 export default function DoctorDashboard() {
   const [isEhrModalOpen, setIsEhrModalOpen] = useState(false);
+  const [appointments, setAppointments] = useState<any[]>([]);
+
 
   return (
     <div className="px-6 sm:px-12 md:px-20 max-w-7xl mx-auto flex flex-col gap-10 pb-24">
@@ -67,8 +68,8 @@ export default function DoctorDashboard() {
         <h3 className="font-display text-2xl font-bold text-primary">Today&apos;s Appointment Roster</h3>
 
         <Table
-          data={MOCK_APPOINTMENTS}
-          keyExtractor={(r) => r.id}
+          data={appointments}
+          keyExtractor={(r) => r.id || r._id || Math.random().toString()}
           columns={[
             { header: 'SLOT TIME', accessorKey: 'time', className: 'font-bold text-primary' },
             { header: 'PATIENT NAME', accessorKey: 'patientName' },

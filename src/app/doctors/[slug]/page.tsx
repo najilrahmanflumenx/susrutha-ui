@@ -7,19 +7,22 @@ import { ArrowLeft, Award, Calendar, Languages, Stethoscope, Sparkles } from 'lu
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { DoctorItem, fetchDoctorBySlug, MOCK_DOCTORS } from '@/lib/api';
+import { DoctorItem, fetchDoctorBySlug } from '@/lib/api';
 import { useApiData } from '@/hooks/useApiData';
 import { formatCurrency } from '@/lib/utils';
 
-export default function DoctorDetailPage() {
-  const params = useParams();
-  const slug = (params?.slug as string) || '';
+export default function DoctorDetailPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
 
-  const { data: doctor } = useApiData<DoctorItem>(
+  const { data: doctor, loading } = useApiData<DoctorItem | null>(
     () => fetchDoctorBySlug(slug),
-    MOCK_DOCTORS[0],
+    null,
     [slug]
   );
+
+  if (loading || !doctor) {
+    return <div className="min-h-screen flex items-center justify-center">Loading Doctor Profile...</div>;
+  }
 
   const name = doctor.name || 'Ayurvedic Physician';
   const designation = doctor.designation || doctor.title || 'Senior Consultant';

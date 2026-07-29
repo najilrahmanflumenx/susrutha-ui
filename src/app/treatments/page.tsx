@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge, Chip } from '@/components/ui/Badge';
 import { TreatmentCardSkeleton } from '@/components/ui/Skeleton';
-import { fetchTreatments, MOCK_TREATMENTS, TreatmentItem } from '@/lib/api';
+import { fetchTreatments, TreatmentItem } from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
 
 export default function TreatmentsPage() {

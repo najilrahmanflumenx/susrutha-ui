@@ -126,199 +126,14 @@ export interface FAQItem {
   category?: string;
 }
 
-// Mock Data
-export const MOCK_TREATMENTS: TreatmentItem[] = [
-  {
-    id: 'tr-1',
-    _id: 'tr-1',
-    name: 'Shirodhara Bliss',
-    title: 'Shirodhara Bliss',
-    slug: 'shirodhara-bliss',
-    category: 'Nervous System & Mind',
-    duration: '90 Mins',
-    durationMinutes: 90,
-    price: 3500,
-    rating: 4.9,
-    reviewsCount: 124,
-    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80',
-    description: 'A rhythmic pouring of warm herbal oil onto the forehead to calm the central nervous system, relieve anxiety, and treat chronic insomnia.',
-    shortDescription: 'Continuous rhythm pour of warm medicated oil across forehead for deep nervous system relaxation.',
-    benefits: ['Deep Nervous System Relaxation', 'Insomnia & Anxiety Relief', 'Mental Clarity & Memory Enhancement'],
-    indications: ['Insomnia', 'Anxiety & Stress', 'Migraine', 'Hypertension'],
-    dosha: 'Vata & Pitta Pacifying'
-  },
-  {
-    id: 'tr-2',
-    _id: 'tr-2',
-    name: 'Panchakarma Detox Ritual',
-    title: 'Panchakarma Detox Ritual',
-    slug: 'panchakarma-detox-ritual',
-    category: 'Full-Body Purification',
-    duration: '7 Days',
-    durationMinutes: 420,
-    price: 45000,
-    rating: 5.0,
-    reviewsCount: 210,
-    image: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&q=80',
-    description: 'The premier five-fold detoxification process designed to eliminate deep-seated cellular toxins (Ama) and restore metabolic agni.',
-    shortDescription: 'Comprehensive 5-step cellular detox therapy for total metabolic reset and rejuvenation.',
-    benefits: ['Cellular Toxins Flush', 'Immune System Reboot', 'Metabolic Balance Restoration'],
-    indications: ['Chronic Fatigue', 'Autoimmune Conditions', 'Metabolic Disorder'],
-    dosha: 'Tri-Dosha Balancing'
-  },
-  {
-    id: 'tr-3',
-    _id: 'tr-3',
-    name: 'Abhyanga Herbal Massage',
-    title: 'Abhyanga Herbal Massage',
-    slug: 'abhyanga-herbal-massage',
-    category: 'Rejuvenation & Circulation',
-    duration: '60 Mins',
-    durationMinutes: 60,
-    price: 2800,
-    rating: 4.8,
-    reviewsCount: 98,
-    image: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&q=80',
-    description: 'Synchronized warm medicinal oil therapy performed by two trained therapists to improve lymphatic movement and relieve muscle tension.',
-    shortDescription: 'Synchronized full body herbal oil massage for lymphatic drainage and joint mobility.',
-    benefits: ['Lymphatic Drainage Boost', 'Joint Stiffness Relief', 'Luminous Skin Nourishment'],
-    indications: ['Vata Stiffness', 'General Fatigue', 'Joint Pain'],
-    dosha: 'Vata Balancing'
-  }
-];
+// Clean Fallback Empty Arrays (No mock data forced)
+export const MOCK_TREATMENTS: TreatmentItem[] = [];
+export const MOCK_DOCTORS: DoctorItem[] = [];
+export const MOCK_BRANCHES: BranchItem[] = [];
+export const MOCK_TESTIMONIALS: TestimonialItem[] = [];
+export const MOCK_FAQS: FAQItem[] = [];
+export const MOCK_APPOINTMENTS: any[] = [];
 
-export const MOCK_DOCTORS: DoctorItem[] = [
-  {
-    id: 'doc-1',
-    _id: 'doc-1',
-    name: 'Dr. Krishnakumar K.',
-    slug: 'dr-krishnakumar-k',
-    title: 'Chief Medical Officer',
-    designation: 'Senior Ayurvedic Physician',
-    specialization: 'Kaya Chikitsa & Panchakarma',
-    specialties: ['Spine Disc Herniation', 'Panchakarma Detoxification', 'Rheumatoid Arthritis'],
-    experienceYears: 24,
-    rating: 4.95,
-    patientsCount: 15400,
-    image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80',
-    photoUrl: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80',
-    qualifications: ['BAMS', 'MD (Ayurveda)'],
-    bio: 'Renowned Ayurvedic physician with over 24 years of clinical experience in classical Panchakarma, severe degenerative spine disorders, and chronic arthritis.',
-    consultationFee: 500,
-    languagesSpoken: ['Malayalam', 'English', 'Hindi']
-  },
-  {
-    id: 'doc-2',
-    _id: 'doc-2',
-    name: 'Dr. Sreeja Krishna S.',
-    slug: 'dr-sreeja-krishna-s',
-    title: 'Senior Consultant Physician',
-    designation: 'Gynaecology & Skin Specialist',
-    specialization: 'Rasayana & Gynaecology',
-    specialties: ['PCOS & Women Health', 'Psoriasis & Skin Care', 'Metabolic Disorders'],
-    experienceYears: 18,
-    rating: 4.90,
-    patientsCount: 11200,
-    image: 'https://images.unsplash.com/photo-1594824813570-78a295000527?auto=format&fit=crop&q=80',
-    photoUrl: 'https://images.unsplash.com/photo-1594824813570-78a295000527?auto=format&fit=crop&q=80',
-    qualifications: ['BAMS', 'MS (Ayurveda)'],
-    bio: 'Expert in Gynaecology, Infertility, PCOS management, Chronic Psoriasis, and Lifestyle Metabolic Disorders.',
-    consultationFee: 400,
-    languagesSpoken: ['Malayalam', 'English']
-  }
-];
-
-export const MOCK_BRANCHES: BranchItem[] = [
-  {
-    id: 'br-1',
-    _id: 'br-1',
-    name: 'Kattakada Inpatient Hospital & Research Center',
-    code: 'KTK',
-    type: 'INPATIENT_HOSPITAL',
-    tagline: '40-Bed Inpatient Panchakarma Hospital Campus & Research Institute',
-    address: { street: 'Kattakada-Killi Main Road', city: 'Thiruvananthapuram', state: 'Kerala', pincode: '695572', coordinates: { lat: 8.5085, lng: 77.0805 } },
-    contact: { phone: ['+91 96566 56736', '+91 471 229 0256'], email: 'kattakada@susruthaayurveda.com', emergencyPhone: '+91 96566 56736' },
-    opdTimings: '09:00 AM - 07:00 PM (Mon - Sun)',
-    bedCapacity: 40,
-    features: ['40 Inpatient Beds', 'Private Panchakarma Cottages', 'Herbal Species Botanical Garden', 'Organic Pure Vegetarian Kitchen'],
-    isMainBranch: true,
-    coverImage: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'br-2',
-    _id: 'br-2',
-    name: 'Kowdiar City Outpatient Clinic',
-    code: 'KWR',
-    type: 'CITY_CLINIC',
-    tagline: 'Premium City Outpatient Consultation & Specialty Care Center',
-    address: { street: 'Kowdiar Palace Road', city: 'Thiruvananthapuram', state: 'Kerala', pincode: '695003', coordinates: { lat: 8.5241, lng: 76.9637 } },
-    contact: { phone: ['+91 96566 56736'], email: 'kowdiar@susruthaayurveda.com' },
-    opdTimings: '09:00 AM - 07:00 PM (Mon - Sat)',
-    bedCapacity: 0,
-    features: ['Executive OPD Consultation', 'Daycare Panchakarma & Kizhi Therapy', 'In-house GMP Medicine Pharmacy'],
-    isMainBranch: false,
-    coverImage: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80'
-  }
-];
-
-export const MOCK_TESTIMONIALS: TestimonialItem[] = [
-  {
-    id: 't-1',
-    patientName: 'Ananya Sharma',
-    patientLocation: 'Mumbai, India',
-    treatmentReceived: '7-Day Panchakarma Retreat',
-    rating: 5,
-    reviewText: 'My chronic back pain and fatigue completely vanished after the 7-day inpatient Panchakarma therapy at Susrutha Kattakada. The doctors and therapists treat you like family.'
-  },
-  {
-    id: 't-2',
-    patientName: 'David Miller',
-    patientLocation: 'London, UK',
-    treatmentReceived: 'Shirodhara & Rasayana Therapy',
-    rating: 5,
-    reviewText: 'The serene botanical hospital environment paired with authentic classical Kerala treatments made my stay truly transformative. Highly recommended!'
-  }
-];
-
-export const MOCK_FAQS: FAQItem[] = [
-  {
-    id: 'faq-1',
-    question: 'How long should I stay for a complete Panchakarma detox?',
-    answer: 'A classical Panchakarma program typically ranges from 7 to 21 days depending on your health goals and dosha assessment during consultation.'
-  },
-  {
-    id: 'faq-2',
-    question: 'Are inpatient rooms available at the hospital?',
-    answer: 'Yes! Our Kattakada hospital campus features 40 private inpatient rooms, executive suites, and traditional panchakarma therapy cottages.'
-  }
-];
-
-export const MOCK_APPOINTMENTS = [
-  {
-    id: 'apt-101',
-    patientName: 'Ananya Sharma',
-    patientEmail: 'ananya@example.com',
-    doctorName: 'Dr. Krishnakumar K.',
-    treatmentName: 'Shirodhara Bliss',
-    date: '2026-08-02',
-    time: '10:30 AM',
-    status: 'Confirmed',
-    amount: 3500,
-    type: 'In-Clinic Retreat'
-  },
-  {
-    id: 'apt-102',
-    patientName: 'Rohan Mehta',
-    patientEmail: 'rohan@example.com',
-    doctorName: 'Dr. Sreeja Krishna S.',
-    treatmentName: 'Panchakarma Detox Ritual',
-    date: '2026-08-04',
-    time: '02:00 PM',
-    status: 'Pending',
-    amount: 45000,
-    type: '7-Day Sanctuary Retreat'
-  }
-];
 
 export interface FetchOptions {
   page?: number;
@@ -502,3 +317,22 @@ export async function submitContactLead(leadData: {
     return { success: true, message: 'Message sent successfully (Offline Mode)' };
   }
 }
+
+export async function fetchSiteSettings(): Promise<Record<string, any>> {
+  try {
+    const response = await api.get('/public/settings');
+    return response.data?.data || {};
+  } catch (error) {
+    return {};
+  }
+}
+
+export async function fetchHomeData(): Promise<Record<string, any>> {
+  try {
+    const response = await api.get('/public/home');
+    return response.data?.data || {};
+  } catch (error) {
+    return {};
+  }
+}
+

@@ -9,10 +9,11 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Table } from '@/components/ui/Table';
 import { Tabs } from '@/components/ui/Tabs';
-import { MOCK_APPOINTMENTS } from '@/lib/api';
 
 export default function PatientDashboard() {
   const [activeTab, setActiveTab] = useState('upcoming');
+  const [appointments, setAppointments] = useState<any[]>([]);
+
 
   return (
     <div className="px-6 sm:px-12 md:px-20 max-w-7xl mx-auto flex flex-col gap-10 pb-24">
@@ -79,8 +80,8 @@ export default function PatientDashboard() {
         </div>
 
         <Table
-          data={MOCK_APPOINTMENTS}
-          keyExtractor={(row) => row.id}
+          data={appointments}
+          keyExtractor={(row) => row.id || row._id || Math.random().toString()}
           columns={[
             { header: 'APPOINTMENT ID', accessorKey: 'id', className: 'font-bold font-mono text-xs text-gold-dark' },
             { header: 'RITUAL / SERVICE', accessorKey: 'treatmentName' },

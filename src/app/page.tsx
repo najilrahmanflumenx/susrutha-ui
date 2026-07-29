@@ -23,16 +23,19 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Timeline } from '@/components/ui/Timeline';
 import { Modal } from '@/components/ui/Modal';
-import { fetchTreatmentsList, fetchDoctorsList, MOCK_TREATMENTS, MOCK_DOCTORS, TreatmentItem, DoctorItem } from '@/lib/api';
+import { fetchTreatmentsList, fetchDoctorsList, fetchSiteSettings, TreatmentItem, DoctorItem } from '@/lib/api';
 import { DoctorCarousel } from '@/components/doctors/DoctorCarousel';
 import { useApiData } from '@/hooks/useApiData';
 import { formatCurrency } from '@/lib/utils';
 
 export default function HomePage() {
   const [selectedStep, setSelectedStep] = useState(0);
-  const { data: treatments } = useApiData<TreatmentItem[]>(fetchTreatmentsList, MOCK_TREATMENTS);
-  const { data: doctors } = useApiData<DoctorItem[]>(fetchDoctorsList, MOCK_DOCTORS);
+  const { data: treatments } = useApiData<TreatmentItem[]>(fetchTreatmentsList, []);
+  const { data: doctors } = useApiData<DoctorItem[]>(fetchDoctorsList, []);
+  const { data: siteSettings } = useApiData<Record<string, any>>(fetchSiteSettings, {});
   const [activeTreatmentModal, setActiveTreatmentModal] = useState<TreatmentItem | null>(null);
+
+  const heroSettings = siteSettings?.HERO || {};
 
   const timelineSteps = [
     {
@@ -69,6 +72,13 @@ export default function HomePage() {
     <div className="flex flex-col gap-24 sm:gap-36 pb-20 overflow-hidden">
       {/* SECTION 1: CINEMATIC HERO */}
       <section className="relative min-h-[85vh] flex items-center justify-center px-6 sm:px-12 text-center pt-8">
+        {/* Dynamic Hero Cover Image Background if provided */}
+        {heroSettings.bgImageUrl && (
+          <div
+            className="absolute inset-0 z-0 bg-cover bg-center opacity-15"
+            style={{ backgroundImage: `url(${heroSettings.bgImageUrl})` }}
+          />
+        )}
         {/* Ambient Gradient Backdrop */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gold/10 rounded-full blur-[140px]" />
@@ -77,27 +87,29 @@ export default function HomePage() {
 
         <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
           <Badge variant="gold" icon={<Sparkles className="w-3.5 h-3.5" />} className="mb-6 animate-fade-in">
-            ESTABLISHED 1970 • 55 YEARS OF EXCELLENCE
+            {heroSettings.badgeText || 'ESTABLISHED 1970 • 55 YEARS OF EXCELLENCE'}
           </Badge>
 
           <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl font-medium text-primary mb-8 leading-[1.05] tracking-tight">
-            Ancient Wisdom.<br />
-            <span className="italic font-light gold-gradient-text">Modern Healing.</span>
+            {heroSettings.highlightTitle || 'Ancient Wisdom.'}<br />
+            <span className="italic font-light gold-gradient-text">
+              {heroSettings.headline || 'Modern Healing.'}
+            </span>
           </h1>
 
           <p className="font-sans text-base sm:text-xl text-text-secondary mb-12 max-w-2xl leading-relaxed">
-            Susrutha embodies the intersection of authentic 55-year Ayurvedic medical mastery and ultra-luxury hospitality, offering transformative journeys for body, mind, and spirit.
+            {heroSettings.subtitle || 'Susrutha embodies the intersection of authentic 55-year Ayurvedic medical mastery and ultra-luxury hospitality, offering transformative journeys for body, mind, and spirit.'}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto">
-            <Link href="/booking" className="w-full sm:w-auto">
+            <Link href={heroSettings.ctaLink || '/booking'} className="w-full sm:w-auto">
               <Button variant="gold" size="lg" icon={<ArrowRight className="w-4 h-4" />}>
-                START YOUR JOURNEY
+                {heroSettings.ctaText || 'START YOUR JOURNEY'}
               </Button>
             </Link>
-            <Link href="/treatments" className="w-full sm:w-auto">
+            <Link href={heroSettings.secondaryCtaLink || '/treatments'} className="w-full sm:w-auto">
               <Button variant="secondary" size="lg" icon={<Play className="w-4 h-4 fill-current" />}>
-                EXPLORE RITUALS
+                {heroSettings.secondaryCtaText || 'EXPLORE RITUALS'}
               </Button>
             </Link>
           </div>

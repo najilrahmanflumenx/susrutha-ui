@@ -2,24 +2,26 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { ArrowLeft, Clock, ShieldCheck, CheckCircle2, Calendar, Sparkles } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { fetchTreatmentBySlug, MOCK_TREATMENTS, TreatmentItem } from '@/lib/api';
+import { fetchTreatmentBySlug, TreatmentItem } from '@/lib/api';
 import { useApiData } from '@/hooks/useApiData';
 import { formatCurrency } from '@/lib/utils';
 
-export default function TreatmentDetailPage() {
-  const params = useParams();
-  const slug = (params?.slug as string) || '';
-
-  const { data: treatment, loading } = useApiData<TreatmentItem>(
+export default function TreatmentDetailPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+  
+  const { data: treatment, loading } = useApiData<TreatmentItem | null>(
     () => fetchTreatmentBySlug(slug),
-    MOCK_TREATMENTS[0],
+    null,
     [slug]
   );
+
+  if (loading || !treatment) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   const title = treatment.title || treatment.name || 'Ayurvedic Treatment';
   const category = treatment.category || 'Panchakarma';

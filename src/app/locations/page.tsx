@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Badge, Chip } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { LocationCardSkeleton } from '@/components/ui/Skeleton';
-import { BranchItem, fetchBranches, MOCK_BRANCHES } from '@/lib/api';
+import { BranchItem, fetchBranches } from '@/lib/api';
 import { useApiData } from '@/hooks/useApiData';
 
 export default function LocationsPage() {
