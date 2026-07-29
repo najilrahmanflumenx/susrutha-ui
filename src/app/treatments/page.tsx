@@ -14,22 +14,10 @@ export default function TreatmentsPage() {
   const [selectedFilter, setSelectedFilter] = useState('ALL');
   const [page, setPage] = useState(1);
   const [treatments, setTreatments] = useState<TreatmentItem[]>([]);
-  const [allTreatmentsForCategories, setAllTreatmentsForCategories] = useState<TreatmentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const itemsPerPage = 12;
-
-  // Baseline load for category chips
-  useEffect(() => {
-    async function loadCategoriesBaseline() {
-      try {
-        const res = await fetchTreatments({ limit: 100 });
-        setAllTreatmentsForCategories(res.data);
-      } catch (e) {}
-    }
-    loadCategoriesBaseline();
-  }, []);
+  const itemsPerPage = 10;
 
   // Server-side paginated API fetch
   useEffect(() => {
@@ -42,8 +30,10 @@ export default function TreatmentsPage() {
           category: selectedFilter,
         });
         setTreatments(res.data);
-        setTotalPages(res.meta.totalPages);
-        setTotalCount(res.meta.total);
+        if (res.meta) {
+          setTotalPages(res.meta.totalPages || 1);
+          setTotalCount(res.meta.total || res.data.length);
+        }
       } catch (err) {
         console.error('Error fetching treatments:', err);
       } finally {
@@ -55,11 +45,10 @@ export default function TreatmentsPage() {
 
   // Dynamically extract and merge unique categories case-insensitively from available data
   const availableCategories = useMemo(() => {
-    const sourceList = allTreatmentsForCategories.length > 0 ? allTreatmentsForCategories : treatments;
-    if (!sourceList || sourceList.length === 0) return ['ALL'];
+    if (!treatments || treatments.length === 0) return ['ALL'];
 
     const categoryMap = new Map<string, string>();
-    sourceList.forEach((t) => {
+    treatments.forEach((t) => {
       const cat = (t.category || t.dosha || '').trim();
       if (cat) {
         const lowerKey = cat.toLowerCase();
@@ -71,7 +60,7 @@ export default function TreatmentsPage() {
     });
 
     return ['ALL', ...Array.from(categoryMap.values())];
-  }, [allTreatmentsForCategories, treatments]);
+  }, [treatments]);
 
   const handleFilterChange = (cat: string) => {
     setSelectedFilter(cat);

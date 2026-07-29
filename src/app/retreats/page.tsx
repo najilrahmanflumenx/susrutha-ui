@@ -16,7 +16,7 @@ export default function RetreatsPage() {
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const itemsPerPage = 8;
+  const itemsPerPage = 10;
 
   const fallbackRetreats: CarePackageItem[] = [
     {

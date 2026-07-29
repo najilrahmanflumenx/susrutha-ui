@@ -12,26 +12,14 @@ import { DoctorCardSkeleton } from '@/components/ui/Skeleton';
 
 export default function DoctorsPage() {
   const [doctors, setDoctors] = useState<DoctorItem[]>([]);
-  const [allDoctorsForCategories, setAllDoctorsForCategories] = useState<DoctorItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState<'carousel' | 'grid'>('carousel');
+  const [viewMode, setViewMode] = useState<'carousel' | 'grid'>('grid');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const limit = 12;
-
-  // Fetch all categories baseline once
-  useEffect(() => {
-    async function loadCategoriesBaseline() {
-      try {
-        const res = await fetchDoctors({ limit: 100 });
-        setAllDoctorsForCategories(res.data);
-      } catch (e) {}
-    }
-    loadCategoriesBaseline();
-  }, []);
+  const limit = 10;
 
   // Server-Side Paginated API Fetch on page / filter / search change
   useEffect(() => {
@@ -45,8 +33,10 @@ export default function DoctorsPage() {
           search: searchTerm,
         });
         setDoctors(res.data);
-        setTotalPages(res.meta.totalPages);
-        setTotalCount(res.meta.total);
+        if (res.meta) {
+          setTotalPages(res.meta.totalPages || 1);
+          setTotalCount(res.meta.total || res.data.length);
+        }
       } catch (err) {
         console.error('Error fetching doctors:', err);
       } finally {
@@ -56,13 +46,12 @@ export default function DoctorsPage() {
     loadDoctors();
   }, [page, selectedCategory, searchTerm]);
 
-  // Dynamically extract unique available departments / specialties case-insensitively
+  // Available categories derived dynamically from fetched items
   const availableCategories = useMemo(() => {
-    const sourceList = allDoctorsForCategories.length > 0 ? allDoctorsForCategories : doctors;
-    if (!sourceList || sourceList.length === 0) return ['ALL'];
+    if (!doctors || doctors.length === 0) return ['ALL'];
     const categoryMap = new Map<string, string>(); // lowercase -> display title
 
-    sourceList.forEach((doc) => {
+    doctors.forEach((doc) => {
       let deptName = '';
       if (typeof doc.departmentId === 'object' && doc.departmentId !== null) {
         deptName = (doc.departmentId as any).title || '';
@@ -81,7 +70,7 @@ export default function DoctorsPage() {
     });
 
     return ['ALL', ...Array.from(categoryMap.values())];
-  }, [allDoctorsForCategories, doctors]);
+  }, [doctors]);
 
   // Handle filter change
   const handleCategoryChange = (cat: string) => {
