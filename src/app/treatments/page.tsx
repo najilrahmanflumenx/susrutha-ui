@@ -3,11 +3,13 @@
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react';
-import { Breadcrumbs, CardLink, PageHero } from '../../components/ui';
+import { Breadcrumbs, CardLink, PageHero, Pagination, SkeletonCard } from '../../components/ui';
 import { pageTitle } from '../../lib/seo';
 import { getTreatments } from '../../lib/api';
 import { treatments } from '../../data/treatments';
 import { Sparkles, Filter } from 'lucide-react';
+
+const ITEMS_PER_PAGE = 6;
 
 export default function TreatmentsPage() {
   const [treatmentList, setTreatmentList] = useState<any[]>(
@@ -21,25 +23,30 @@ export default function TreatmentsPage() {
     }))
   );
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       document.title = pageTitle('Treatments & Therapies');
     }
-    getTreatments().then((apiTxs) => {
-      if (apiTxs && Array.isArray(apiTxs) && apiTxs.length > 0) {
-        const mapped = apiTxs.map((t: any) => ({
-          id: t._id || t.slug,
-          slug: t.slug,
-          name: t.title || t.name,
-          aiSummary: t.shortDescription || t.fullDescription || t.aiSummary,
-          category: t.category || 'Panchakarma Therapy',
-          image: t.coverImage || t.image || '/images/hero-ayurveda.jpg',
-        }));
-        setTreatmentList(mapped);
-      }
-    });
-  }, []);
+    setLoading(true);
+    getTreatments({ category: selectedCategory !== 'all' ? selectedCategory : undefined })
+      .then((apiTxs) => {
+        if (apiTxs && Array.isArray(apiTxs) && apiTxs.length > 0) {
+          const mapped = apiTxs.map((t: any) => ({
+            id: t._id || t.slug,
+            slug: t.slug,
+            name: t.title || t.name,
+            aiSummary: t.shortDescription || t.fullDescription || t.aiSummary,
+            category: t.category || 'Panchakarma Therapy',
+            image: t.coverImage || t.image || '/images/hero-ayurveda.jpg',
+          }));
+          setTreatmentList(mapped);
+        }
+      })
+      .finally(() => setLoading(false));
+  }, [selectedCategory]);
 
   const categories = ['all', 'Panchakarma', 'Spine & Joint', 'Rasayana & Immunity', 'Ayurvedic Wellness'];
 
@@ -55,8 +62,11 @@ export default function TreatmentsPage() {
         );
       });
 
+  const totalPages = Math.ceil(filteredList.length / ITEMS_PER_PAGE);
+  const paginatedList = filteredList.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   return (
-    <div style={{ backgroundColor: '#160506', color: '#FDFBF7' }} className="font-body min-h-screen">
+    <div className="font-body min-h-screen bg-[#120A0B] text-[#FDFBF7]">
       <PageHero
         eyebrow="Therapies & Protocols"
         title="Classical Ayurvedic Therapies & Procedures"
@@ -67,18 +77,21 @@ export default function TreatmentsPage() {
 
         {/* Category Filter Tabs */}
         <div className="my-8 flex flex-wrap items-center gap-2.5">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#FCAB28] mr-2">
-            <Filter className="h-4 w-4 text-[#FCAB28]" /> Filter Category:
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#FFC86B] mr-2">
+            <Filter className="h-4 w-4 text-[#FFC86B]" /> Filter Category:
           </span>
           {categories.map((cat) => (
             <button
               key={cat}
               type="button"
-              onClick={() => setSelectedCategory(cat)}
+              onClick={() => {
+                setSelectedCategory(cat);
+                setCurrentPage(1);
+              }}
               className={`rounded-full px-5 py-2 text-xs font-bold capitalize transition-all duration-300 ${
                 selectedCategory === cat
-                  ? 'bg-[#FCAB28] text-[#160506] shadow-ochre-glow'
-                  : 'bg-[#240809] border border-ochre/30 text-white hover:border-[#FCAB28] hover:text-[#FCAB28]'
+                  ? 'bg-[#FFC86B] text-[#120A0B] shadow-ochre-glow'
+                  : 'bg-[#1C1214] border border-ochre/30 text-white hover:border-[#FFC86B] hover:text-[#FFC86B]'
               }`}
             >
               {cat === 'all' ? 'All Therapies' : cat}
@@ -86,24 +99,40 @@ export default function TreatmentsPage() {
           ))}
         </div>
 
-        {filteredList.length > 0 ? (
+        {loading ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredList.map((t) => (
-              <CardLink
-                key={t.id}
-                to={`/treatments/${t.slug}`}
-                title={t.name}
-                description={t.aiSummary}
-                meta={t.category}
-                image={t.image}
-              />
-            ))}
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
           </div>
+        ) : paginatedList.length > 0 ? (
+          <>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {paginatedList.map((t) => (
+                <CardLink
+                  key={t.id}
+                  to={`/treatments/${t.slug}`}
+                  title={t.name}
+                  description={t.aiSummary}
+                  meta={t.category}
+                  image={t.image}
+                />
+              ))}
+            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(p) => setCurrentPage(p)}
+            />
+          </>
         ) : (
-          <div className="rounded-3xl border border-ivory-300 bg-white p-12 text-center">
-            <Sparkles className="h-8 w-8 text-ochre mx-auto mb-3" />
-            <h2 className="font-display text-2xl font-bold text-ivory-900">No Therapies Found</h2>
-            <p className="mt-2 text-sm text-ivory-700">No therapies match the selected category criteria.</p>
+          <div className="rounded-3xl border border-ochre/30 bg-[#1C1214]/95 p-12 text-center shadow-glass-dark text-ivory-50 font-body">
+            <Sparkles className="h-8 w-8 text-[#FFC86B] mx-auto mb-3" />
+            <h2 className="font-display text-2xl font-bold text-white">No Therapies Found</h2>
+            <p className="mt-2 text-sm text-ivory-200/90">No therapies match the selected category criteria.</p>
           </div>
         )}
       </div>

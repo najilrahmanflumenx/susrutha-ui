@@ -112,22 +112,22 @@ export default function DoctorProfilePage() {
             <div className="overflow-hidden rounded-[1.5rem] bg-sus-sand">
               <img src={doctor.image || '/images/doctor-portrait.jpg'} alt={`Portrait placeholder for ${doctor.name}`} className="aspect-[4/5] w-full object-cover" />
             </div>
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-5 space-y-3 text-sm">
+            <div className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-5 space-y-3 text-sm shadow-glass-dark text-ivory-50 font-body">
               <div>
-                <p className="text-xs uppercase tracking-wider text-sus-gold">Availability</p>
-                <p className="mt-1 text-sus-ink">{doctor.availability}</p>
+                <p className="text-xs uppercase tracking-wider text-[#FFC86B] font-bold">Availability</p>
+                <p className="mt-1 text-white font-medium">{doctor.availability}</p>
               </div>
               {doctor.lineage && (
                 <div>
-                  <p className="text-xs uppercase tracking-wider text-sus-gold">Lineage</p>
-                  <p className="mt-1 text-sus-ink">{doctor.lineage}</p>
+                  <p className="text-xs uppercase tracking-wider text-[#FFC86B] font-bold">Lineage</p>
+                  <p className="mt-1 text-white font-medium">{doctor.lineage}</p>
                 </div>
               )}
               <div>
-                <p className="text-xs uppercase tracking-wider text-sus-gold">Branches</p>
+                <p className="text-xs uppercase tracking-wider text-[#FFC86B] font-bold">Branches</p>
                 <ul className="mt-1 space-y-1">
                   {docsBranches.map((b) => (
-                    <li key={b.id}><Link className="text-sus-green hover:underline" href={`/branches/${b.slug}`}>{b.name}</Link></li>
+                    <li key={b.id}><Link className="text-[#FFC86B] hover:underline" href={`/branches/${b.slug}`}>{b.name}</Link></li>
                   ))}
                 </ul>
               </div>
@@ -137,37 +137,37 @@ export default function DoctorProfilePage() {
             ))}
           </div>
 
-          <div className="lg:col-span-8 space-y-10">
+          <div className="lg:col-span-8 space-y-10 font-body">
             <AiSummary text={doctor.aiSummary} reviewedBy={doctor.name} />
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep">Philosophy</h2>
-              <blockquote className="mt-4 border-l-2 border-sus-gold pl-5 font-display text-2xl text-sus-green-deep leading-snug">
+              <h2 className="font-display text-3xl text-white font-bold">Philosophy</h2>
+              <blockquote className="mt-4 border-l-2 border-[#FFC86B] pl-5 font-display text-2xl text-white leading-snug">
                 “{doctor.philosophy}”
               </blockquote>
-              <p className="mt-4 text-sus-muted leading-relaxed">{doctor.approach}</p>
+              <p className="mt-4 text-ivory-200/90 leading-relaxed">{doctor.approach}</p>
             </section>
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep">Education & standing</h2>
-              <ul className="mt-4 space-y-2">
+              <h2 className="font-display text-3xl text-white font-bold">Education & standing</h2>
+              <ul className="mt-4 space-y-2 font-body">
                 {(doctor.education || []).map((e: string) => (
-                  <li key={e} className="rounded-xl bg-white border border-sus-green/10 px-4 py-3 text-sm text-sus-ink">{e}</li>
+                  <li key={e} className="rounded-xl bg-[#1C1214]/95 border border-ochre/30 px-4 py-3 text-sm text-ivory-100 shadow-glass-dark">{e}</li>
                 ))}
               </ul>
             </section>
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep">Specialisations</h2>
-              <div className="mt-4 flex flex-wrap gap-2">
+              <h2 className="font-display text-3xl text-white font-bold">Specialisations</h2>
+              <div className="mt-4 flex flex-wrap gap-2 font-body">
                 {(doctor.specializations || []).map((s: string) => (
-                  <span key={s} className="rounded-full bg-sus-sand px-3 py-1.5 text-sm text-sus-green-deep">{s}</span>
+                  <span key={s} className="rounded-full bg-ochre/20 border border-ochre/40 px-3 py-1.5 text-sm text-[#FFC86B] font-medium">{s}</span>
                 ))}
               </div>
               {doctor.pillars && doctor.pillars.length > 0 && (
                 <div className="mt-6">
-                  <h3 className="text-sm uppercase tracking-wider text-sus-gold">Pillars</h3>
-                  <ul className="mt-2 list-disc pl-5 text-sus-muted space-y-1">
+                  <h3 className="text-sm uppercase tracking-wider text-[#FFC86B] font-bold">Pillars</h3>
+                  <ul className="mt-2 list-disc pl-5 text-ivory-200/90 space-y-1">
                     {doctor.pillars.map((p: string) => <li key={p}>{p}</li>)}
                   </ul>
                 </div>
@@ -176,12 +176,12 @@ export default function DoctorProfilePage() {
 
             {txs.length > 0 && (
               <section>
-                <h2 className="font-display text-3xl text-sus-green-deep">Signature treatments</h2>
-                <div className="mt-4 grid sm:grid-cols-2 gap-3">
+                <h2 className="font-display text-3xl text-white font-bold">Signature treatments</h2>
+                <div className="mt-4 grid sm:grid-cols-2 gap-3 font-body">
                   {txs.map((t) => (
-                    <Link key={t.id} href={`/treatments/${t.slug}`} className="rounded-xl border border-sus-green/10 bg-white px-4 py-3 hover:border-sus-green/30">
-                      <span className="font-medium text-sus-green-deep">{t.name}</span>
-                      <span className="block text-xs text-sus-muted mt-1">{t.category}</span>
+                    <Link key={t.id} href={`/treatments/${t.slug}`} className="rounded-xl border border-ochre/30 bg-[#1C1214]/95 px-4 py-3 hover:border-ochre shadow-glass-dark transition-all">
+                      <span className="font-medium text-white block">{t.name}</span>
+                      <span className="block text-xs text-[#FFC86B] mt-1">{t.category}</span>
                     </Link>
                   ))}
                 </div>

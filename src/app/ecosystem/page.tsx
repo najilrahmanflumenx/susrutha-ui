@@ -40,26 +40,26 @@ export default function EcosystemPage() {
           description="Dedicated pages include services, FAQs, maps, galleries and enquiry forms for institutional clarity."
         />
         {verticals.length > 0 ? (
-          <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3 font-body">
             {verticals.map((v) => (
               <Link
                 key={v.id}
                 href={`/ecosystem/${v.slug}`}
-                className="group flex h-full flex-col rounded-[1.5rem] border border-sus-green/10 bg-white p-6 hover:border-sus-green/30 hover:-translate-y-1 transition-all"
+                className="group flex h-full flex-col rounded-[1.5rem] border border-ochre/30 bg-[#1C1214]/95 p-6 hover:border-ochre hover:-translate-y-1 transition-all shadow-glass-dark text-ivory-50"
               >
-                {v.year && <p className="text-xs uppercase tracking-[0.16em] text-sus-gold">Since {v.year}</p>}
-                <h2 className="mt-2 font-display text-2xl text-sus-green-deep">{v.shortName}</h2>
-                <p className="mt-2 text-sm text-sus-muted flex-1 leading-relaxed">{v.tagline}</p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sus-green">
+                {v.year && <p className="text-xs uppercase tracking-[0.16em] text-[#FFC86B] font-bold">Since {v.year}</p>}
+                <h2 className="mt-2 font-display text-2xl font-bold text-white group-hover:text-[#FFC86B] transition-colors">{v.shortName}</h2>
+                <p className="mt-2 text-sm text-ivory-200/90 flex-1 leading-relaxed">{v.tagline}</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-[#FFC86B] group-hover:text-white transition-colors">
                   Open page <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </span>
               </Link>
             ))}
           </div>
         ) : (
-          <div className="mt-10 rounded-2xl border border-sus-green/10 bg-white p-8 text-center">
-            <h2 className="font-display text-xl text-sus-green-deep">No Ecosystem Pillars Listed</h2>
-            <p className="mt-2 text-sm text-sus-muted">No ecosystem pillars are currently published in the database.</p>
+          <div className="mt-10 rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-8 text-center shadow-glass-dark text-ivory-50 font-body">
+            <h2 className="font-display text-xl font-bold text-white">No Ecosystem Pillars Listed</h2>
+            <p className="mt-2 text-sm text-ivory-200/90">No ecosystem pillars are currently published in the database.</p>
           </div>
         )}
       </div>

@@ -260,10 +260,10 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
             ? 'Your message has been received. We will respond using your phone or email.'
             : 'Thank you for your feedback. It is queued for internal review.';
     return (
-      <div className="rounded-[1.5rem] border border-ochre/30 bg-white p-8 text-center shadow-soft-sm">
-        <h3 className="font-display text-3xl text-crimson-900">Request received</h3>
-        <p className="mt-3 text-ivory-600 max-w-lg mx-auto">{copy}</p>
-        <p className="mt-4 text-sm text-ivory-500">
+      <div className="rounded-[1.5rem] border border-ochre/40 bg-[#1C1214]/95 p-8 text-center shadow-glass-dark text-ivory-50">
+        <h3 className="font-display text-3xl text-white">Request received</h3>
+        <p className="mt-3 text-ivory-200/90 max-w-lg mx-auto">{copy}</p>
+        <p className="mt-4 text-sm text-ivory-300/80">
           Call {brand.contact.mobile} · Emergency {brand.contact.emergency[0]}
         </p>
         <Button
@@ -280,9 +280,9 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
   }
 
   return (
-    <div className="grid gap-8 xl:grid-cols-12">
+    <div className="grid gap-8 xl:grid-cols-12 font-body text-ivory-50">
       <div className="xl:col-span-7 space-y-5">
-        <div className="flex flex-wrap gap-2 rounded-2xl border border-ochre/20 bg-white p-2 shadow-soft-sm">
+        <div className="flex flex-wrap gap-2 rounded-2xl border border-ochre/30 bg-[#1C1214]/90 p-2 shadow-glass-dark">
           {tabs.map((t) => {
             const Icon = t.icon;
             const active = tab === t.id;
@@ -296,22 +296,24 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
                 }}
                 className={cn(
                   'inline-flex flex-1 min-w-[9rem] items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-bold transition-all duration-300',
-                  active ? 'bg-crimson text-ivory-50 shadow-soft-sm' : 'text-crimson-900 hover:bg-ochre-50/60 hover:text-crimson',
+                  active
+                    ? 'bg-gradient-to-r from-crimson via-[#9F0311] to-crimson-700 text-white border border-[#FFC86B]/40 shadow-soft-md'
+                    : 'text-ivory-200/90 border border-transparent hover:bg-white/10 hover:text-[#FFC86B]',
                 )}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-4 w-4 text-[#FFC86B]" />
                 {t.label}
               </button>
             );
           })}
         </div>
 
-        <div className="rounded-[1.5rem] border border-ochre/20 bg-white p-6 sm:p-8 shadow-soft-sm">
+        <div className="rounded-[1.5rem] border border-ochre/30 bg-[#1C1214]/95 p-6 sm:p-8 shadow-glass-dark">
           {tab === 'appointment' && (
             <form onSubmit={submitAppointment} className="space-y-5" noValidate>
               <div>
-                <h2 className="font-display text-2xl text-crimson-900">Book Appointment</h2>
-                <p className="mt-1 text-sm text-ivory-600">Requests are confirmed against live roster before you travel.</p>
+                <h2 className="font-display text-2xl text-white">Book Appointment</h2>
+                <p className="mt-1 text-sm text-ivory-200/90">Requests are confirmed against live roster before you travel.</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
@@ -392,8 +394,8 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
           {tab === 'package' && (
             <form onSubmit={submitPackage} className="space-y-5" noValidate>
               <div>
-                <h2 className="font-display text-2xl text-crimson-900">Package Enquiry</h2>
-                <p className="mt-1 text-sm text-ivory-600">All twelve programmes — tariffs confirmed after clinical review.</p>
+                <h2 className="font-display text-2xl text-white">Package Enquiry</h2>
+                <p className="mt-1 text-sm text-ivory-200/90">All twelve programmes — tariffs confirmed after clinical review.</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
@@ -448,8 +450,8 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
           {tab === 'contact' && (
             <form onSubmit={submitContact} className="space-y-5" noValidate>
               <div>
-                <h2 className="font-display text-2xl text-crimson-900">Contact Us</h2>
-                <p className="mt-1 text-sm text-ivory-600">General questions, coordination and media notes.</p>
+                <h2 className="font-display text-2xl text-white">Contact Us</h2>
+                <p className="mt-1 text-sm text-ivory-200/90">General questions, coordination and media notes.</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
@@ -481,8 +483,8 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
           {tab === 'feedback' && (
             <form onSubmit={submitFeedback} className="space-y-5" noValidate>
               <div>
-                <h2 className="font-display text-2xl text-crimson-900">Feedback</h2>
-                <p className="mt-1 text-sm text-ivory-600">Help us improve hospital experience. Not published automatically.</p>
+                <h2 className="font-display text-2xl text-white">Feedback</h2>
+                <p className="mt-1 text-sm text-ivory-200/90">Help us improve hospital experience. Not published automatically.</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
@@ -517,7 +519,7 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
       </div>
 
       <aside className="xl:col-span-5 space-y-5">
-        <h3 className="font-display text-2xl text-crimson-900">Branches & quick actions</h3>
+        <h3 className="font-display text-2xl text-white">Branches & quick actions</h3>
         {availableBranches.map((b: any) => {
           const addressStr = typeof b.address === 'string'
             ? b.address
@@ -543,28 +545,28 @@ function AppointmentHubContent({ defaultTab = 'appointment' as Tab }: { defaultT
           const key = b._id ?? b.id ?? b.code;
 
           return (
-            <div key={key} className="rounded-[1.5rem] border border-ochre/25 bg-white p-6 shadow-soft-sm">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-ochre-700">{b.type}</p>
-              <h4 className="mt-1 font-display text-2xl text-crimson-900">{b.name}</h4>
-              <ul className="mt-4 space-y-2.5 text-sm text-ivory-700">
-                <li className="flex gap-2"><MapPin className="h-4 w-4 shrink-0 text-ochre mt-0.5" /><span>{addressStr}</span></li>
-                <li className="flex gap-2"><Phone className="h-4 w-4 shrink-0 text-ochre mt-0.5" /><a className="hover:text-crimson font-medium" href={`tel:${phone}`}>{phoneDisplay}</a></li>
-                <li className="flex gap-2"><Mail className="h-4 w-4 shrink-0 text-ochre mt-0.5" /><a className="hover:text-crimson font-medium" href={`mailto:${email}`}>{email}</a></li>
-                <li><span className="text-crimson-900 font-bold">OP timing:</span> {opTiming}</li>
-                <li><span className="text-crimson-900 font-bold">Hospital timing:</span> {hospitalTiming}</li>
+            <div key={key} className="rounded-[1.5rem] border border-ochre/30 bg-[#1C1214]/95 p-6 shadow-glass-dark text-ivory-50 font-body">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#FFC86B]">{b.type}</p>
+              <h4 className="mt-1 font-display text-2xl text-white">{b.name}</h4>
+              <ul className="mt-4 space-y-2.5 text-sm text-ivory-200/90">
+                <li className="flex gap-2"><MapPin className="h-4 w-4 shrink-0 text-[#FFC86B] mt-0.5" /><span>{addressStr}</span></li>
+                <li className="flex gap-2"><Phone className="h-4 w-4 shrink-0 text-[#FFC86B] mt-0.5" /><a className="hover:text-[#FFC86B] font-medium" href={`tel:${phone}`}>{phoneDisplay}</a></li>
+                <li className="flex gap-2"><Mail className="h-4 w-4 shrink-0 text-[#FFC86B] mt-0.5" /><a className="hover:text-[#FFC86B] font-medium" href={`mailto:${email}`}>{email}</a></li>
+                <li><span className="text-white font-bold">OP timing:</span> {opTiming}</li>
+                <li><span className="text-white font-bold">Hospital timing:</span> {hospitalTiming}</li>
               </ul>
               <div className="mt-5 grid grid-cols-2 gap-2">
-                <a href={`tel:${phone}`} className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/30 px-3 py-2 text-xs font-bold text-crimson-900 hover:bg-ochre-50 hover:border-crimson transition-colors">
-                  <Phone className="h-3.5 w-3.5 text-ochre-600" /> Call
+                <a href={`tel:${phone}`} className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/40 px-3 py-2 text-xs font-bold text-white hover:bg-white/10 hover:border-[#FFC86B] transition-colors">
+                  <Phone className="h-3.5 w-3.5 text-[#FFC86B]" /> Call
                 </a>
-                <a href={brand.contact.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/30 px-3 py-2 text-xs font-bold text-crimson-900 hover:bg-ochre-50 hover:border-crimson transition-colors">
-                  <MessageCircle className="h-3.5 w-3.5 text-ochre-600" /> WhatsApp
+                <a href={brand.contact.whatsapp} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/40 px-3 py-2 text-xs font-bold text-white hover:bg-white/10 hover:border-[#FFC86B] transition-colors">
+                  <MessageCircle className="h-3.5 w-3.5 text-emerald-400" /> WhatsApp
                 </a>
-                <a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/30 px-3 py-2 text-xs font-bold text-crimson-900 hover:bg-ochre-50 hover:border-crimson transition-colors">
-                  <MapPin className="h-3.5 w-3.5 text-ochre-600" /> Directions
+                <a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/40 px-3 py-2 text-xs font-bold text-white hover:bg-white/10 hover:border-[#FFC86B] transition-colors">
+                  <MapPin className="h-3.5 w-3.5 text-[#FFC86B]" /> Directions
                 </a>
-                <a href={brand.contact.googleReview} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/30 px-3 py-2 text-xs font-bold text-crimson-900 hover:bg-ochre-50 hover:border-crimson transition-colors">
-                  <Star className="h-3.5 w-3.5 text-ochre-600" /> Leave Review
+                <a href={brand.contact.googleReview} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ochre/40 px-3 py-2 text-xs font-bold text-white hover:bg-white/10 hover:border-[#FFC86B] transition-colors">
+                  <Star className="h-3.5 w-3.5 text-[#FFC86B]" /> Leave Review
                 </a>
               </div>
             </div>

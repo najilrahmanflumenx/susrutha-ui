@@ -118,8 +118,7 @@ export default function TabascoDocumentaryStory() {
   return (
     <section
       ref={triggerRef}
-      style={{ backgroundColor: '#160506', color: '#FFFFFF' }}
-      className="relative w-full overflow-hidden font-body py-0"
+      className="relative w-full overflow-hidden font-body bg-[#120A0B] text-white py-0"
     >
       <div className="relative w-full min-h-screen flex items-center justify-center py-6 sm:py-10">
         {/* Looping Scene Background Videos with Smooth Crossfade */}
@@ -141,7 +140,7 @@ export default function TabascoDocumentaryStory() {
             >
               <source src={scene.video} type="video/mp4" />
             </video>
-            <div className="absolute inset-0 bg-gradient-to-t from-[#160506] via-[#160506]/85 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#120A0B] via-[#120A0B]/85 to-transparent" />
           </motion.div>
         ))}
 
@@ -150,11 +149,11 @@ export default function TabascoDocumentaryStory() {
           {/* Left Column: Documentary Index & Navigation */}
           <div className="lg:col-span-5 space-y-5">
             <div className="inline-flex items-center gap-2.5">
-              <span className="h-2 w-2 rounded-full bg-[#FCAB28] shadow-ochre-glow shrink-0" />
-              <span className="text-xs uppercase tracking-[0.28em] font-extrabold text-[#FCAB28] font-display">
+              <span className="h-2 w-2 rounded-full bg-[#FFC86B] shadow-ochre-glow shrink-0" />
+              <span className="text-xs uppercase tracking-[0.28em] font-extrabold text-[#FFC86B] font-display">
                 The Documentary Arc
               </span>
-              <span className="h-px w-8 bg-gradient-to-r from-[#FCAB28]/60 to-transparent" />
+              <span className="h-px w-8 bg-gradient-to-r from-[#FFC86B]/60 to-transparent" />
             </div>
 
             <h2 className="font-display text-3xl sm:text-5xl font-bold text-white leading-tight">
@@ -172,12 +171,12 @@ export default function TabascoDocumentaryStory() {
                   onClick={() => setActiveScene(i)}
                   className={`flex items-center gap-4 cursor-pointer transition-all duration-300 ${
                     activeScene === i
-                      ? 'text-ochre-400 font-bold translate-x-2'
-                      : 'text-ivory-300/40 hover:text-ivory-200'
+                      ? 'text-[#FFC86B] font-bold translate-x-2'
+                      : 'text-ivory-300/60 hover:text-ivory-200'
                   }`}
                 >
                   <span className="text-xs font-mono tracking-widest">{sc.chapter}</span>
-                  <div className={`h-0.5 transition-all duration-300 ${activeScene === i ? 'w-10 bg-ochre-400' : 'w-3 bg-ivory-300/20'}`} />
+                  <div className={`h-0.5 transition-all duration-300 ${activeScene === i ? 'w-10 bg-[#FFC86B]' : 'w-3 bg-ivory-300/20'}`} />
                   <span className="text-sm font-medium">{sc.title}</span>
                 </div>
               ))}
@@ -191,15 +190,14 @@ export default function TabascoDocumentaryStory() {
               initial={{ opacity: 0, y: 25, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              style={{ backgroundColor: '#280A0C', borderColor: 'rgba(252, 171, 40, 0.4)' }}
-              className="rounded-3xl border backdrop-blur-xl p-6 sm:p-10 shadow-2xl grid gap-6 md:grid-cols-2 items-center"
+              className="rounded-3xl border border-ochre/40 bg-[#1C1214]/95 backdrop-blur-xl p-6 sm:p-10 shadow-2xl grid gap-6 md:grid-cols-2 items-center"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold uppercase tracking-widest text-ochre-300">
+                  <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#FFC86B]">
                     {current.chapter}
                   </span>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-ochre/20 text-ochre-400">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-ochre/20 text-[#FFC86B]">
                     <IconComp className="h-5 w-5" />
                   </div>
                 </div>
@@ -216,7 +214,7 @@ export default function TabascoDocumentaryStory() {
               </div>
 
               {/* Scene Frame */}
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-ochre/40 shadow-ochre-glow bg-[#1E0507]">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-ochre/40 shadow-ochre-glow bg-[#1C1214]">
                 <img
                   src={current.poster}
                   alt={current.title}
@@ -225,7 +223,7 @@ export default function TabascoDocumentaryStory() {
                   }}
                   className="h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#160506]/80 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#120A0B]/80 to-transparent" />
               </div>
             </motion.div>
           </div>

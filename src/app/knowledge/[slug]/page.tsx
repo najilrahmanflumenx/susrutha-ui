@@ -102,27 +102,27 @@ export default function ArticlePage() {
         <Breadcrumbs items={[{ label: 'Knowledge Centre', to: '/knowledge' }, { label: article.title }]} />
         <AiSummary text={article.aiSummary} reviewedBy={author?.name} />
 
-        <div className="mt-8 rounded-2xl border border-sus-green/10 bg-white p-6">
-          <h2 className="text-xs uppercase tracking-[0.18em] text-sus-gold">Key takeaways</h2>
-          <ul className="mt-3 space-y-2 text-sus-ink">
+        <div className="mt-8 rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-6 shadow-glass-dark text-ivory-50 font-body">
+          <h2 className="text-xs uppercase tracking-[0.18em] text-[#FFC86B] font-bold">Key takeaways</h2>
+          <ul className="mt-3 space-y-2 text-ivory-100">
             {article.takeaways.map((t: any) => (
-              <li key={t} className="flex gap-2"><span className="text-sus-gold">·</span>{t}</li>
+              <li key={t} className="flex gap-2"><span className="text-[#FFC86B]">·</span>{t}</li>
             ))}
           </ul>
         </div>
 
-        <div className="prose-sus mt-10">
+        <div className="mt-10 space-y-5 text-base sm:text-lg text-ivory-200/90 leading-relaxed font-body">
           {article.body.map((p: any) => (
             <p key={p.slice(0, 24)}>{p}</p>
           ))}
         </div>
 
         {article.treatmentIds && article.treatmentIds.length > 0 && (
-          <div className="mt-10">
-            <h2 className="font-display text-2xl text-sus-green-deep">Related treatments</h2>
+          <div className="mt-10 font-body">
+            <h2 className="font-display text-2xl text-white font-bold">Related treatments</h2>
             <div className="mt-3 flex flex-wrap gap-2">
               {article.treatmentIds.map((id: any) => (
-                <Link key={id} href={`/treatments/${id}`} className="rounded-full border border-sus-green/15 px-3 py-1.5 text-sm text-sus-green hover:bg-white">
+                <Link key={id} href={`/treatments/${id}`} className="rounded-full border border-ochre/30 px-3 py-1.5 text-sm text-[#FFC86B] hover:bg-white/10 transition-colors">
                   {id}
                 </Link>
               ))}
@@ -130,13 +130,13 @@ export default function ArticlePage() {
           </div>
         )}
 
-        <div className="mt-12">
-          <h2 className="font-display text-3xl text-sus-green-deep mb-4">FAQ</h2>
+        <div className="mt-12 font-body">
+          <h2 className="font-display text-3xl text-white font-bold mb-4">FAQ</h2>
           <FaqList items={article.faqs} />
         </div>
 
-        <div className="mt-12 rounded-2xl bg-sus-green-deep text-sus-cream p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <p className="font-display text-2xl">Discuss this with a physician</p>
+        <div className="mt-12 rounded-2xl bg-[#1C1214] border border-ochre/40 text-ivory-50 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-glass-dark font-body">
+          <p className="font-display text-2xl font-bold text-white">Discuss this with a physician</p>
           <Button to="/book" variant="secondary">Book appointment</Button>
         </div>
       </div>

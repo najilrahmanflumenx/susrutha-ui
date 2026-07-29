@@ -98,21 +98,21 @@ export default function TestimonialCarousel() {
               initial={reduce ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               className={cn(
-                'group rounded-2xl border border-ochre/25 bg-white/70 p-6 text-left shadow-soft-sm backdrop-blur-md font-body',
-                'hover:bg-white hover:border-ochre/50 transition-all duration-300',
+                'group rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-6 text-left shadow-glass-dark backdrop-blur-md font-body',
+                'hover:bg-[#281B1E] hover:border-ochre transition-all duration-300',
               )}
               onClick={() => setOpenId(t.id)}
             >
-              <Quote className="h-6 w-6 text-ochre-600" />
-              <p className="mt-4 text-ivory-900 leading-relaxed line-clamp-5 font-body">“{t.quote}”</p>
+              <Quote className="h-6 w-6 text-[#FFC86B]" />
+              <p className="mt-4 text-ivory-100 leading-relaxed line-clamp-5 font-body">“{t.quote}”</p>
               <div className="mt-5 flex items-end justify-between gap-3">
                 <div>
-                  <p className="text-sm font-bold text-crimson-900 font-display">{t.name}</p>
-                  <p className="text-xs text-ivory-600 font-body">{t.context}</p>
+                  <p className="text-sm font-bold text-white font-display">{t.name}</p>
+                  <p className="text-xs text-ivory-300/80 font-body">{t.context}</p>
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-ochre-700">{t.category}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#FFC86B]">{t.category}</span>
               </div>
-              <p className="mt-3 text-xs font-bold text-crimson opacity-0 group-hover:opacity-100 transition-opacity">Read full story →</p>
+              <p className="mt-3 text-xs font-bold text-[#FFC86B] opacity-0 group-hover:opacity-100 transition-opacity">Read full story →</p>
             </motion.button>
           ))}
         </div>

@@ -25,7 +25,7 @@ export default function PackagesPage() {
   }, []);
 
   return (
-    <div className="bg-[#FDFBF7] text-ivory-900 font-body min-h-screen">
+    <div className="bg-[#120A0B] text-ivory-50 font-body min-h-screen">
       <PageHero
         eyebrow="Curative & Rejuvenation Programmes"
         title="Structured Care & Recovery Packages"
@@ -48,9 +48,9 @@ export default function PackagesPage() {
             ))}
           </div>
         ) : (
-          <div className="rounded-3xl border border-ivory-300 bg-white p-12 text-center shadow-soft-sm">
-            <h2 className="font-display text-2xl font-bold text-ivory-900">No Care Packages Listed</h2>
-            <p className="mt-2 text-sm text-ivory-700">No care packages are currently published in the database.</p>
+          <div className="rounded-3xl border border-ochre/30 bg-[#1C1214]/95 p-12 text-center shadow-glass-dark text-ivory-50">
+            <h2 className="font-display text-2xl font-bold text-white">No Care Packages Listed</h2>
+            <p className="mt-2 text-sm text-ivory-200/90">No care packages are currently published in the database.</p>
           </div>
         )}
       </div>

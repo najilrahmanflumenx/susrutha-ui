@@ -20,11 +20,11 @@ export default function ContactPage() {
       />
       <div className="container-wide section-pad py-12">
         <Breadcrumbs items={[{ label: 'Contact' }]} />
-        <div className="mb-8 rounded-2xl border border-sus-terracotta/30 bg-white p-6">
-          <h2 className="font-display text-2xl text-sus-green-deep">Emergency</h2>
+        <div className="mb-8 rounded-2xl border border-crimson-500/40 bg-[#1C1214]/95 p-6 shadow-glass-dark text-ivory-50 font-body">
+          <h2 className="font-display text-2xl font-bold text-white">Emergency</h2>
           <div className="mt-3 flex flex-wrap gap-4">
             {brand.contact.emergency.map((n) => (
-              <a key={n} href={`tel:${n.replace(/\s/g, '')}`} className="text-lg font-medium text-sus-terracotta hover:underline">
+              <a key={n} href={`tel:${n.replace(/\s/g, '')}`} className="text-lg font-bold text-red-400 hover:underline">
                 {n}
               </a>
             ))}

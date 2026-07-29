@@ -88,7 +88,7 @@ export default function TestimonialsPage() {
       <div className="container-wide section-pad py-12">
         <Breadcrumbs items={[{ label: 'Testimonials' }]} />
 
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-8 font-body">
           {storyCategories.map((c) => (
             <button
               key={c}
@@ -96,7 +96,7 @@ export default function TestimonialsPage() {
               onClick={() => setFilter(c)}
               className={cn(
                 'rounded-full px-4 py-2 text-sm font-medium transition-colors',
-                filter === c ? 'bg-sus-green text-sus-cream' : 'bg-white border border-sus-green/10 text-sus-green-deep',
+                filter === c ? 'bg-crimson text-white shadow-soft-sm' : 'bg-[#1C1214] border border-ochre/30 text-white hover:bg-white/10',
               )}
             >
               {c}
@@ -105,42 +105,42 @@ export default function TestimonialsPage() {
         </div>
 
         {filtered.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 font-body">
             {filtered.map((t) => (
               <button
                 key={t.id}
                 type="button"
                 onClick={() => setOpenId(t.id)}
-                className="rounded-2xl border border-white/40 bg-white/60 p-6 text-left shadow-sm backdrop-blur-md hover:bg-white/80 transition-colors"
+                className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-6 text-left shadow-glass-dark backdrop-blur-md hover:border-ochre transition-all text-ivory-50"
               >
-                <Quote className="h-6 w-6 text-sus-gold" />
-                <blockquote className="mt-4 text-sus-ink leading-relaxed line-clamp-5">“{t.quote}”</blockquote>
-                <figcaption className="mt-4 text-sm text-sus-muted">
+                <Quote className="h-6 w-6 text-[#FFC86B]" />
+                <blockquote className="mt-4 text-ivory-100 leading-relaxed line-clamp-5">“{t.quote}”</blockquote>
+                <figcaption className="mt-4 text-sm text-ivory-300/80">
                   {t.name} · {t.context}
                 </figcaption>
-                <p className="mt-2 text-[10px] uppercase tracking-wider text-sus-gold">{t.category}</p>
+                <p className="mt-2 text-[10px] uppercase tracking-wider text-[#FFC86B] font-bold">{t.category}</p>
               </button>
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-sus-green/10 bg-white p-8 text-center">
-            <h2 className="font-display text-xl text-sus-green-deep">No Testimonials Found</h2>
-            <p className="mt-2 text-sm text-sus-muted">No patient testimonials are currently published in this category in the database.</p>
+          <div className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-8 text-center text-ivory-50 font-body">
+            <h2 className="font-display text-xl text-white">No Testimonials Found</h2>
+            <p className="mt-2 text-sm text-ivory-300/80">No patient testimonials are currently published in this category in the database.</p>
           </div>
         )}
 
         <div className="mt-6">
-          <a href={brand.contact.googleReview} target="_blank" rel="noreferrer" className="text-sus-green font-medium hover:underline">
-            Leave a Google review
+          <a href={brand.contact.googleReview} target="_blank" rel="noreferrer" className="text-[#FFC86B] font-medium hover:underline">
+            Leave a Google review →
           </a>
         </div>
 
-        <section className="mt-16 max-w-2xl">
+        <section className="mt-16 max-w-2xl font-body">
           <SectionHeading title="Submit a story for moderation" description="Stories publish only after consent verification. Nothing goes live automatically." />
           {sent ? (
-            <p className="mt-6 rounded-2xl border border-sus-green/10 bg-white p-6 text-sus-muted">Thank you. Your story is queued for moderation and consent checks.</p>
+            <p className="mt-6 rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-6 text-ivory-200">Thank you. Your story is queued for moderation and consent checks.</p>
           ) : (
-            <form onSubmit={onSubmit} className="mt-6 rounded-2xl border border-sus-green/10 bg-white p-6 space-y-4" noValidate>
+            <form onSubmit={onSubmit} className="mt-6 rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-6 space-y-4 shadow-glass-dark" noValidate>
               <div>
                 <Label htmlFor="tname">Name</Label>
                 <input id="tname" className={inputClass} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -156,7 +156,7 @@ export default function TestimonialsPage() {
                 <textarea id="tstory" rows={5} className={inputClass} value={form.story} onChange={(e) => setForm({ ...form, story: e.target.value })} />
                 <FieldError message={errors.story} />
               </div>
-              <label className="flex items-start gap-2 text-sm text-sus-muted">
+              <label className="flex items-start gap-2 text-sm text-ivory-300">
                 <input type="checkbox" className="mt-1" checked={form.consent} onChange={(e) => setForm({ ...form, consent: e.target.checked })} />
                 I consent to Susrutha contacting me to verify and, if approved, publish this story (with agreed attribution).
               </label>
@@ -172,7 +172,7 @@ export default function TestimonialsPage() {
       <AnimatePresence>
         {active && (
           <motion.div
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-sus-green-deep/55 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#120A0B]/80 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -184,15 +184,15 @@ export default function TestimonialsPage() {
               initial={reduce ? false : { y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={reduce ? undefined : { y: 12, opacity: 0 }}
-              className="relative max-w-lg w-full rounded-3xl bg-sus-cream p-6 sm:p-8"
+              className="relative max-w-lg w-full rounded-3xl bg-[#1C1214] border border-ochre/40 p-6 sm:p-8 text-ivory-50 shadow-glass-dark"
               onClick={(e) => e.stopPropagation()}
             >
-              <button type="button" className="absolute right-4 top-4 h-9 w-9 rounded-full bg-white border border-sus-green/10 inline-flex items-center justify-center" onClick={() => setOpenId(null)} aria-label="Close">
+              <button type="button" className="absolute right-4 top-4 h-9 w-9 rounded-full bg-white/10 border border-white/20 text-white inline-flex items-center justify-center hover:bg-white/20 transition-colors" onClick={() => setOpenId(null)} aria-label="Close">
                 <X className="h-4 w-4" />
               </button>
-              <p className="text-lg text-sus-ink leading-relaxed">“{active.full}”</p>
-              <p className="mt-6 font-medium text-sus-green-deep">{active.name}</p>
-              <p className="text-sm text-sus-muted">{active.context} · {active.location}</p>
+              <p className="text-lg text-ivory-100 leading-relaxed font-body">“{active.full}”</p>
+              <p className="mt-6 font-bold text-white font-display">{active.name}</p>
+              <p className="text-sm text-ivory-300/80 font-body">{active.context} · {active.location}</p>
             </motion.div>
           </motion.div>
         )}

@@ -74,7 +74,7 @@ export default function InteractiveTimeline({ compact = false }: { compact?: boo
             type="button"
             aria-label="Previous milestone"
             onClick={() => step(-1)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-sus-green/15 bg-white text-sus-green-deep hover:bg-sus-sand/60"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-ochre/40 bg-[#1C1214] text-white hover:bg-white/10"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -82,7 +82,7 @@ export default function InteractiveTimeline({ compact = false }: { compact?: boo
             type="button"
             aria-label="Next milestone"
             onClick={() => step(1)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-sus-green/15 bg-white text-sus-green-deep hover:bg-sus-sand/60"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-ochre/40 bg-[#1C1214] text-white hover:bg-white/10"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
@@ -102,9 +102,9 @@ export default function InteractiveTimeline({ compact = false }: { compact?: boo
               data-mile
               layout
               className={cn(
-                'snap-center shrink-0 rounded-2xl border bg-white transition-shadow',
+                'snap-center shrink-0 rounded-2xl border bg-[#1C1214]/95 text-white transition-all shadow-glass-dark font-body',
                 compact ? 'w-[16.5rem] sm:w-[18rem]' : 'w-[18rem] sm:w-[20rem]',
-                isActive ? 'border-sus-gold/50 shadow-[0_16px_40px_-24px_rgba(18,53,36,0.45)]' : 'border-sus-green/10',
+                isActive ? 'border-[#FFC86B] shadow-ochre-glow' : 'border-ochre/30',
               )}
             >
               <button
@@ -117,17 +117,17 @@ export default function InteractiveTimeline({ compact = false }: { compact?: boo
                 aria-expanded={isOpen}
               >
                 <div className="flex items-start justify-between gap-3">
-                  <p className="font-display text-3xl text-sus-gold">{m.year}</p>
+                  <p className="font-display text-3xl text-[#FFC86B] font-bold">{m.year}</p>
                   <span
                     className={cn(
-                      'mt-1 h-2.5 w-2.5 rounded-full ring-4 ring-sus-cream',
-                      isActive ? 'bg-sus-gold' : 'bg-sus-green/30',
+                      'mt-1 h-2.5 w-2.5 rounded-full ring-4 ring-[#1C1214]',
+                      isActive ? 'bg-[#FFC86B]' : 'bg-white/20',
                     )}
                   />
                 </div>
-                <h3 className="mt-2 font-display text-xl text-sus-green-deep">{m.title}</h3>
-                <p className="mt-2 text-sm text-sus-muted leading-relaxed">{m.short}</p>
-                <p className="mt-3 text-xs font-medium text-sus-green">{isOpen ? 'Hide details' : 'Open details'}</p>
+                <h3 className="mt-2 font-display text-xl font-bold text-white">{m.title}</h3>
+                <p className="mt-2 text-sm text-ivory-200/90 leading-relaxed font-body">{m.short}</p>
+                <p className="mt-3 text-xs font-bold text-[#FFC86B]">{isOpen ? 'Hide details' : 'Open details'}</p>
               </button>
               <AnimatePresence initial={false}>
                 {isOpen && (
@@ -138,12 +138,12 @@ export default function InteractiveTimeline({ compact = false }: { compact?: boo
                     transition={{ duration: 0.28 }}
                     className="overflow-hidden"
                   >
-                    <div className="border-t border-sus-sand px-5 sm:px-6 pb-5 sm:pb-6">
-                      <p className="pt-4 text-sm text-sus-ink leading-relaxed">{m.detail}</p>
+                    <div className="border-t border-ochre/20 px-5 sm:px-6 pb-5 sm:pb-6 font-body">
+                      <p className="pt-4 text-sm text-ivory-100 leading-relaxed">{m.detail}</p>
                       <ul className="mt-3 space-y-1.5">
                         {m.highlights.map((h) => (
-                          <li key={h} className="text-xs text-sus-muted flex gap-2">
-                            <span className="text-sus-gold">·</span> {h}
+                          <li key={h} className="text-xs text-ivory-300/80 flex gap-2">
+                            <span className="text-[#FFC86B]">·</span> {h}
                           </li>
                         ))}
                       </ul>

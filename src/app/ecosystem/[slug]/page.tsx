@@ -146,18 +146,18 @@ export default function VerticalDetailPage() {
         <div className="grid gap-10 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-10">
             <AiSummary text={vertical.aiSummary} />
-            <section className="prose-sus">
-              <h2 className="font-display text-3xl text-sus-green-deep">Overview</h2>
+            <section className="font-body text-ivory-100">
+              <h2 className="font-display text-3xl text-white font-bold">Overview</h2>
               {Array.isArray(vertical.description)
-                ? vertical.description.map((p: string) => <p key={p.slice(0, 32)}>{p}</p>)
-                : <p>{vertical.description || vertical.overview}</p>}
+                ? vertical.description.map((p: string) => <p key={p.slice(0, 32)} className="mt-3 leading-relaxed text-ivory-200/90">{p}</p>)
+                : <p className="mt-3 leading-relaxed text-ivory-200/90">{vertical.description || vertical.overview}</p>}
             </section>
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep">Services & Highlights</h2>
-              <ul className="mt-4 grid sm:grid-cols-2 gap-3">
+              <h2 className="font-display text-3xl text-white font-bold">Services & Highlights</h2>
+              <ul className="mt-4 grid sm:grid-cols-2 gap-3 font-body">
                 {(vertical.services || vertical.highlights || []).map((s: string) => (
-                  <li key={s} className="rounded-xl border border-sus-green/10 bg-white px-4 py-3 text-sm text-sus-ink">
+                  <li key={s} className="rounded-xl border border-ochre/30 bg-[#1C1214]/95 px-4 py-3 text-sm text-ivory-100 shadow-glass-dark">
                     {s}
                   </li>
                 ))}
@@ -165,8 +165,8 @@ export default function VerticalDetailPage() {
             </section>
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep">Who it serves</h2>
-              <ul className="mt-3 list-disc pl-5 text-sus-muted space-y-1">
+              <h2 className="font-display text-3xl text-white font-bold">Who it serves</h2>
+              <ul className="mt-3 list-disc pl-5 text-ivory-200/90 space-y-1 font-body">
                 {(vertical.audience || ['Inpatient and Outpatient Care Patients', 'Medical Researchers and Scholars']).map((a: string) => (
                   <li key={a}>{a}</li>
                 ))}
@@ -177,36 +177,36 @@ export default function VerticalDetailPage() {
               <SectionHeading eyebrow="Gallery" title="Visual context" />
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 {(vertical.gallery || [vertical.image]).map((src: string) => (
-                  <img key={src} src={src} alt="" className="rounded-2xl aspect-[4/3] object-cover w-full" loading="lazy" />
+                  <img key={src} src={src} alt="" className="rounded-2xl aspect-[4/3] object-cover w-full border border-ochre/30 shadow-glass-dark" loading="lazy" />
                 ))}
               </div>
             </section>
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep mb-4">FAQ</h2>
+              <h2 className="font-display text-3xl text-white font-bold mb-4">FAQ</h2>
               <FaqList items={vertical.faqs} />
             </section>
           </div>
 
-          <aside className="space-y-5">
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
-              <p className="text-xs uppercase tracking-wider text-sus-gold">Contact</p>
-              <p className="mt-2 text-sm text-sus-muted leading-relaxed">{vertical.contactNote}</p>
+          <aside className="space-y-5 font-body">
+            <div className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-5 shadow-glass-dark text-ivory-50">
+              <p className="text-xs uppercase tracking-wider text-[#FFC86B] font-bold">Contact</p>
+              <p className="mt-2 text-sm text-ivory-200/90 leading-relaxed">{vertical.contactNote}</p>
               <ul className="mt-3 space-y-2 text-sm">
                 <li>
-                  <a className="text-sus-green hover:underline" href={`tel:${brand.contact.mobileTel}`}>
+                  <a className="text-[#FFC86B] hover:underline" href={`tel:${brand.contact.mobileTel}`}>
                     {brand.contact.mobile}
                   </a>
                 </li>
                 <li>
-                  <a className="text-sus-green hover:underline" href={`mailto:${brand.contact.email}`}>
+                  <a className="text-[#FFC86B] hover:underline" href={`mailto:${brand.contact.email}`}>
                     {brand.contact.email}
                   </a>
                 </li>
               </ul>
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-sus-green/10 aspect-video bg-sus-sand">
+            <div className="overflow-hidden rounded-2xl border border-ochre/30 aspect-video bg-[#120A0B] shadow-glass-dark">
               <iframe
                 title={`Map for ${vertical.name}`}
                 className="h-full w-full"
@@ -215,10 +215,10 @@ export default function VerticalDetailPage() {
               />
             </div>
 
-            <div id="enquiry" className="rounded-2xl border border-sus-green/10 bg-white p-5 scroll-mt-28">
-              <h3 className="font-display text-xl text-sus-green-deep">Enquiry form</h3>
+            <div id="enquiry" className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-5 scroll-mt-28 shadow-glass-dark text-ivory-50">
+              <h3 className="font-display text-xl font-bold text-white">Enquiry form</h3>
               {sent ? (
-                <p className="mt-3 text-sm text-sus-muted">Thank you. We will respond shortly regarding {vertical.shortName}.</p>
+                <p className="mt-3 text-sm text-ivory-200/90">Thank you. We will respond shortly regarding {vertical.shortName}.</p>
               ) : (
                 <form onSubmit={onSubmit} className="mt-4 space-y-3" noValidate>
                   <div>

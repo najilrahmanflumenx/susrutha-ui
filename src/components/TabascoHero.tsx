@@ -9,7 +9,7 @@ export default function TabascoHero() {
   const headlineWords = ['The', 'Living', 'Sanctuary', 'of', 'Kerala', 'Ayurveda.'];
 
   return (
-    <section className="relative min-h-[92vh] overflow-hidden bg-[#1E1B1B] text-ivory-50 flex items-center justify-center font-body">
+    <section className="relative min-h-[92vh] overflow-hidden bg-[#120A0B] text-ivory-50 flex items-center justify-center font-body">
       {/* Background Media Layer */}
       <div className="absolute inset-0 overflow-hidden">
         <video
@@ -27,8 +27,8 @@ export default function TabascoHero() {
         </video>
         
         {/* Volumetric Gradient Vignette Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1E1B1B] via-[#1E1B1B]/70 to-[#1E1B1B]/40" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1E1B1B]/80 via-transparent to-[#1E1B1B]/80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#120A0B] via-[#120A0B]/70 to-[#120A0B]/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#120A0B]/80 via-transparent to-[#120A0B]/80" />
         <div className="absolute -left-36 top-1/3 h-[550px] w-[550px] rounded-full bg-crimson-600/20 blur-[150px] pointer-events-none" />
         <div className="absolute -right-36 bottom-1/4 h-[550px] w-[550px] rounded-full bg-ochre/15 blur-[160px] pointer-events-none" />
       </div>
@@ -45,11 +45,11 @@ export default function TabascoHero() {
           transition={{ duration: 0.8 }}
           className="inline-flex items-center gap-3.5 mb-8"
         >
-          <div className="flex h-7 w-7 items-center justify-center rounded bg-[#FCAB28]/15 border border-[#FCAB28]/50 text-ochre-400 font-mono text-[10px] font-black uppercase tracking-wider shadow-sm">
+          <div className="flex h-7 w-7 items-center justify-center rounded bg-[#FCAB28]/15 border border-[#FCAB28]/50 text-[#FFC86B] font-mono text-[10px] font-black uppercase tracking-wider shadow-sm">
             NABH
           </div>
           <span className="h-4 w-px bg-ochre/40" />
-          <span className="text-xs uppercase tracking-[0.28em] font-extrabold text-[#FCAB28] font-display">
+          <span className="text-xs uppercase tracking-[0.28em] font-extrabold text-[#FFC86B] font-display">
             Accredited Ayurveda Hospital · Est. 1986
           </span>
         </motion.div>

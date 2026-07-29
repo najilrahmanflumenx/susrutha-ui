@@ -123,10 +123,10 @@ function PanchakarmaSteps() {
     <ol className="grid gap-4 md:grid-cols-5">
       {steps.map((step, i) => (
         <FadeIn key={step.step} delay={i * 0.05}>
-          <li className="relative h-full rounded-2xl border border-ivory-200 bg-white p-5 shadow-soft-sm hover:border-ochre/40 transition-colors">
-            <span className="font-display text-3xl font-bold text-ochre-600">{String(i + 1).padStart(2, '0')}</span>
-            <h3 className="mt-2 text-lg font-bold text-crimson-900">{step.step}</h3>
-            <p className="mt-2 text-sm text-ivory-500 leading-relaxed">{step.detail}</p>
+          <li className="relative h-full rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-5 shadow-glass-dark hover:border-ochre transition-colors text-ivory-50 font-body">
+            <span className="font-display text-3xl font-bold text-[#FFC86B]">{String(i + 1).padStart(2, '0')}</span>
+            <h3 className="mt-2 text-lg font-bold text-white">{step.step}</h3>
+            <p className="mt-2 text-sm text-ivory-200/90 leading-relaxed">{step.detail}</p>
           </li>
         </FadeIn>
       ))}
@@ -200,7 +200,7 @@ export default function HomePage() {
 
   return (
     <LenisProvider>
-      <div className="relative bg-[#FDFBF7] text-ivory-900 overflow-x-hidden selection:bg-ochre/30 selection:text-crimson font-body">
+      <div className="relative bg-[#120A0B] text-ivory-50 overflow-x-hidden selection:bg-ochre/30 selection:text-white font-body">
 
         {/* Custom Interactive Leaf Pointer */}
         <CinematicCursor />
@@ -224,10 +224,7 @@ export default function HomePage() {
         </section>
 
         {/* 3. Trust & Heritage Counter Ribbon */}
-        <section
-          style={{ backgroundColor: '#160506', color: '#FFFFFF' }}
-          className="relative overflow-hidden border-t border-b border-ochre/40 py-16 font-body"
-        >
+        <section className="relative overflow-hidden bg-[#120A0B] text-white border-t border-b border-ochre/40 py-16 font-body">
           <div className="absolute inset-0 botanical-pattern opacity-10 pointer-events-none" aria-hidden="true" />
           <div className="absolute -left-20 top-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-ochre/20 blur-3xl pointer-events-none" aria-hidden="true" />
           <div className="absolute -right-20 top-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-crimson/25 blur-3xl pointer-events-none" aria-hidden="true" />
@@ -236,13 +233,13 @@ export default function HomePage() {
             <TrustCounters />
             <div className="mt-10 pt-6 border-t border-ochre/25 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <p className="text-sm text-[#FDFBF7] max-w-3xl leading-relaxed font-body">
-                <span className="font-bold text-[#FCAB28]">Authentic clinical care:</span> We lead with family lineage and institutional age separately — delivering transparent, research-backed Panchakarma therapeutics.
+                <span className="font-bold text-[#FFC86B]">Authentic clinical care:</span> We lead with family lineage and institutional age separately — delivering transparent, research-backed Panchakarma therapeutics.
               </p>
               <div className="inline-flex items-center gap-2.5 shrink-0">
-                <div className="flex h-5 w-5 items-center justify-center rounded bg-[#FCAB28]/15 border border-[#FCAB28]/50 text-[#FCAB28] font-mono text-[9px] font-black uppercase">
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-[#FCAB28]/15 border border-[#FCAB28]/50 text-[#FFC86B] font-mono text-[9px] font-black uppercase">
                   ✓
                 </div>
-                <span className="text-xs uppercase tracking-[0.24em] font-extrabold text-[#FCAB28] font-display">
+                <span className="text-xs uppercase tracking-[0.24em] font-extrabold text-[#FFC86B] font-display">
                   NABH Accredited Hospital
                 </span>
               </div>
@@ -251,7 +248,7 @@ export default function HomePage() {
         </section>
 
         {/* 4. Structured Care Packages */}
-        <section className="bg-[#F5EFE6]/80 border-b border-ochre/25 backdrop-blur-sm">
+        <section className="bg-[#120A0B] border-b border-ochre/25">
           <div className="container-wide section-pad py-20">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between mb-10">
               <SectionHeading
@@ -304,14 +301,14 @@ export default function HomePage() {
           <div className="mt-10">
             <InteractiveTimeline compact />
           </div>
-          <Button to="/about#timeline" variant="ghost" className="mt-6 !px-0 text-crimson font-bold">
+          <Button to="/about#timeline" variant="ghost" className="mt-6 !px-0 text-[#FFC86B] font-bold">
             Full heritage narrative <ArrowRight className="h-4 w-4" />
           </Button>
         </section>
 
 
 
-      <section className="bg-crimson-900 text-ivory-50 border-y border-ochre/30">
+      <section className="bg-[#1C1214] text-ivory-50 border-y border-ochre/30">
         <div className="container-wide section-pad py-16">
           <SectionHeading
             light
@@ -324,11 +321,11 @@ export default function HomePage() {
               <Link
                 key={v.id}
                 href={`/ecosystem/${v.slug}`}
-                className="group rounded-2xl border border-ochre/20 bg-white/5 p-5 hover:bg-white/10 transition-colors shadow-soft-sm"
+                className="group rounded-2xl border border-ochre/20 bg-white/5 p-5 hover:bg-white/10 transition-colors shadow-glass-dark"
               >
                 <h3 className="font-display text-xl font-bold text-ivory-50">{v.shortName}</h3>
                 <p className="mt-2 text-sm text-ivory-200/80">{v.tagline}</p>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-ochre hover:text-white">
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-[#FFC86B] hover:text-white">
                   Open vertical <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </span>
               </Link>
@@ -345,12 +342,12 @@ export default function HomePage() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img src="/images/kerala-nature.jpg" alt="" className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-crimson-900/90" />
+          <div className="absolute inset-0 bg-[#120A0B]/90" />
         </div>
         <div className="container-wide section-pad relative py-20 text-ivory-50">
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-ochre-300 font-bold inline-flex items-center gap-2">
+              <p className="text-xs uppercase tracking-[0.24em] text-[#FFC86B] font-bold inline-flex items-center gap-2">
                 <Globe2 className="h-4 w-4" /> International Patients
               </p>
               <h2 className="mt-4 font-display text-3xl sm:text-5xl font-bold text-balance leading-tight">
@@ -363,7 +360,7 @@ export default function HomePage() {
                 <Button to="/international-patients" variant="secondary">
                   Open Travel Guide
                 </Button>
-                <Button to="/package-enquiry" variant="outline" className="!border-ivory-200 !text-ivory-50 hover:!bg-white/10">
+                <Button to="/package-enquiry" variant="outline">
                   Package Enquiry
                 </Button>
               </div>
@@ -375,8 +372,8 @@ export default function HomePage() {
                 { icon: ShieldCheck, t: 'Visa guidance', d: 'Case-by-case documentation support' },
                 { icon: Leaf, t: 'Package planning', d: '5 to 16-day clinical programmes' },
               ].map((item) => (
-                <div key={item.t} className="rounded-2xl border border-ochre/25 bg-white/10 backdrop-blur-md p-5 shadow-soft-sm">
-                  <item.icon className="h-5 w-5 text-ochre-300" />
+                <div key={item.t} className="rounded-2xl border border-ochre/30 bg-[#1C1214]/90 backdrop-blur-md p-5 shadow-glass-dark">
+                  <item.icon className="h-5 w-5 text-[#FFC86B]" />
                   <h3 className="mt-3 font-display text-xl font-bold text-ivory-50">{item.t}</h3>
                   <p className="mt-1 text-sm text-ivory-200/80">{item.d}</p>
                 </div>
@@ -386,7 +383,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="container-wide section-pad py-20">
+      <section className="container-wide section-pad py-20 bg-[#120A0B]">
         <SectionHeading
           eyebrow="Patient Voices"
           title="Stories in Motion"
@@ -397,7 +394,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-ivory-100/50 border-t border-ivory-200">
+      <section className="bg-[#120A0B] border-t border-ochre/25">
         <div className="container-wide section-pad py-20">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between mb-10">
             <SectionHeading
@@ -417,7 +414,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-t border-ivory-200 bg-ivory-50">
+      <section className="border-t border-ochre/25 bg-[#120A0B]">
         <div className="container-wide section-pad py-20">
           <SectionHeading
             eyebrow="Care Desk"

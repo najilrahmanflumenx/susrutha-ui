@@ -47,7 +47,7 @@ export default function VideoGalleryPage() {
       <div className="container-wide section-pad py-12">
         <Breadcrumbs items={[{ label: 'Video gallery' }]} />
 
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-8 font-body">
           {videoCategories.map((c) => (
             <button
               key={c}
@@ -55,7 +55,7 @@ export default function VideoGalleryPage() {
               onClick={() => setCategory(c)}
               className={cn(
                 'rounded-full px-4 py-2 text-sm font-medium transition-colors',
-                category === c ? 'bg-sus-green text-sus-cream' : 'bg-white border border-sus-green/10 text-sus-green-deep hover:bg-sus-sand/50',
+                category === c ? 'bg-crimson text-white shadow-soft-sm' : 'bg-[#1C1214] border border-ochre/30 text-white hover:bg-white/10',
               )}
             >
               {c}
@@ -63,14 +63,14 @@ export default function VideoGalleryPage() {
           ))}
         </div>
 
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5 font-body">
           {filtered.map((v, i) => (
             <motion.button
               key={v.id}
               type="button"
               onClick={() => setActiveId(v.id)}
               className={cn(
-                'group relative w-full break-inside-avoid overflow-hidden rounded-2xl border border-sus-green/10 bg-white text-left',
+                'group relative w-full break-inside-avoid overflow-hidden rounded-2xl border border-ochre/30 bg-[#1C1214] text-left shadow-glass-dark hover:border-ochre transition-all',
                 i % 3 === 0 ? 'aspect-[4/5]' : i % 3 === 1 ? 'aspect-video' : 'aspect-[5/4]',
               )}
               whileHover={reduce ? undefined : { y: -4 }}
@@ -81,15 +81,15 @@ export default function VideoGalleryPage() {
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-sus-green-deep/90 via-sus-green-deep/25 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#120A0B]/95 via-[#120A0B]/40 to-transparent" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-white/90 text-sus-green-deep shadow-lg transition-transform group-hover:scale-110">
+                <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#FFC86B] text-[#120A0B] shadow-lg transition-transform group-hover:scale-110">
                   <Play className="h-6 w-6 fill-current" />
                 </span>
               </div>
               <div className="absolute inset-x-0 bottom-0 p-5">
-                <p className="text-[10px] uppercase tracking-[0.16em] text-sus-gold-soft">{v.category}</p>
-                <h2 className="mt-1 font-display text-xl text-sus-cream leading-snug">{v.title}</h2>
+                <p className="text-[10px] uppercase tracking-[0.16em] text-[#FFC86B] font-bold">{v.category}</p>
+                <h2 className="mt-1 font-display text-xl text-white font-bold leading-snug">{v.title}</h2>
               </div>
             </motion.button>
           ))}

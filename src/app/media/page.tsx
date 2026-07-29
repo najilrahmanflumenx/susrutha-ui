@@ -38,18 +38,18 @@ export default function MediaPage() {
         </div>
 
         {mediaItems.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12 font-body">
             {mediaItems.map((item: any, idx: number) => (
-              <div key={item._id || idx} className="rounded-2xl border border-sus-green/10 bg-white p-5 hover:border-sus-green/30 transition-all">
+              <div key={item._id || idx} className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-5 shadow-glass-dark hover:border-ochre transition-all text-ivory-50">
                 {item.coverImage && (
-                  <img src={item.coverImage} alt={item.title} className="aspect-video w-full object-cover rounded-xl mb-4" />
+                  <img src={item.coverImage} alt={item.title} className="aspect-video w-full object-cover rounded-xl mb-4 border border-ochre/20" />
                 )}
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-sus-gold">{item.type || 'Press Release'}</span>
-                <h3 className="font-display text-xl text-sus-green-deep mt-1">{item.title}</h3>
-                {item.publisherName && <p className="text-xs text-sus-muted mt-1">Publisher: {item.publisherName}</p>}
-                <p className="text-sm text-sus-muted mt-3 line-clamp-3">{item.summary}</p>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#FFC86B]">{item.type || 'Press Release'}</span>
+                <h3 className="font-display text-xl text-white font-bold mt-1">{item.title}</h3>
+                {item.publisherName && <p className="text-xs text-ivory-300/80 mt-1">Publisher: {item.publisherName}</p>}
+                <p className="text-sm text-ivory-200/90 mt-3 line-clamp-3 leading-relaxed">{item.summary}</p>
                 {item.externalLink && (
-                  <a href={item.externalLink} target="_blank" rel="noopener noreferrer" className="inline-block mt-4 text-xs font-semibold text-sus-green hover:underline">
+                  <a href={item.externalLink} target="_blank" rel="noopener noreferrer" className="inline-block mt-4 text-xs font-bold text-[#FFC86B] hover:underline">
                     Read Original Article →
                   </a>
                 )}

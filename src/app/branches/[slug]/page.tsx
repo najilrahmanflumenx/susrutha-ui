@@ -32,7 +32,7 @@ export default function BranchDetailPage() {
               type: match.type || (match.code === 'KTK' ? 'Inpatient Hospital Campus' : 'City Outpatient Clinic'),
               address: match.address || 'Thiruvananthapuram, Kerala',
               description: match.tagline || 'Authentic Ayurveda clinical care facility.',
-              image: match.code === 'KTK' ? '/images/hero-home.jpg' : '/images/ayurveda-herbs.jpg',
+              image: match.code === 'KTK' ? '/images/hero-ayurveda.jpg' : '/images/herbs-mortar.jpg',
               features: match.features || ['Panchakarma Suites', 'Specialist Consultations', '24/7 Care'],
               hours: { opdTimings: match.opdTimings || 'OP 9:00 AM - 7:00 PM', hospital: 'Hospital 24x7' },
               mapQuery: encodeURIComponent(match.name + ' ' + match.address),
@@ -98,42 +98,42 @@ export default function BranchDetailPage() {
 
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
-            <img src={branch.image} alt="" className="rounded-[1.5rem] w-full aspect-[16/11] object-cover" />
-            <p className="mt-6 text-sus-muted leading-relaxed">{branch.description}</p>
-            <h2 className="mt-8 font-display text-2xl text-sus-green-deep">Facilities & focus</h2>
-            <ul className="mt-3 grid sm:grid-cols-2 gap-2">
+            <img src={branch.image} alt="" className="rounded-[1.5rem] w-full aspect-[16/11] object-cover border border-ochre/30 shadow-glass-dark" />
+            <p className="mt-6 text-ivory-200/90 leading-relaxed font-body">{branch.description}</p>
+            <h2 className="mt-8 font-display text-2xl text-white font-bold">Facilities & focus</h2>
+            <ul className="mt-3 grid sm:grid-cols-2 gap-2 font-body">
               {branch.features.map((f: any) => (
-                <li key={f} className="rounded-xl border border-sus-green/10 bg-white px-4 py-3 text-sm">{f}</li>
+                <li key={f} className="rounded-xl border border-ochre/30 bg-[#1C1214]/95 px-4 py-3 text-sm text-ivory-100 shadow-glass-dark">{f}</li>
               ))}
             </ul>
           </div>
-          <div className="space-y-5">
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-6">
-              <h2 className="font-display text-2xl text-sus-green-deep">Hours</h2>
+          <div className="space-y-5 font-body">
+            <div className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-6 shadow-glass-dark text-ivory-50">
+              <h2 className="font-display text-2xl text-white font-bold">Hours</h2>
               <dl className="mt-4 space-y-2 text-sm">
                 {Object.entries(branch.hours).map(([k, v]: [string, any]) => (
-                  <div key={k} className="flex justify-between gap-4 border-b border-sus-sand pb-2">
-                    <dt className="capitalize text-sus-muted">{k.replace(/([A-Z])/g, ' $1')}</dt>
-                    <dd className="text-sus-ink text-right">{v}</dd>
+                  <div key={k} className="flex justify-between gap-4 border-b border-ochre/20 pb-2">
+                    <dt className="capitalize text-ivory-300/80">{k.replace(/([A-Z])/g, ' $1')}</dt>
+                    <dd className="text-white font-medium text-right">{v}</dd>
                   </div>
                 ))}
               </dl>
             </div>
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-6">
-              <h2 className="font-display text-2xl text-sus-green-deep">Contact</h2>
+            <div className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-6 shadow-glass-dark text-ivory-50">
+              <h2 className="font-display text-2xl text-white font-bold">Contact</h2>
               <ul className="mt-3 space-y-2 text-sm">
-                <li><a className="text-sus-green hover:underline" href={`tel:${brand.contact.mobileTel}`}>{brand.contact.mobile}</a></li>
-                <li><a className="text-sus-green hover:underline" href={`tel:${brand.contact.landlineTel}`}>{brand.contact.landline}</a></li>
-                <li><a className="text-sus-green hover:underline" href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></li>
+                <li><a className="text-[#FFC86B] hover:underline" href={`tel:${brand.contact.mobileTel}`}>{brand.contact.mobile}</a></li>
+                <li><a className="text-[#FFC86B] hover:underline" href={`tel:${brand.contact.landlineTel}`}>{brand.contact.landline}</a></li>
+                <li><a className="text-[#FFC86B] hover:underline" href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></li>
               </ul>
             </div>
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-6">
-              <h2 className="font-display text-2xl text-sus-green-deep">Doctors & days</h2>
+            <div className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-6 shadow-glass-dark text-ivory-50">
+              <h2 className="font-display text-2xl text-white font-bold">Doctors & days</h2>
               <ul className="mt-4 space-y-3">
                 {docs.map((d: any) => (
-                  <li key={d._id || d.slug} className="border-b border-sus-sand pb-3">
-                    <Link href={`/doctors/${d.slug}`} className="font-medium text-sus-green-deep hover:text-sus-green">{d.name}</Link>
-                    <p className="text-xs text-sus-muted mt-1">{typeof d.availability === 'string' ? d.availability : 'Mon - Sat (OPD)'}</p>
+                  <li key={d._id || d.slug} className="border-b border-ochre/20 pb-3">
+                    <Link href={`/doctors/${d.slug}`} className="font-medium text-white hover:text-[#FFC86B] transition-colors">{d.name}</Link>
+                    <p className="text-xs text-ivory-300/80 mt-1">{typeof d.availability === 'string' ? d.availability : 'Mon - Sat (OPD)'}</p>
                   </li>
                 ))}
               </ul>

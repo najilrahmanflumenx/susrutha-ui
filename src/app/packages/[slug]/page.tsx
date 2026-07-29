@@ -93,50 +93,50 @@ export default function PackageDetailPage() {
               </ul>
             </section>
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep">What is included</h2>
-              <ul className="mt-4 grid sm:grid-cols-2 gap-2">
+              <h2 className="font-display text-3xl text-white font-bold">What is included</h2>
+              <ul className="mt-4 grid sm:grid-cols-2 gap-2 font-body">
                 {pkg.included.map((item: any) => (
-                  <li key={item} className="rounded-xl border border-sus-green/10 bg-white px-4 py-3 text-sm text-sus-ink">{item}</li>
+                  <li key={item} className="rounded-xl border border-ochre/30 bg-[#1C1214]/95 px-4 py-3 text-sm text-ivory-100 shadow-glass-dark">{item}</li>
                 ))}
               </ul>
             </section>
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep">Typical flow</h2>
-              <ol className="mt-4 space-y-3">
+              <h2 className="font-display text-3xl text-white font-bold">Typical flow</h2>
+              <ol className="mt-4 space-y-3 font-body">
                 {pkg.dayFlow.map((d: any, i: number) => (
                   <li key={d} className="flex gap-3">
-                    <span className="font-display text-xl text-sus-gold">{String(i + 1).padStart(2, '0')}</span>
-                    <span className="text-sus-muted">{d}</span>
+                    <span className="font-display text-xl text-[#FFC86B] font-bold">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="text-ivory-200/90 leading-relaxed">{d}</span>
                   </li>
                 ))}
               </ol>
             </section>
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep">Educational focus</h2>
-              <p className="mt-3 text-sus-muted leading-relaxed">{pkg.focus}</p>
+              <h2 className="font-display text-3xl text-white font-bold">Educational focus</h2>
+              <p className="mt-3 text-ivory-200/90 leading-relaxed font-body">{pkg.focus}</p>
             </section>
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep mb-4">FAQ</h2>
+              <h2 className="font-display text-3xl text-white font-bold mb-4">FAQ</h2>
               <FaqList items={pkg.faqs} />
             </section>
           </div>
-          <aside className="space-y-5">
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
-              <p className="text-xs uppercase tracking-wider text-sus-gold">Investment</p>
-              <p className="mt-2 text-sus-ink">{pkg.priceNote}</p>
+          <aside className="space-y-5 font-body">
+            <div className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-5 shadow-glass-dark text-ivory-50">
+              <p className="text-xs uppercase tracking-wider text-[#FFC86B] font-bold">Investment</p>
+              <p className="mt-2 text-white font-medium">{pkg.priceNote}</p>
             </div>
-            <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
-              <p className="text-xs uppercase tracking-wider text-sus-gold">Add-ons</p>
-              <ul className="mt-2 space-y-1 text-sm text-sus-muted list-disc pl-5">
+            <div className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-5 shadow-glass-dark text-ivory-50">
+              <p className="text-xs uppercase tracking-wider text-[#FFC86B] font-bold">Add-ons</p>
+              <ul className="mt-2 space-y-1 text-sm text-ivory-200/90 list-disc pl-5">
                 {pkg.addOns.map((a: any) => <li key={a}>{a}</li>)}
               </ul>
             </div>
             {specs.length > 0 && (
-              <div className="rounded-2xl border border-sus-green/10 bg-white p-5">
-                <p className="text-xs uppercase tracking-wider text-sus-gold">Related conditions</p>
+              <div className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-5 shadow-glass-dark text-ivory-50">
+                <p className="text-xs uppercase tracking-wider text-[#FFC86B] font-bold">Related conditions</p>
                 <ul className="mt-2 space-y-1">
                   {specs.map((s) => (
-                    <li key={s.id}><Link href={`/conditions/${s.slug}`} className="text-sm text-sus-green hover:underline">{s.shortName}</Link></li>
+                    <li key={s.id}><Link href={`/conditions/${s.slug}`} className="text-sm text-[#FFC86B] hover:underline">{s.shortName}</Link></li>
                   ))}
                 </ul>
               </div>

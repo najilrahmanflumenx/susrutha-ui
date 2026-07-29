@@ -93,7 +93,7 @@ export default function InternationalPage() {
   }
 
   return (
-    <div className="bg-[#FDFBF7] text-ivory-900 font-body min-h-screen">
+    <div className="bg-[#120A0B] text-ivory-50 font-body min-h-screen">
       <section className="relative min-h-[70vh] overflow-hidden bg-[#1E1B1B] text-ivory-50">
         <img
           src="/images/kerala-nature.jpg"
@@ -128,19 +128,19 @@ export default function InternationalPage() {
         <section className="mt-16 grid gap-10 lg:grid-cols-2 items-center">
           <div>
             <SectionHeading eyebrow="Why Kerala" title="A Living Sanctuary of Classical Medical Care" />
-            <p className="mt-4 text-ivory-700 leading-relaxed text-base sm:text-lg">
+            <p className="mt-4 text-ivory-200/90 leading-relaxed text-base sm:text-lg">
               Kerala remains a global reference for Panchakarma because the tradition is still practised as medicine, not only hospitality. Climate, diet culture and trained therapy ecosystems support multi-day supervised programmes.
             </p>
-            <p className="mt-4 text-ivory-700 leading-relaxed text-base sm:text-lg">
+            <p className="mt-4 text-ivory-200/90 leading-relaxed text-base sm:text-lg">
               Susrutha adds hospital infrastructure: 40 beds, OT-backed specialty pathways, director-led clinics and an ecosystem spanning pharma, lab and nursing education.
             </p>
           </div>
-          <div className="rounded-3xl overflow-hidden border border-ivory-300 shadow-soft-lg">
+          <div className="rounded-3xl overflow-hidden border border-ochre/30 shadow-glass-dark">
             <img src="/images/ayur-village.jpg" alt="Ayur Village stay setting" className="h-full w-full object-cover aspect-[5/4]" />
           </div>
         </section>
 
-        <section className="mt-16">
+        <section className="mt-16 font-body">
           <SectionHeading eyebrow="Medical travel guide" title="What we coordinate with you" align="center" />
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
@@ -151,23 +151,23 @@ export default function InternationalPage() {
               { icon: Package, t: 'Package planning', d: 'From 5–7 day programmes to extended 16-day care. Therapy mix is physician-directed after assessment — not a fixed tourist checklist.' },
               { icon: Shield, t: 'Clinical honesty', d: 'Educational care without cure promises. Red-flag symptoms may require conventional pathways first. That restraint is part of trust.' },
             ].map((item) => (
-              <div key={item.t} className="rounded-2xl border border-sus-green/10 bg-white p-6">
-                <item.icon className="h-5 w-5 text-sus-gold" />
-                <h3 className="mt-3 font-display text-xl text-sus-green-deep">{item.t}</h3>
-                <p className="mt-2 text-sm text-sus-muted leading-relaxed">{item.d}</p>
+              <div key={item.t} className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-6 shadow-glass-dark text-ivory-50">
+                <item.icon className="h-5 w-5 text-[#FFC86B]" />
+                <h3 className="mt-3 font-display text-xl text-white font-bold">{item.t}</h3>
+                <p className="mt-2 text-sm text-ivory-200/90 leading-relaxed font-body">{item.d}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mt-16 rounded-[2rem] bg-sus-green-deep text-sus-cream overflow-hidden grid lg:grid-cols-2">
+        <section className="mt-16 rounded-[2rem] bg-[#1C1214] border border-ochre/40 text-ivory-50 overflow-hidden grid lg:grid-cols-2 shadow-glass-dark font-body">
           <div className="p-8 sm:p-12">
-            <p className="text-xs uppercase tracking-[0.2em] text-sus-gold-soft">Stay</p>
-            <h2 className="mt-3 font-display text-3xl">{ayurVillage.name}</h2>
-            <p className="mt-4 text-sus-sand/85 leading-relaxed">{ayurVillage.description}</p>
-            <ul className="mt-6 space-y-2 text-sm text-sus-sand/80">
+            <p className="text-xs uppercase tracking-[0.2em] text-[#FFC86B] font-bold">Stay</p>
+            <h2 className="mt-3 font-display text-3xl font-bold text-white">{ayurVillage.name}</h2>
+            <p className="mt-4 text-ivory-200/90 leading-relaxed">{ayurVillage.description}</p>
+            <ul className="mt-6 space-y-2 text-sm text-ivory-300/80">
               {ayurVillage.features.map((f) => (
-                <li key={f} className="flex gap-2"><MapPinned className="h-4 w-4 text-sus-gold-soft shrink-0 mt-0.5" />{f}</li>
+                <li key={f} className="flex gap-2"><MapPinned className="h-4 w-4 text-[#FFC86B] shrink-0 mt-0.5" />{f}</li>
               ))}
             </ul>
             <Button to="/ayur-village" variant="secondary" className="mt-8">
@@ -190,7 +190,7 @@ export default function InternationalPage() {
           <SectionHeading eyebrow="Gallery" title="Sense of place" />
           <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {['/images/kerala-nature.jpg', '/images/ayur-village.jpg', '/images/panchakarma.jpg', '/images/hero-ayurveda.jpg'].map((src) => (
-              <img key={src} src={src} alt="" className="rounded-2xl aspect-[4/3] object-cover w-full" loading="lazy" />
+              <img key={src} src={src} alt="" className="rounded-2xl aspect-[4/3] object-cover w-full border border-ochre/30 shadow-glass-dark" loading="lazy" />
             ))}
           </div>
         </section>
@@ -221,10 +221,10 @@ export default function InternationalPage() {
           </div>
         </section>
 
-        <section id="intl-enquiry" className="mt-16 scroll-mt-28 grid gap-8 lg:grid-cols-2">
-          <div className="rounded-[1.75rem] border border-sus-green/10 bg-white p-6 sm:p-8">
-            <h2 className="font-display text-3xl text-sus-green-deep">Travel enquiry</h2>
-            <p className="mt-2 text-sm text-sus-muted">Share goals, medical background summary and preferred months. We respond with next clinical steps.</p>
+        <section id="intl-enquiry" className="mt-16 scroll-mt-28 grid gap-8 lg:grid-cols-2 font-body">
+          <div className="rounded-[1.75rem] border border-ochre/30 bg-[#1C1214]/95 p-6 sm:p-8 shadow-glass-dark text-ivory-50">
+            <h2 className="font-display text-3xl text-white font-bold">Travel enquiry</h2>
+            <p className="mt-2 text-sm text-ivory-200/90">Share goals, medical background summary and preferred months. We respond with next clinical steps.</p>
             {sent ? (
               <p className="mt-6 text-sus-muted">Thank you, {form.name}. Our international coordination desk will respond to {form.email}.</p>
             ) : (
@@ -267,24 +267,24 @@ export default function InternationalPage() {
               </form>
             )}
           </div>
-          <div className="rounded-[1.75rem] bg-sus-sand/50 p-6 sm:p-8 flex flex-col justify-between">
+          <div className="rounded-[1.75rem] bg-[#1C1214]/95 border border-ochre/30 p-6 sm:p-8 flex flex-col justify-between shadow-glass-dark text-ivory-50 font-body">
             <div>
-              <h2 className="font-display text-3xl text-sus-green-deep">Contact CTA</h2>
-              <p className="mt-3 text-sus-muted leading-relaxed">Prefer a direct line while planning flights or caregiver logistics?</p>
+              <h2 className="font-display text-3xl font-bold text-white">Contact CTA</h2>
+              <p className="mt-3 text-ivory-200/90 leading-relaxed">Prefer a direct line while planning flights or caregiver logistics?</p>
               <ul className="mt-6 space-y-3 text-sm">
                 <li>
-                  <a className="text-sus-green font-medium hover:underline" href={`tel:${brand.contact.mobileTel}`}>
+                  <a className="text-[#FFC86B] font-medium hover:underline" href={`tel:${brand.contact.mobileTel}`}>
                     {brand.contact.mobile}
                   </a>
                 </li>
                 <li>
-                  <a className="text-sus-green font-medium hover:underline" href={`mailto:${brand.contact.email}`}>
+                  <a className="text-[#FFC86B] font-medium hover:underline" href={`mailto:${brand.contact.email}`}>
                     {brand.contact.email}
                   </a>
                 </li>
                 <li>
-                  <a className="text-sus-green font-medium hover:underline" href={brand.contact.whatsapp} target="_blank" rel="noreferrer">
-                    WhatsApp coordination
+                  <a className="text-[#FFC86B] font-medium hover:underline" href={brand.contact.whatsapp} target="_blank" rel="noreferrer">
+                    WhatsApp coordination →
                   </a>
                 </li>
               </ul>

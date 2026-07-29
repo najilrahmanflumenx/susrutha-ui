@@ -27,21 +27,21 @@ export default function AffiliationsPage() {
         <Breadcrumbs items={[{ label: 'Affiliations' }]} />
 
         {affiliationsList.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 font-body">
             {affiliationsList.map((item: any, idx: number) => (
-              <div key={item._id || idx} className="rounded-2xl border border-sus-green/10 bg-white p-6 shadow-sm hover:border-sus-green/25 transition-all">
+              <div key={item._id || idx} className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-6 shadow-glass-dark hover:border-ochre transition-all text-ivory-50">
                 {item.logoUrl && (
                   <img src={item.logoUrl} alt={item.title} className="h-12 w-auto object-contain mb-3" />
                 )}
-                <span className="inline-block rounded-full bg-sus-cream px-3 py-1 text-[11px] font-medium text-sus-gold uppercase tracking-wider mb-2">
+                <span className="inline-block rounded-full bg-ochre/20 border border-ochre/40 px-3 py-1 text-[11px] font-bold text-[#FFC86B] uppercase tracking-wider mb-2">
                   {item.category || 'Accreditation'}
                 </span>
-                <h3 className="font-display text-xl text-sus-green-deep">{item.title}</h3>
-                {item.issuingBody && <p className="text-sm font-medium text-sus-ink/80 mt-1">Issued by: {item.issuingBody}</p>}
-                {item.description && <p className="text-sm text-sus-muted mt-2 line-clamp-3">{item.description}</p>}
-                {item.validityYear && <p className="text-xs text-sus-green font-medium mt-3">Valid: {item.validityYear}</p>}
+                <h3 className="font-display text-xl font-bold text-white">{item.title}</h3>
+                {item.issuingBody && <p className="text-sm font-medium text-ivory-100 mt-1">Issued by: {item.issuingBody}</p>}
+                {item.description && <p className="text-sm text-ivory-200/90 mt-2 line-clamp-3 leading-relaxed">{item.description}</p>}
+                {item.validityYear && <p className="text-xs text-[#FFC86B] font-bold mt-3">Valid: {item.validityYear}</p>}
                 {item.certificateUrl && (
-                  <a href={item.certificateUrl} target="_blank" rel="noopener noreferrer" className="inline-block mt-3 text-xs font-semibold text-sus-green hover:underline">
+                  <a href={item.certificateUrl} target="_blank" rel="noopener noreferrer" className="inline-block mt-3 text-xs font-bold text-[#FFC86B] hover:underline">
                     View Certificate →
                   </a>
                 )}
@@ -49,9 +49,9 @@ export default function AffiliationsPage() {
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-sus-green/10 bg-white p-8 text-center">
-            <h2 className="font-display text-xl text-sus-green-deep">No Affiliations Listed</h2>
-            <p className="mt-2 text-sm text-sus-muted">No accreditation certificates or institutional affiliations are currently published in the database.</p>
+          <div className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-8 text-center shadow-glass-dark text-ivory-50 font-body">
+            <h2 className="font-display text-xl font-bold text-white">No Affiliations Listed</h2>
+            <p className="mt-2 text-sm text-ivory-200/90">No accreditation certificates or institutional affiliations are currently published in the database.</p>
           </div>
         )}
 

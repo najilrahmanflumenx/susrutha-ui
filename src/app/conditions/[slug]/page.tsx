@@ -97,39 +97,39 @@ export default function ConditionDetailPage() {
         <div className="grid gap-10 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-10">
             <AiSummary text={condition.aiSummary} reviewedBy={docs[0]?.name} />
-            <section className="prose-sus">
-              <h2 className="font-display text-3xl text-sus-green-deep">Overview</h2>
-              <p>{condition.overview}</p>
-              <h2 className="font-display text-3xl text-sus-green-deep">Ayurvedic understanding</h2>
-              <p>{condition.ayurvedicView}</p>
+            <section className="font-body text-ivory-100">
+              <h2 className="font-display text-3xl text-white font-bold">Overview</h2>
+              <p className="mt-3 leading-relaxed text-ivory-200/90">{condition.overview}</p>
+              <h2 className="font-display text-3xl text-white font-bold mt-8">Ayurvedic understanding</h2>
+              <p className="mt-3 leading-relaxed text-ivory-200/90">{condition.ayurvedicView}</p>
             </section>
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep">Symptoms often discussed</h2>
-              <ul className="mt-4 grid sm:grid-cols-2 gap-2">
+              <h2 className="font-display text-3xl text-white font-bold">Symptoms often discussed</h2>
+              <ul className="mt-4 grid sm:grid-cols-2 gap-2 font-body">
                 {condition.symptoms.map((s: any) => (
-                  <li key={s} className="rounded-xl bg-white border border-sus-green/10 px-4 py-3 text-sm text-sus-muted">{s}</li>
+                  <li key={s} className="rounded-xl bg-[#1C1214]/95 border border-ochre/30 px-4 py-3 text-sm text-ivory-100 shadow-glass-dark">{s}</li>
                 ))}
               </ul>
             </section>
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep">How Susrutha approaches it</h2>
-              <ol className="mt-4 space-y-3">
+              <h2 className="font-display text-3xl text-white font-bold">How Susrutha approaches it</h2>
+              <ol className="mt-4 space-y-3 font-body">
                 {condition.approach.map((a: any, i: number) => (
-                  <li key={a} className="flex gap-3 text-sus-muted">
-                    <span className="font-display text-xl text-sus-gold">{String(i + 1).padStart(2, '0')}</span>
-                    <span>{a}</span>
+                  <li key={a} className="flex gap-3 text-ivory-200/90">
+                    <span className="font-display text-xl text-[#FFC86B] font-bold">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="leading-relaxed">{a}</span>
                   </li>
                 ))}
               </ol>
             </section>
 
             <section>
-              <h2 className="font-display text-3xl text-sus-green-deep mb-4">Related treatments</h2>
-              <div className="flex flex-wrap gap-2">
+              <h2 className="font-display text-3xl text-white font-bold mb-4">Related treatments</h2>
+              <div className="flex flex-wrap gap-2 font-body">
                 {txs.map((t: any) => t && (
-                  <Link key={t.id} href={`/treatments/${t.slug}`} className="rounded-full border border-sus-green/15 px-3 py-1.5 text-sm text-sus-green hover:bg-white">
+                  <Link key={t.id} href={`/treatments/${t.slug}`} className="rounded-full border border-ochre/30 px-3 py-1.5 text-sm text-[#FFC86B] hover:bg-white/10 transition-colors">
                     {t.name}
                   </Link>
                 ))}

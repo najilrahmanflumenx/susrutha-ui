@@ -1,42 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --color-primary: #C02425;
-    --color-primary-hover: #A41B1C;
-    --color-primary-active: #881314;
-    --color-primary-light: #FDF2F2;
-    --color-primary-dark: #4F0A0B;
+    /* Veda Clinical Luxury Design Tokens */
+    --color-primary: #9F0311;
+    --color-primary-hover: #83020E;
+    --color-primary-active: #66010B;
+    --color-primary-light: #FFF8F7;
+    --color-primary-dark: #410003;
 
-    --color-secondary: #F5A623;
-    --color-secondary-hover: #D4890F;
+    --color-secondary: #F9A825;
+    --color-secondary-hover: #FCAB28;
     --color-terracotta: #C86D4B;
 
-    --color-background: #FAF8F4;
+    --color-background: #FDFBF7;
     --color-surface: #FFFFFF;
-    --color-surface-elevated: #F4EFE6;
-    --color-border: #E8DFCE;
-    --color-text-primary: #1E1913;
-    --color-text-secondary: #736652;
-    --color-text-muted: #A3947D;
+    --color-surface-elevated: #F4ECEC;
+    --color-border: #E3BEBA;
+    --color-text-primary: #1E1B1B;
+    --color-text-secondary: #5B403D;
+    --color-text-muted: #8F706C;
+
+    --color-gold: #FCAB28;
+    --color-gold-high-contrast: #FFC86B;
+    --color-botanical: #2E7D32;
 
     --font-playfair: 'Playfair Display', Georgia, serif;
     --font-jakarta: 'Plus Jakarta Sans', system-ui, sans-serif;
   }
 
-
   .dark {
-    --color-background: #0D1612;
-    --color-surface: #14221C;
-    --color-surface-elevated: #1B2C24;
-    --color-border: #263B31;
-    --color-text-primary: #FAF8F4;
-    --color-text-secondary: #C2D9CB;
-    --color-text-muted: #99BEA8;
+    --color-background: #120A0B;
+    --color-surface: #1C1214;
+    --color-surface-elevated: #281B1E;
+    --color-border: rgba(252, 171, 40, 0.25);
+    --color-text-primary: #FDFBF7;
+    --color-text-secondary: #E3BEBA;
+    --color-text-muted: #A89593;
   }
 
   html {
@@ -58,7 +60,7 @@
   }
 
   body {
-    font-family: var(--font-jakarta);
+    font-family: var(--font-jakarta), system-ui, sans-serif;
     color: var(--color-text-primary);
     background-color: var(--color-background);
     -webkit-font-smoothing: antialiased;
@@ -67,30 +69,30 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-playfair);
+    font-family: var(--font-playfair), Georgia, serif;
     font-weight: 700;
     line-height: 1.2;
     color: var(--color-text-primary);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-gold-high-contrast);
     outline-offset: 3px;
   }
 
   ::selection {
-    background: rgba(31, 82, 60, 0.15);
-    color: var(--color-primary);
+    background: rgba(252, 171, 40, 0.25);
+    color: #FFFFFF;
   }
 }
 
 @layer utilities {
   .font-display {
-    font-family: var(--font-display);
+    font-family: var(--font-playfair), Georgia, serif;
   }
 
   .font-body {
-    font-family: var(--font-body);
+    font-family: var(--font-jakarta), system-ui, sans-serif;
   }
 
   .text-balance {
@@ -98,7 +100,7 @@
   }
 
   .botanical-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231E5631' fill-opacity='0.04'%3E%3Cpath d='M30 5c-2 8-8 14-16 16 8 2 14 8 16 16 2-8 8-14 16-16-8-2-14-8-16-16z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FCAB28' fill-opacity='0.05'%3E%3Cpath d='M30 5c-2 8-8 14-16 16 8 2 14 8 16 16 2-8 8-14 16-16-8-2-14-8-16-16z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
   .section-pad {
@@ -114,15 +116,15 @@
   }
 
   .prose-sus p {
-    @apply text-sus-muted leading-relaxed mb-4;
+    @apply text-ivory-600 leading-relaxed mb-4;
   }
 
   .prose-sus h3 {
-    @apply text-2xl mt-8 mb-3;
+    @apply text-2xl mt-8 mb-3 font-display font-bold;
   }
 
   .prose-sus ul {
-    @apply list-disc pl-5 space-y-2 text-sus-muted mb-4;
+    @apply list-disc pl-5 space-y-2 text-ivory-600 mb-4;
   }
 
   .link-underline {
@@ -146,3 +148,4 @@
     transform: scaleX(1);
   }
 }
+

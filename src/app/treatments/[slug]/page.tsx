@@ -82,13 +82,13 @@ export default function TreatmentDetailPage() {
   if (!treatment) {
     if (loading) {
       return (
-        <div style={{ backgroundColor: '#160506', color: '#FDFBF7' }} className="container-wide section-pad py-20 text-center font-body min-h-screen">
-          <p className="text-[#FCAB28]">Loading therapy details...</p>
+        <div className="container-wide section-pad py-20 text-center font-body min-h-screen bg-[#120A0B] text-[#FDFBF7]">
+          <p className="text-[#FFC86B]">Loading therapy details...</p>
         </div>
       );
     }
     return (
-      <div style={{ backgroundColor: '#160506', color: '#FDFBF7' }} className="container-wide section-pad py-20 font-body min-h-screen">
+      <div className="container-wide section-pad py-20 font-body min-h-screen bg-[#120A0B] text-[#FDFBF7]">
         <h1 className="font-display text-3xl font-bold text-white">Treatment not found</h1>
         <p className="text-ivory-300 mt-2">The requested therapy procedure is not available in the database.</p>
         <Button to="/treatments" className="mt-6">All treatments</Button>
@@ -98,7 +98,7 @@ export default function TreatmentDetailPage() {
 
   const docs: any[] = [];
   return (
-    <div style={{ backgroundColor: '#160506', color: '#FDFBF7' }} className="font-body min-h-screen">
+    <div className="font-body min-h-screen bg-[#120A0B] text-[#FDFBF7]">
       <PageHero eyebrow={treatment.category} title={treatment.name} description={treatment.malayalam ? `${treatment.malayalam} · Physician-directed therapy` : 'Physician-directed therapy'}>
         <Button to="/book" variant="primary">Book consultation</Button>
       </PageHero>
@@ -120,8 +120,8 @@ export default function TreatmentDetailPage() {
                   const stepTitle = typeof step === 'string' ? `Phase ${i + 1}` : (typeof step?.step === 'string' ? step.step : `Phase ${i + 1}`);
                   const stepDetail = typeof step === 'string' ? step : (typeof step?.detail === 'string' ? step.detail : (typeof step?.step === 'string' ? step.step : ''));
                   return (
-                    <li key={i} className="rounded-3xl border border-ochre/30 border-t-2 border-t-[#FCAB28] bg-[#240809]/90 p-6 shadow-2xl backdrop-blur-2xl">
-                      <span className="text-xs text-[#FCAB28] font-bold uppercase tracking-wider">Phase {i + 1}</span>
+                    <li key={i} className="rounded-3xl border border-ochre/30 border-t-2 border-t-[#FFC86B] bg-[#1C1214]/95 p-6 shadow-2xl backdrop-blur-2xl">
+                      <span className="text-xs text-[#FFC86B] font-bold uppercase tracking-wider">Phase {i + 1}</span>
                       <h3 className="mt-1 font-display text-xl font-bold text-white">{stepTitle}</h3>
                       <p className="mt-2 text-sm text-ivory-200/90 leading-relaxed font-body">{stepDetail}</p>
                     </li>
@@ -131,13 +131,13 @@ export default function TreatmentDetailPage() {
             </section>
 
             <section className="grid sm:grid-cols-2 gap-6">
-              <div className="rounded-3xl border border-ochre/30 bg-[#240809]/90 p-6 shadow-2xl backdrop-blur-2xl">
+              <div className="rounded-3xl border border-ochre/30 bg-[#1C1214]/95 p-6 shadow-2xl backdrop-blur-2xl">
                 <h2 className="font-display text-2xl font-bold text-white">Clinical Benefits</h2>
                 <ul className="mt-3 space-y-2 text-sm text-ivory-200/90 list-disc pl-5">
                   {treatment.benefits.map((b: any, idx: number) => <li key={idx}>{typeof b === 'string' ? b : String(b)}</li>)}
                 </ul>
               </div>
-              <div className="rounded-3xl border border-ochre/30 bg-[#240809]/90 p-6 shadow-2xl backdrop-blur-2xl">
+              <div className="rounded-3xl border border-ochre/30 bg-[#1C1214]/95 p-6 shadow-2xl backdrop-blur-2xl">
                 <h2 className="font-display text-2xl font-bold text-white">Who May Need It</h2>
                 <ul className="mt-3 space-y-2 text-sm text-ivory-200/90 list-disc pl-5">
                   {treatment.whoNeeds.map((b: any, idx: number) => <li key={idx}>{typeof b === 'string' ? b : String(b)}</li>)}

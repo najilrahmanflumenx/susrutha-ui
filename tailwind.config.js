@@ -93,13 +93,14 @@ module.exports = {
         'sus-crimson': '#C22626',
         'sus-gold': '#FCAB28',
         'sus-gold-soft': '#FFDDB5',
+        'sus-gold-bright': '#FFC86B',
         'sus-cream': '#FDFBF7',
         'sus-sand': '#F8F4EC',
         'sus-border': '#E3BEBA',
         'sus-ink': '#1E1B1B',
         'sus-muted': '#5B403D',
-        'sus-green-deep': '#410003', // Deep Crimson Hero Black
-        'sus-green': '#C22626',      // Primary Crimson Hero Red
+        'sus-green-deep': '#003A0B',
+        'sus-green': '#2E7D32',
         'sus-terracotta': '#C86D4B',
       },
 

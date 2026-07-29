@@ -16,6 +16,22 @@ const api = axios.create({
   withCredentials: false,
 });
 
+export interface PaginationOptions {
+  page?: number;
+  limit?: number;
+  category?: string;
+  search?: string;
+  branchCode?: string;
+}
+
+export interface PaginatedResult<T> {
+  items: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export const getHomeData = async () => {
   try {
     const res = await api.get('/home');
@@ -31,7 +47,7 @@ export const getHomeData = async () => {
       { _id: 'f-1', title: 'Inpatient Rooms', description: 'Economic to luxury options with TV, AC/Non-AC, WiFi on demand, hot water, attached bath.', photo: '/images/hospital-room.jpg', features: ['40 Inpatient Beds', '24x7 Nursing', 'Dietary Service'] },
       { _id: 'f-2', title: 'Panchakarma Suites', description: 'Separate male and female therapy rooms with dedicated therapists trained in classical protocols.', photo: '/images/hero-ayurveda.jpg', features: ['Male & Female Suites', 'Experienced Therapists', 'Medicated Oils'] },
       { _id: 'f-3', title: 'Operation Theatre', description: 'On-site OT supporting procedures including Kshara Sutra and related minor surgical care.', photo: '/images/herbs-mortar.jpg', features: ['Kshara Sutra Unit', 'Sterile Environment', 'Minor Surgery Support'] },
-      { _id: 'f-4', title: 'Physiotherapy Unit', description: 'Integrated rehabilitation support alongside Ayurvedic therapies for spine & joint recovery.', photo: '/images/hero-home.jpg', features: ['Rehab Equipment', 'Spine Mobility', 'Guided Exercises'] },
+      { _id: 'f-4', title: 'Physiotherapy Unit', description: 'Integrated rehabilitation support alongside Ayurvedic therapies for spine & joint recovery.', photo: '/images/hospital-room.jpg', features: ['Rehab Equipment', 'Spine Mobility', 'Guided Exercises'] },
       { _id: 'f-5', title: 'Ayur Village (Gramam)', description: 'Four traditional Kerala cottages with private treatment rooms, ~20 km from airport.', photo: '/images/ayur-village.jpg', features: ['Traditional Cottages', 'Private Therapy', 'Serene Environment'] },
     ],
   };
@@ -221,7 +237,7 @@ export const getFacilities = async () => {
       _id: 'f-4',
       title: 'Physiotherapy Unit',
       description: 'Integrated rehabilitation support alongside Ayurvedic therapies for spine, joint and neurological recovery.',
-      photo: '/images/hero-home.jpg',
+      photo: '/images/hospital-room.jpg',
       features: ['Rehab Equipment', 'Spine Mobility', 'Neurological Rehab', 'Guided Exercises'],
     },
     {
@@ -350,16 +366,22 @@ export const getConditionBySlug = async (slug: string) => {
   };
 };
 
-export const getTreatments = async () => {
+export const getTreatments = async (options?: PaginationOptions) => {
   try {
-    const res = await api.get('/treatments');
-    if (res.data && res.data.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
-      return res.data.data;
+    const res = await api.get('/treatments', { params: options });
+    if (res.data && res.data.data) {
+      if (Array.isArray(res.data.data) && res.data.data.length > 0) {
+        let items = res.data.data;
+        if (options?.limit && !res.data.meta) {
+          items = items.slice(0, options.limit);
+        }
+        return items;
+      }
     }
   } catch (error) {
     console.warn('API fetch failed, fallback to local data:', error);
   }
-  return treatments.map(t => ({
+  let mapped = treatments.map(t => ({
     _id: t.id,
     slug: t.slug,
     title: t.name,
@@ -368,6 +390,20 @@ export const getTreatments = async () => {
     category: t.category,
     coverImage: t.image || '/images/hero-ayurveda.jpg',
   }));
+
+  if (options?.category && options.category !== 'All') {
+    mapped = mapped.filter(t => t.category.toLowerCase().includes(options.category!.toLowerCase()));
+  }
+  if (options?.search) {
+    const q = options.search.toLowerCase();
+    mapped = mapped.filter(t => t.title.toLowerCase().includes(q) || t.shortDescription.toLowerCase().includes(q));
+  }
+  if (options?.limit) {
+    const page = options.page || 1;
+    const start = (page - 1) * options.limit;
+    return mapped.slice(start, start + options.limit);
+  }
+  return mapped;
 };
 
 export const getTreatmentBySlug = async (slug: string) => {

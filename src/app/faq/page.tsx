@@ -36,9 +36,9 @@ export default function FaqPage() {
         {faqList.length > 0 ? (
           <FaqList items={faqList} />
         ) : (
-          <div className="rounded-2xl border border-sus-green/10 bg-white p-8 text-center">
-            <h2 className="font-display text-xl text-sus-green-deep">No FAQs Published</h2>
-            <p className="mt-2 text-sm text-sus-muted">No frequently asked questions are currently published in the database.</p>
+          <div className="rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-8 text-center shadow-glass-dark text-ivory-50 font-body">
+            <h2 className="font-display text-xl font-bold text-white">No FAQs Published</h2>
+            <p className="mt-2 text-sm text-ivory-200/90">No frequently asked questions are currently published in the database.</p>
           </div>
         )}
         <Button to="/contact" className="mt-8">Still need help?</Button>

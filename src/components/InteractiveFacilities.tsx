@@ -11,7 +11,7 @@ export default function InteractiveFacilities({ showCta = true }: { showCta?: bo
     { id: 'f-1', title: 'Inpatient Rooms', detail: 'Economic to luxury options with TV, AC/Non-AC, WiFi on demand, hot water, attached bath.', image: '/images/hospital-room.jpg', points: ['40 Inpatient Beds', '24x7 Nursing', 'Dietary Service'] },
     { id: 'f-2', title: 'Panchakarma Suites', detail: 'Separate male and female therapy rooms with dedicated therapists trained in classical protocols.', image: '/images/hero-ayurveda.jpg', points: ['Male & Female Suites', 'Experienced Therapists', 'Medicated Oils'] },
     { id: 'f-3', title: 'Operation Theatre', detail: 'On-site OT supporting procedures including Kshara Sutra and related minor surgical care.', image: '/images/herbs-mortar.jpg', points: ['Kshara Sutra Unit', 'Sterile Environment', 'Minor Surgery'] },
-    { id: 'f-4', title: 'Physiotherapy Unit', detail: 'Integrated rehabilitation support alongside Ayurvedic therapies for spine & joint recovery.', image: '/images/hero-home.jpg', points: ['Rehab Equipment', 'Spine Mobility', 'Guided Exercises'] },
+    { id: 'f-4', title: 'Physiotherapy Unit', detail: 'Integrated rehabilitation support alongside Ayurvedic therapies for spine & joint recovery.', image: '/images/hospital-room.jpg', points: ['Rehab Equipment', 'Spine Mobility', 'Guided Exercises'] },
     { id: 'f-5', title: 'Ayur Village (Gramam)', detail: 'Four traditional Kerala cottages with private treatment rooms, ~20 km from airport.', image: '/images/ayur-village.jpg', points: ['Traditional Cottages', 'Private Therapy', 'Serene Setting'] },
   ]);
   const [active, setActive] = useState(0);
@@ -24,7 +24,7 @@ export default function InteractiveFacilities({ showCta = true }: { showCta?: bo
           id: f._id || `f-${idx}`,
           title: f.title || f.name,
           detail: f.description || f.overview || 'Hospital infrastructure amenity.',
-          image: f.photo || f.image || '/images/hero-home.jpg',
+          image: f.photo || f.image || '/images/hospital-room.jpg',
           points: f.features || ['NABH Standards', 'Doctor Supervised'],
         }));
         setFacilitiesList(mapped);

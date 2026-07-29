@@ -116,7 +116,7 @@ export default function DoctorsPage() {
   const others = useMemo(() => filtered.filter((d) => !d.isDirector), [filtered]);
 
   return (
-    <div style={{ backgroundColor: '#160506', color: '#FDFBF7' }} className="font-body min-h-screen">
+    <div className="font-body min-h-screen bg-[#120A0B] text-[#FDFBF7]">
       <PageHero
         eyebrow="Medical Roster & Specialists"
         title="Consulting Ayurvedic Physicians & Chief Doctors"

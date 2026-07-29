@@ -69,14 +69,11 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
   }, []);
 
   return (
-    <div ref={ref} className="relative w-full max-w-xs">
+    <div ref={ref} className="relative w-full max-w-xs" role="combobox" aria-haspopup="listbox" aria-expanded={open && results.length > 0} aria-owns="search-results-list">
       <label htmlFor="site-search" className="sr-only">
         Search the site
       </label>
-      <div
-        style={{ backgroundColor: 'rgba(34, 8, 9, 0.65)', backdropFilter: 'blur(16px)', borderColor: 'rgba(252, 171, 40, 0.35)' }}
-        className="flex items-center gap-2.5 rounded-full border px-4 py-2.5 text-white shadow-soft-sm focus-within:border-ochre focus-within:ring-2 focus-within:ring-ochre/20 transition-all duration-300"
-      >
+      <div className="flex items-center gap-2.5 rounded-full border border-ochre/35 bg-[#1C1214]/80 backdrop-blur-md px-4 py-2.5 text-white shadow-soft-sm focus-within:border-ochre focus-within:ring-2 focus-within:ring-ochre/25 transition-all duration-300">
         <Search className="h-4 w-4 text-ochre-400 shrink-0" aria-hidden="true" />
         <input
           id="site-search"
@@ -87,21 +84,24 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
           }}
           onFocus={() => setOpen(true)}
           placeholder="Search treatments, doctors…"
-          className="w-full bg-transparent text-sm text-white placeholder:text-ivory-300/60 focus:outline-none font-body"
+          className="w-full bg-transparent text-sm text-white placeholder:text-ivory-300/70 focus:outline-none font-body"
           autoComplete="off"
+          aria-autocomplete="list"
+          aria-controls="search-results-list"
         />
       </div>
       {open && q.trim().length >= 2 && (
         <div
-          style={{ backgroundColor: 'rgba(28, 7, 8, 0.92)', backdropFilter: 'blur(24px)', borderColor: 'rgba(252, 171, 40, 0.4)' }}
-          className="absolute right-0 z-50 mt-2.5 w-[min(100vw-2rem,24rem)] overflow-hidden rounded-3xl border shadow-glass-card text-white"
+          id="search-results-list"
+          role="listbox"
+          className="absolute right-0 z-50 mt-2.5 w-[min(100vw-2rem,24rem)] overflow-hidden rounded-3xl border border-ochre/40 bg-[#1C1214]/95 backdrop-blur-xl shadow-glass-card text-white"
         >
           {results.length === 0 ? (
             <div className="px-5 py-4 text-sm text-ivory-300 font-body">No matches found. Try searching for Panchakarma, Spine, Doctor, or Kowdiar…</div>
           ) : (
             <ul className="max-h-80 overflow-auto py-2 divide-y divide-white/10">
               {results.map((r) => (
-                <li key={r.path + r.title}>
+                <li key={r.path + r.title} role="option" aria-selected={false}>
                   <Link
                     href={r.path}
                     onClick={() => {
@@ -109,12 +109,12 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
                       setQ('');
                       onNavigate?.();
                     }}
-                    className="block px-5 py-3 hover:bg-[#351012] transition-colors group"
+                    className="block px-5 py-3 hover:bg-white/10 transition-colors group"
                   >
-                    <span className="text-[10px] uppercase tracking-wider text-[#FCAB28] font-bold">{r.type}</span>
-                    <span className="flex items-center justify-between text-sm font-semibold text-white group-hover:text-[#FCAB28]">
+                    <span className="text-[10px] uppercase tracking-wider text-[#FFC86B] font-bold">{r.type}</span>
+                    <span className="flex items-center justify-between text-sm font-semibold text-white group-hover:text-[#FFC86B]">
                       {r.title}
-                      <ArrowUpRight className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-[#FCAB28]" />
+                      <ArrowUpRight className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-[#FFC86B]" />
                     </span>
                     <span className="block text-xs text-ivory-200/70 line-clamp-1 font-body mt-0.5">{r.description}</span>
                   </Link>
