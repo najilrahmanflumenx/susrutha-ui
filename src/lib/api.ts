@@ -1,17 +1,26 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+// Normalize API Base URL and strip trailing /public if provided in env
+let rawBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+rawBaseUrl = rawBaseUrl.replace(/\/public\/?$/, '').replace(/\/+$/, '');
+if (!rawBaseUrl.endsWith('/api/v1') && !rawBaseUrl.includes('/api/v1')) {
+  rawBaseUrl += '/api/v1';
+}
 
 export const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: rawBaseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 10000,
 });
 
-// Auth Token Interceptor
+// Auth Token & URL Path Normalizer Interceptor
 api.interceptors.request.use((config) => {
+  // Prevent duplicate /public/public in path if baseURL includes /public
+  if (config.url && config.url.startsWith('/public/') && config.baseURL?.endsWith('/public')) {
+    config.url = config.url.substring(7);
+  }
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('susrutha_token');
     if (token && config.headers) {
