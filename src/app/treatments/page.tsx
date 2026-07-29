@@ -12,16 +12,15 @@ import { Sparkles, Filter } from 'lucide-react';
 const ITEMS_PER_PAGE = 6;
 
 export default function TreatmentsPage() {
-  const [treatmentList, setTreatmentList] = useState<any[]>(
-    treatments.map((t) => ({
-      id: t.id,
-      slug: t.slug,
-      name: t.name,
-      aiSummary: t.aiSummary,
-      category: t.category,
-      image: t.image || '/images/hero-ayurveda.jpg',
-    }))
-  );
+  const localTreatmentList = treatments.map((t) => ({
+    id: t.id,
+    slug: t.slug,
+    name: t.name,
+    aiSummary: t.aiSummary,
+    category: t.category,
+    image: t.image || '/images/hero-ayurveda.jpg',
+  }));
+  const [treatmentList, setTreatmentList] = useState<any[]>(localTreatmentList);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
@@ -48,19 +47,22 @@ export default function TreatmentsPage() {
       .finally(() => setLoading(false));
   }, [selectedCategory]);
 
-  const categories = ['all', 'Panchakarma', 'Spine & Joint', 'Rasayana & Immunity', 'Ayurvedic Wellness'];
+  // Dynamically derive unique categories from actual treatment data (case-insensitive deduplicated)
+  const categories = [
+    'all',
+    ...Array.from(
+      new Map(
+        treatmentList.map((t) => [t.category.toLowerCase(), t.category])
+      ).values()
+    ),
+  ];
 
-  const filteredList = selectedCategory === 'all'
-    ? treatmentList
-    : treatmentList.filter((t) => {
-        const query = selectedCategory.toLowerCase().split(' ')[0];
-        return (
-          t.category.toLowerCase().includes(query) ||
-          t.name.toLowerCase().includes(query) ||
-          t.aiSummary.toLowerCase().includes(query) ||
-          t.slug.toLowerCase().includes(query)
+  const filteredList =
+    selectedCategory === 'all'
+      ? treatmentList
+      : treatmentList.filter(
+          (t) => t.category.toLowerCase() === selectedCategory.toLowerCase()
         );
-      });
 
   const totalPages = Math.ceil(filteredList.length / ITEMS_PER_PAGE);
   const paginatedList = filteredList.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);

@@ -25,7 +25,7 @@ export default function TreatmentDetailPage() {
             slug: apiTx.slug,
             name: apiTx.title || apiTx.name,
             category: apiTx.category || 'Panchakarma Therapy',
-            malayalam: 'ആയുർവേദ ചികിത്സ',
+            malayalam: apiTx.malayalam || 'ആയുർവേദ ചികിത്സ',
             aiSummary: apiTx.shortDescription || apiTx.fullDescription || 'Therapeutic Ayurvedic procedure.',
             overview: apiTx.fullDescription || apiTx.shortDescription || 'Classical Panchakarma therapy performed under medical supervision.',
             procedure: (apiTx.procedureSteps && apiTx.procedureSteps.length > 0)
@@ -44,18 +44,36 @@ export default function TreatmentDetailPage() {
                   { step: 'Main Procedure', detail: 'Core therapeutic procedure administered by trained therapists.' },
                   { step: 'Paschat Karma (Aftercare)', detail: 'Post-treatment rest, warm bath, and soothing dietary regimen.' },
                 ],
-            benefits: Array.isArray(apiTx.benefits) ? apiTx.benefits.map((b: any) => typeof b === 'string' ? b : (b.detail || b.title || String(b))) : ['Relieves muscle stiffness', 'Improves blood circulation', 'Promotes deep relaxation'],
-            whoNeeds: Array.isArray(apiTx.indications) ? apiTx.indications.map((b: any) => typeof b === 'string' ? b : (b.detail || b.title || String(b))) : ['Chronic pain', 'Vata imbalances', 'Stress and fatigue'],
-            preparation: ['Fast 2 hours prior to therapy', 'Inform doctor of any active allergies'],
-            aftercare: ['Drink warm water post-treatment', 'Avoid cold winds and direct fan exposure'],
-            safety: ['Supervised by BAMS physicians', 'Therapy discontinued if fever occurs'],
-            avoid: Array.isArray(apiTx.contraindications) ? apiTx.contraindications.map((b: any) => typeof b === 'string' ? b : (b.detail || b.title || String(b))) : ['Acute fever', 'Severe skin infections', 'Indigestion'],
-            faqs: [
-              { q: 'Is a doctor consultation mandatory before treatment?', a: 'Yes, all therapies are prescribed following a detailed physician diagnostic examination.' },
-              { q: 'What is the recommended duration?', a: `${apiTx.recommendedDays || 7} consecutive days for optimal clinical results.` },
-            ],
+            benefits: Array.isArray(apiTx.benefits) && apiTx.benefits.length > 0
+              ? apiTx.benefits.map((b: any) => typeof b === 'string' ? b : (b.detail || b.title || String(b)))
+              : ['Relieves muscle stiffness', 'Improves blood circulation', 'Promotes deep relaxation'],
+            whoNeeds: Array.isArray(apiTx.indications) && apiTx.indications.length > 0
+              ? apiTx.indications.map((b: any) => typeof b === 'string' ? b : (b.detail || b.title || String(b)))
+              : ['Chronic pain', 'Vata imbalances', 'Stress and fatigue'],
+            preparation: Array.isArray(apiTx.preparation) && apiTx.preparation.length > 0
+              ? apiTx.preparation.map((x: any) => typeof x === 'string' ? x : String(x))
+              : ['Fast 2 hours prior to therapy', 'Inform doctor of any active allergies'],
+            aftercare: Array.isArray(apiTx.aftercare) && apiTx.aftercare.length > 0
+              ? apiTx.aftercare.map((x: any) => typeof x === 'string' ? x : String(x))
+              : ['Drink warm water post-treatment', 'Avoid cold winds and direct fan exposure'],
+            safety: Array.isArray(apiTx.safety) && apiTx.safety.length > 0
+              ? apiTx.safety.map((x: any) => typeof x === 'string' ? x : String(x))
+              : ['Supervised by BAMS physicians', 'Therapy discontinued if fever occurs'],
+            avoid: Array.isArray(apiTx.contraindications) && apiTx.contraindications.length > 0
+              ? apiTx.contraindications.map((b: any) => typeof b === 'string' ? b : (b.detail || b.title || String(b)))
+              : ['Acute fever', 'Severe skin infections', 'Indigestion'],
+            faqs: Array.isArray(apiTx.faqs) && apiTx.faqs.length > 0
+              ? apiTx.faqs.map((f: any) => ({ q: f.q || f.question, a: f.a || f.answer }))
+              : [
+                  { q: 'Is a doctor consultation mandatory before treatment?', a: 'Yes, all therapies are prescribed following a detailed physician diagnostic examination.' },
+                  { q: 'What is the recommended duration?', a: `${apiTx.recommendedDays || 7} consecutive days for optimal clinical results.` },
+                ],
             duration: `${apiTx.durationMinutes || 60} Minutes Session (${apiTx.recommendedDays || 7} Days Course)`,
-            conditions: Array.isArray(apiTx.indications) ? apiTx.indications.map((b: any) => typeof b === 'string' ? b : String(b)) : ['Arthritis', 'Panchakarma Detox', 'Stress Relief'],
+            conditions: Array.isArray(apiTx.conditions) && apiTx.conditions.length > 0
+              ? apiTx.conditions.map((c: any) => typeof c === 'string' ? c : String(c))
+              : Array.isArray(apiTx.indications) && apiTx.indications.length > 0
+              ? apiTx.indications.map((b: any) => typeof b === 'string' ? b : String(b))
+              : ['Arthritis', 'Panchakarma Detox', 'Stress Relief'],
             doctorIds: apiTx.doctorIds || [],
             relatedPackageIds: [],
           });

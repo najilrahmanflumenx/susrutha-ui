@@ -423,9 +423,25 @@ export const getTreatmentBySlug = async (slug: string) => {
     category: tx.category,
     coverImage: tx.image || '/images/hero-ayurveda.jpg',
     benefits: tx.benefits,
-    procedureSteps: tx.procedure,
-    duration: tx.duration,
+    // Map rich procedure objects { step, detail } as procedureSteps objects
+    procedureSteps: tx.procedure.map(p => ({ step: p.step, detail: p.detail })),
+    durationMinutes: (() => {
+      const match = tx.duration.match(/(\d+)/);
+      return match ? parseInt(match[1]) : 60;
+    })(),
+    recommendedDays: (() => {
+      const matches = tx.duration.match(/(\d+)/g);
+      return matches && matches.length > 1 ? parseInt(matches[1]) : 7;
+    })(),
+    indications: tx.whoNeeds,
+    contraindications: tx.avoid,
+    preparation: tx.preparation,
+    aftercare: tx.aftercare,
     safety: tx.safety,
+    conditions: tx.conditions,
+    faqs: tx.faqs.map(f => ({ q: f.q, a: f.a })),
+    malayalam: (tx as any).malayalam || 'ആയുർവേദ ചികിത്സ',
+    doctorIds: tx.doctorIds || [],
   };
 };
 
