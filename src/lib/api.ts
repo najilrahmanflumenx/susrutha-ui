@@ -157,82 +157,86 @@ export interface PaginatedResult<T> {
 // API Service Callers
 export async function fetchTreatments(options: FetchOptions = {}): Promise<PaginatedResult<TreatmentItem>> {
   try {
-    const params: any = {};
-    if (options.page) params.page = options.page;
-    if (options.limit) params.limit = options.limit;
+    const params: any = {
+      page: options.page || 1,
+      limit: options.limit || 10,
+    };
     if (options.category && options.category !== 'ALL') params.category = options.category;
     if (options.search || options.q) params.q = options.search || options.q;
 
     const response = await api.get('/public/treatments', { params });
-    const data = response.data?.data || MOCK_TREATMENTS;
-    const meta = response.data?.meta || { total: data.length, page: options.page || 1, limit: options.limit || data.length, totalPages: Math.ceil(data.length / (options.limit || data.length || 1)) };
+    const data = Array.isArray(response.data?.data) ? response.data.data : [];
+    const meta = response.data?.meta || { total: data.length, page: params.page, limit: params.limit, totalPages: Math.ceil(data.length / params.limit) || 1 };
     return { data, meta };
   } catch (error) {
-    return { data: MOCK_TREATMENTS, meta: { total: MOCK_TREATMENTS.length, page: 1, limit: MOCK_TREATMENTS.length, totalPages: 1 } };
+    return { data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 } };
   }
 }
 
 export async function fetchTreatmentBySlug(slug: string): Promise<TreatmentItem> {
   try {
     const response = await api.get(`/public/treatments/${slug}`);
-    return response.data?.data || MOCK_TREATMENTS[0];
+    return response.data?.data || null;
   } catch (error) {
-    return MOCK_TREATMENTS.find((t) => t.slug === slug) || MOCK_TREATMENTS[0];
+    return null as any;
   }
 }
 
 export async function fetchDoctors(options: FetchOptions = {}): Promise<PaginatedResult<DoctorItem>> {
   try {
-    const params: any = {};
-    if (options.page) params.page = options.page;
-    if (options.limit) params.limit = options.limit;
+    const params: any = {
+      page: options.page || 1,
+      limit: options.limit || 10,
+    };
     if (options.category && options.category !== 'ALL') params.category = options.category;
     if (options.search || options.q) params.q = options.search || options.q;
 
     const response = await api.get('/public/doctors', { params });
-    const data = response.data?.data || MOCK_DOCTORS;
-    const meta = response.data?.meta || { total: data.length, page: options.page || 1, limit: options.limit || data.length, totalPages: Math.ceil(data.length / (options.limit || data.length || 1)) };
+    const data = Array.isArray(response.data?.data) ? response.data.data : [];
+    const meta = response.data?.meta || { total: data.length, page: params.page, limit: params.limit, totalPages: Math.ceil(data.length / params.limit) || 1 };
     return { data, meta };
   } catch (error) {
-    return { data: MOCK_DOCTORS, meta: { total: MOCK_DOCTORS.length, page: 1, limit: MOCK_DOCTORS.length, totalPages: 1 } };
+    return { data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 } };
   }
 }
 
 export async function fetchDoctorBySlug(slug: string): Promise<DoctorItem> {
   try {
     const response = await api.get(`/public/doctors/${slug}`);
-    return response.data?.data || MOCK_DOCTORS[0];
+    return response.data?.data || null;
   } catch (error) {
-    return MOCK_DOCTORS.find((d) => d.slug === slug) || MOCK_DOCTORS[0];
+    return null as any;
   }
 }
 
 export async function fetchBranches(options: FetchOptions = {}): Promise<PaginatedResult<BranchItem>> {
   try {
-    const params: any = {};
-    if (options.page) params.page = options.page;
-    if (options.limit) params.limit = options.limit;
+    const params: any = {
+      page: options.page || 1,
+      limit: options.limit || 10,
+    };
     if (options.type && options.type !== 'ALL') params.type = options.type;
 
     const response = await api.get('/public/branches', { params });
-    const data = response.data?.data || MOCK_BRANCHES;
-    const meta = response.data?.meta || { total: data.length, page: options.page || 1, limit: options.limit || data.length, totalPages: Math.ceil(data.length / (options.limit || data.length || 1)) };
+    const data = Array.isArray(response.data?.data) ? response.data.data : [];
+    const meta = response.data?.meta || { total: data.length, page: params.page, limit: params.limit, totalPages: Math.ceil(data.length / params.limit) || 1 };
     return { data, meta };
   } catch (error) {
-    return { data: MOCK_BRANCHES, meta: { total: MOCK_BRANCHES.length, page: 1, limit: MOCK_BRANCHES.length, totalPages: 1 } };
+    return { data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 } };
   }
 }
 
 export async function fetchCarePackages(options: FetchOptions = {}): Promise<PaginatedResult<CarePackageItem>> {
   try {
-    const params: any = {};
-    if (options.page) params.page = options.page;
-    if (options.limit) params.limit = options.limit;
+    const params: any = {
+      page: options.page || 1,
+      limit: options.limit || 10,
+    };
     if (options.category && options.category !== 'ALL') params.category = options.category;
 
     const response = await api.get('/public/packages', { params });
-    const data = response.data?.data || [];
-    const meta = response.data?.meta || { total: data.length, page: options.page || 1, limit: options.limit || 10, totalPages: Math.ceil(data.length / (options.limit || 10)) };
+    const data = Array.isArray(response.data?.data) ? response.data.data : [];
+    const meta = response.data?.meta || { total: data.length, page: params.page, limit: params.limit, totalPages: Math.ceil(data.length / params.limit) || 1 };
     return { data, meta };
   } catch (error) {
     return { data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 } };
