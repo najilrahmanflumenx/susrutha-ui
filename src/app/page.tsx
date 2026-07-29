@@ -29,7 +29,6 @@ import CinematicCursor from '../components/CinematicCursor';
 import LenisProvider from '../components/LenisProvider';
 import TabascoHero from '../components/TabascoHero';
 import TabascoDocumentaryStory from '../components/TabascoDocumentaryStory';
-import Interactive3DShowcase from '../components/Interactive3DShowcase';
 import TreatmentGlassGrid from '../components/TreatmentGlassGrid';
 import { orgSchema } from '../lib/seo';
 import { getHomeData } from '../lib/api';
@@ -290,10 +289,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 6. Interactive 3D Sanctuary Architecture */}
-        <section className="container-wide section-pad py-20">
-          <Interactive3DShowcase />
-        </section>
+
 
         {/* 7. Tabasco 8-Scene Video-Driven Documentary Arc */}
         <TabascoDocumentaryStory />
