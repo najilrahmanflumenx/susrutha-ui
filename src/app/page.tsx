@@ -23,15 +23,15 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Timeline } from '@/components/ui/Timeline';
 import { Modal } from '@/components/ui/Modal';
-import { fetchTreatments, fetchDoctors, MOCK_TREATMENTS, MOCK_DOCTORS, TreatmentItem, DoctorItem } from '@/lib/api';
+import { fetchTreatmentsList, fetchDoctorsList, MOCK_TREATMENTS, MOCK_DOCTORS, TreatmentItem, DoctorItem } from '@/lib/api';
 import { DoctorCarousel } from '@/components/doctors/DoctorCarousel';
 import { useApiData } from '@/hooks/useApiData';
 import { formatCurrency } from '@/lib/utils';
 
 export default function HomePage() {
   const [selectedStep, setSelectedStep] = useState(0);
-  const { data: treatments } = useApiData<TreatmentItem[]>(fetchTreatments, MOCK_TREATMENTS);
-  const { data: doctors } = useApiData<DoctorItem[]>(fetchDoctors, MOCK_DOCTORS);
+  const { data: treatments } = useApiData<TreatmentItem[]>(fetchTreatmentsList, MOCK_TREATMENTS);
+  const { data: doctors } = useApiData<DoctorItem[]>(fetchDoctorsList, MOCK_DOCTORS);
   const [activeTreatmentModal, setActiveTreatmentModal] = useState<TreatmentItem | null>(null);
 
   const timelineSteps = [

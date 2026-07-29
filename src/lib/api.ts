@@ -320,13 +320,40 @@ export const MOCK_APPOINTMENTS = [
   }
 ];
 
+export interface FetchOptions {
+  page?: number;
+  limit?: number;
+  category?: string;
+  type?: string;
+  search?: string;
+  q?: string;
+}
+
+export interface PaginatedResult<T> {
+  data: T[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
 // API Service Callers
-export async function fetchTreatments(): Promise<TreatmentItem[]> {
+export async function fetchTreatments(options: FetchOptions = {}): Promise<PaginatedResult<TreatmentItem>> {
   try {
-    const response = await api.get('/public/treatments');
-    return response.data?.data || MOCK_TREATMENTS;
+    const params: any = {};
+    if (options.page) params.page = options.page;
+    if (options.limit) params.limit = options.limit;
+    if (options.category && options.category !== 'ALL') params.category = options.category;
+    if (options.search || options.q) params.q = options.search || options.q;
+
+    const response = await api.get('/public/treatments', { params });
+    const data = response.data?.data || MOCK_TREATMENTS;
+    const meta = response.data?.meta || { total: data.length, page: options.page || 1, limit: options.limit || data.length, totalPages: Math.ceil(data.length / (options.limit || data.length || 1)) };
+    return { data, meta };
   } catch (error) {
-    return MOCK_TREATMENTS;
+    return { data: MOCK_TREATMENTS, meta: { total: MOCK_TREATMENTS.length, page: 1, limit: MOCK_TREATMENTS.length, totalPages: 1 } };
   }
 }
 
@@ -339,12 +366,20 @@ export async function fetchTreatmentBySlug(slug: string): Promise<TreatmentItem>
   }
 }
 
-export async function fetchDoctors(): Promise<DoctorItem[]> {
+export async function fetchDoctors(options: FetchOptions = {}): Promise<PaginatedResult<DoctorItem>> {
   try {
-    const response = await api.get('/public/doctors');
-    return response.data?.data || MOCK_DOCTORS;
+    const params: any = {};
+    if (options.page) params.page = options.page;
+    if (options.limit) params.limit = options.limit;
+    if (options.category && options.category !== 'ALL') params.category = options.category;
+    if (options.search || options.q) params.q = options.search || options.q;
+
+    const response = await api.get('/public/doctors', { params });
+    const data = response.data?.data || MOCK_DOCTORS;
+    const meta = response.data?.meta || { total: data.length, page: options.page || 1, limit: options.limit || data.length, totalPages: Math.ceil(data.length / (options.limit || data.length || 1)) };
+    return { data, meta };
   } catch (error) {
-    return MOCK_DOCTORS;
+    return { data: MOCK_DOCTORS, meta: { total: MOCK_DOCTORS.length, page: 1, limit: MOCK_DOCTORS.length, totalPages: 1 } };
   }
 }
 
@@ -357,22 +392,57 @@ export async function fetchDoctorBySlug(slug: string): Promise<DoctorItem> {
   }
 }
 
-export async function fetchBranches(): Promise<BranchItem[]> {
+export async function fetchBranches(options: FetchOptions = {}): Promise<PaginatedResult<BranchItem>> {
   try {
-    const response = await api.get('/public/branches');
-    return response.data?.data || MOCK_BRANCHES;
+    const params: any = {};
+    if (options.page) params.page = options.page;
+    if (options.limit) params.limit = options.limit;
+    if (options.type && options.type !== 'ALL') params.type = options.type;
+
+    const response = await api.get('/public/branches', { params });
+    const data = response.data?.data || MOCK_BRANCHES;
+    const meta = response.data?.meta || { total: data.length, page: options.page || 1, limit: options.limit || data.length, totalPages: Math.ceil(data.length / (options.limit || data.length || 1)) };
+    return { data, meta };
   } catch (error) {
-    return MOCK_BRANCHES;
+    return { data: MOCK_BRANCHES, meta: { total: MOCK_BRANCHES.length, page: 1, limit: MOCK_BRANCHES.length, totalPages: 1 } };
   }
 }
 
-export async function fetchCarePackages(): Promise<CarePackageItem[]> {
+export async function fetchCarePackages(options: FetchOptions = {}): Promise<PaginatedResult<CarePackageItem>> {
   try {
-    const response = await api.get('/public/packages');
-    return response.data?.data || [];
+    const params: any = {};
+    if (options.page) params.page = options.page;
+    if (options.limit) params.limit = options.limit;
+    if (options.category && options.category !== 'ALL') params.category = options.category;
+
+    const response = await api.get('/public/packages', { params });
+    const data = response.data?.data || [];
+    const meta = response.data?.meta || { total: data.length, page: options.page || 1, limit: options.limit || 10, totalPages: Math.ceil(data.length / (options.limit || 10)) };
+    return { data, meta };
   } catch (error) {
-    return [];
+    return { data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 } };
   }
+}
+
+// Array List Helpers for hook compatibility
+export async function fetchTreatmentsList(options: FetchOptions = {}): Promise<TreatmentItem[]> {
+  const res = await fetchTreatments(options);
+  return res.data;
+}
+
+export async function fetchDoctorsList(options: FetchOptions = {}): Promise<DoctorItem[]> {
+  const res = await fetchDoctors(options);
+  return res.data;
+}
+
+export async function fetchBranchesList(options: FetchOptions = {}): Promise<BranchItem[]> {
+  const res = await fetchBranches(options);
+  return res.data;
+}
+
+export async function fetchCarePackagesList(options: FetchOptions = {}): Promise<CarePackageItem[]> {
+  const res = await fetchCarePackages(options);
+  return res.data;
 }
 
 export async function fetchTestimonials(): Promise<TestimonialItem[]> {

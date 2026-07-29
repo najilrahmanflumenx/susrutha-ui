@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Loader2, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
@@ -8,27 +8,62 @@ import { Button } from '@/components/ui/Button';
 import { Badge, Chip } from '@/components/ui/Badge';
 import { TreatmentCardSkeleton } from '@/components/ui/Skeleton';
 import { fetchTreatments, MOCK_TREATMENTS, TreatmentItem } from '@/lib/api';
-import { useApiData } from '@/hooks/useApiData';
 import { formatCurrency } from '@/lib/utils';
 
 export default function TreatmentsPage() {
   const [selectedFilter, setSelectedFilter] = useState('ALL');
   const [page, setPage] = useState(1);
+  const [treatments, setTreatments] = useState<TreatmentItem[]>([]);
+  const [allTreatmentsForCategories, setAllTreatmentsForCategories] = useState<TreatmentItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const itemsPerPage = 12;
 
-  const { data: treatments, loading } = useApiData<TreatmentItem[]>(fetchTreatments, MOCK_TREATMENTS);
+  // Baseline load for category chips
+  useEffect(() => {
+    async function loadCategoriesBaseline() {
+      try {
+        const res = await fetchTreatments({ limit: 100 });
+        setAllTreatmentsForCategories(res.data);
+      } catch (e) {}
+    }
+    loadCategoriesBaseline();
+  }, []);
+
+  // Server-side paginated API fetch
+  useEffect(() => {
+    async function loadTreatments() {
+      setLoading(true);
+      try {
+        const res = await fetchTreatments({
+          page,
+          limit: itemsPerPage,
+          category: selectedFilter,
+        });
+        setTreatments(res.data);
+        setTotalPages(res.meta.totalPages);
+        setTotalCount(res.meta.total);
+      } catch (err) {
+        console.error('Error fetching treatments:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadTreatments();
+  }, [page, selectedFilter]);
 
   // Dynamically extract and merge unique categories case-insensitively from available data
   const availableCategories = useMemo(() => {
-    if (!treatments || treatments.length === 0) return ['ALL'];
+    const sourceList = allTreatmentsForCategories.length > 0 ? allTreatmentsForCategories : treatments;
+    if (!sourceList || sourceList.length === 0) return ['ALL'];
 
-    const categoryMap = new Map<string, string>(); // lowercase -> display string
-    treatments.forEach((t) => {
+    const categoryMap = new Map<string, string>();
+    sourceList.forEach((t) => {
       const cat = (t.category || t.dosha || '').trim();
       if (cat) {
         const lowerKey = cat.toLowerCase();
         if (!categoryMap.has(lowerKey)) {
-          // Capitalize cleanly or keep original title case
           const cleanDisplay = cat.charAt(0).toUpperCase() + cat.slice(1);
           categoryMap.set(lowerKey, cleanDisplay);
         }
@@ -36,30 +71,12 @@ export default function TreatmentsPage() {
     });
 
     return ['ALL', ...Array.from(categoryMap.values())];
-  }, [treatments]);
+  }, [allTreatmentsForCategories, treatments]);
 
-  // Filter treatments by selected category
-  const filteredTreatments = useMemo(() => {
-    if (selectedFilter === 'ALL') return treatments;
-    const filterKey = selectedFilter.toLowerCase();
-    return treatments.filter((t) => {
-      const cat = (t.category || t.dosha || '').toLowerCase();
-      return cat === filterKey || cat.includes(filterKey);
-    });
-  }, [treatments, selectedFilter]);
-
-  // Reset page to 1 when filter changes
   const handleFilterChange = (cat: string) => {
     setSelectedFilter(cat);
     setPage(1);
   };
-
-  // Pagination slicing
-  const totalPages = Math.max(1, Math.ceil(filteredTreatments.length / itemsPerPage));
-  const paginatedTreatments = filteredTreatments.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
 
   return (
     <div className="px-6 sm:px-12 md:px-20 max-w-7xl mx-auto flex flex-col gap-12 pb-24">
@@ -102,7 +119,7 @@ export default function TreatmentsPage() {
       {!loading && (
         <div className="flex justify-between items-center border-b border-primary/10 pb-4">
           <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze">
-            Showing {filteredTreatments.length} Available Therapies
+            Showing {totalCount} Available Therapies
           </span>
           <span className="text-xs font-sans text-text-muted">
             Page {page} of {totalPages}
@@ -113,7 +130,7 @@ export default function TreatmentsPage() {
       {/* Grid */}
       {!loading && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {paginatedTreatments.map((treatment, idx) => {
+          {treatments.map((treatment, idx) => {
             const id = treatment.id || treatment._id || `tr-${idx}`;
             const slug = treatment.slug || id;
             const title = treatment.title || treatment.name || 'Ayurvedic Treatment';

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { MapPin, Phone, Mail, Clock, Loader2, Calendar, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
@@ -13,36 +13,40 @@ import { useApiData } from '@/hooks/useApiData';
 export default function LocationsPage() {
   const [selectedFilter, setSelectedFilter] = useState('ALL');
   const [page, setPage] = useState(1);
+  const [branches, setBranches] = useState<BranchItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const itemsPerPage = 8;
 
-  const { data: branches, loading } = useApiData<BranchItem[]>(fetchBranches, MOCK_BRANCHES);
+  useEffect(() => {
+    async function loadBranches() {
+      setLoading(true);
+      try {
+        const res = await fetchBranches({
+          page,
+          limit: itemsPerPage,
+          type: selectedFilter,
+        });
+        setBranches(res.data);
+        setTotalPages(res.meta.totalPages);
+        setTotalCount(res.meta.total);
+      } catch (err) {
+        console.error('Error loading branches:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadBranches();
+  }, [page, selectedFilter]);
 
   // Dynamic available categories / types extraction
   const availableTypes = useMemo(() => {
-    if (!branches || branches.length === 0) return ['ALL'];
-    const typeSet = new Set<string>();
-    branches.forEach((b) => {
-      if (b.type === 'INPATIENT_HOSPITAL') typeSet.add('Inpatient Campus');
-      else if (b.type === 'CITY_CLINIC') typeSet.add('Specialty Clinic');
-      else if (b.type) typeSet.add(b.type);
-    });
-    return ['ALL', ...Array.from(typeSet)];
-  }, [branches]);
+    return ['ALL', 'Inpatient Campus', 'Specialty Clinic'];
+  }, []);
 
-  const filteredBranches = useMemo(() => {
-    if (selectedFilter === 'ALL') return branches;
-    return branches.filter((b) => {
-      if (selectedFilter === 'Inpatient Campus') return b.type === 'INPATIENT_HOSPITAL';
-      if (selectedFilter === 'Specialty Clinic') return b.type === 'CITY_CLINIC';
-      return b.type === selectedFilter;
-    });
-  }, [branches, selectedFilter]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredBranches.length / itemsPerPage));
-  const paginatedBranches = filteredBranches.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-
-  const handleFilterChange = (filter: string) => {
-    setSelectedFilter(filter);
+  const handleFilterChange = (type: string) => {
+    setSelectedFilter(type);
     setPage(1);
   };
 
@@ -86,7 +90,7 @@ export default function LocationsPage() {
         <>
           <div className="flex justify-between items-center border-b border-primary/10 pb-4">
             <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze">
-              Showing {filteredBranches.length} Medical Sanctuaries Across Kerala
+              Showing {totalCount} Medical Sanctuaries Across Kerala
             </span>
             <span className="text-xs font-sans text-text-muted">
               Page {page} of {totalPages}
@@ -94,7 +98,7 @@ export default function LocationsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {paginatedBranches.map((branch, idx) => {
+            {branches.map((branch, idx) => {
               const id = branch.id || branch._id || `br-${idx}`;
               const name = branch.name || 'Susrutha Ayurvedic Center';
               const typeLabel = branch.type === 'INPATIENT_HOSPITAL' ? '40-Bed Inpatient Campus' : 'Outpatient Specialty Clinic';

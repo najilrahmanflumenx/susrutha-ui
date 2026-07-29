@@ -1,18 +1,21 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Calendar, CheckCircle2, ArrowRight, Loader2, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge, Chip } from '@/components/ui/Badge';
 import { CarePackageItem, fetchCarePackages } from '@/lib/api';
-import { useApiData } from '@/hooks/useApiData';
 import { formatCurrency } from '@/lib/utils';
 
 export default function RetreatsPage() {
   const [selectedFilter, setSelectedFilter] = useState('ALL');
   const [page, setPage] = useState(1);
+  const [packages, setPackages] = useState<CarePackageItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const itemsPerPage = 8;
 
   const fallbackRetreats: CarePackageItem[] = [
@@ -48,32 +51,31 @@ export default function RetreatsPage() {
     }
   ];
 
-  const { data: packages, loading } = useApiData<CarePackageItem[]>(fetchCarePackages, fallbackRetreats);
-  const displayPackages = packages.length ? packages : fallbackRetreats;
+  useEffect(() => {
+    async function loadPackages() {
+      setLoading(true);
+      try {
+        const res = await fetchCarePackages({
+          page,
+          limit: itemsPerPage,
+          category: selectedFilter,
+        });
+        setPackages(res.data.length > 0 ? res.data : fallbackRetreats);
+        setTotalPages(res.meta.totalPages);
+        setTotalCount(res.meta.total || res.data.length);
+      } catch (err) {
+        setPackages(fallbackRetreats);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadPackages();
+  }, [page, selectedFilter]);
 
   // Extract unique duration / category chips dynamically
   const availableFilters = useMemo(() => {
-    if (!displayPackages || displayPackages.length === 0) return ['ALL'];
-    const filterSet = new Set<string>();
-    displayPackages.forEach((pkg) => {
-      if (pkg.durationDays) {
-        filterSet.add(`${pkg.durationDays}-Day`);
-      }
-    });
-    return ['ALL', ...Array.from(filterSet)];
-  }, [displayPackages]);
-
-  const filteredPackages = useMemo(() => {
-    if (selectedFilter === 'ALL') return displayPackages;
-    const days = parseInt(selectedFilter.replace('-Day', ''), 10);
-    if (!isNaN(days)) {
-      return displayPackages.filter((pkg) => pkg.durationDays === days);
-    }
-    return displayPackages;
-  }, [displayPackages, selectedFilter]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredPackages.length / itemsPerPage));
-  const paginatedPackages = filteredPackages.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+    return ['ALL', '7-Day', '14-Day', '21-Day'];
+  }, []);
 
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
@@ -119,7 +121,7 @@ export default function RetreatsPage() {
         <>
           <div className="flex justify-between items-center border-b border-primary/10 pb-4">
             <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze">
-              Showing {filteredPackages.length} Curated Care Packages
+              Showing {totalCount} Curated Care Packages
             </span>
             <span className="text-xs font-sans text-text-muted">
               Page {page} of {totalPages}
@@ -127,7 +129,7 @@ export default function RetreatsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {paginatedPackages.map((retreat, idx) => {
+            {packages.map((retreat, idx) => {
               const id = retreat.id || retreat._id || `pkg-${idx}`;
               const title = retreat.title || 'Inpatient Ayurveda Package';
               const duration = retreat.durationDays ? `${retreat.durationDays}-Day Retreat` : '7-Day Sanctuary';

@@ -12,19 +12,41 @@ import { DoctorCardSkeleton } from '@/components/ui/Skeleton';
 
 export default function DoctorsPage() {
   const [doctors, setDoctors] = useState<DoctorItem[]>([]);
+  const [allDoctorsForCategories, setAllDoctorsForCategories] = useState<DoctorItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState<'carousel' | 'grid'>('carousel');
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const limit = 12;
 
+  // Fetch all categories baseline once
+  useEffect(() => {
+    async function loadCategoriesBaseline() {
+      try {
+        const res = await fetchDoctors({ limit: 100 });
+        setAllDoctorsForCategories(res.data);
+      } catch (e) {}
+    }
+    loadCategoriesBaseline();
+  }, []);
+
+  // Server-Side Paginated API Fetch on page / filter / search change
   useEffect(() => {
     async function loadDoctors() {
       setLoading(true);
       try {
-        const fetched = await fetchDoctors();
-        setDoctors(fetched);
+        const res = await fetchDoctors({
+          page,
+          limit,
+          category: selectedCategory,
+          search: searchTerm,
+        });
+        setDoctors(res.data);
+        setTotalPages(res.meta.totalPages);
+        setTotalCount(res.meta.total);
       } catch (err) {
         console.error('Error fetching doctors:', err);
       } finally {
@@ -32,15 +54,15 @@ export default function DoctorsPage() {
       }
     }
     loadDoctors();
-  }, []);
+  }, [page, selectedCategory, searchTerm]);
 
   // Dynamically extract unique available departments / specialties case-insensitively
   const availableCategories = useMemo(() => {
-    if (!doctors || doctors.length === 0) return ['ALL'];
+    const sourceList = allDoctorsForCategories.length > 0 ? allDoctorsForCategories : doctors;
+    if (!sourceList || sourceList.length === 0) return ['ALL'];
     const categoryMap = new Map<string, string>(); // lowercase -> display title
 
-    doctors.forEach((doc) => {
-      // Check department title if populated object or string
+    sourceList.forEach((doc) => {
       let deptName = '';
       if (typeof doc.departmentId === 'object' && doc.departmentId !== null) {
         deptName = (doc.departmentId as any).title || '';
@@ -59,51 +81,13 @@ export default function DoctorsPage() {
     });
 
     return ['ALL', ...Array.from(categoryMap.values())];
-  }, [doctors]);
-
-  // Filter doctors based on selected department chip and search input
-  const filteredDoctors = useMemo(() => {
-    return doctors.filter((doc) => {
-      // Category filter match
-      if (selectedCategory !== 'ALL') {
-        const filterKey = selectedCategory.toLowerCase();
-        let docDept = '';
-        if (typeof doc.departmentId === 'object' && doc.departmentId !== null) {
-          docDept = ((doc.departmentId as any).title || '').toLowerCase();
-        }
-        const docSpec = (doc.specialization || '').toLowerCase();
-        const docSpecialties = (doc.specialties || []).map((s) => s.toLowerCase());
-
-        const matchesCat =
-          docDept.includes(filterKey) ||
-          docSpec.includes(filterKey) ||
-          docSpecialties.some((s) => s.includes(filterKey));
-
-        if (!matchesCat) return false;
-      }
-
-      // Search term match
-      if (searchTerm.trim()) {
-        const q = searchTerm.toLowerCase();
-        const nameMatch = doc.name.toLowerCase().includes(q);
-        const desigMatch = (doc.designation || '').toLowerCase().includes(q);
-        const specMatch = (doc.specialization || '').toLowerCase().includes(q);
-        if (!nameMatch && !desigMatch && !specMatch) return false;
-      }
-
-      return true;
-    });
-  }, [doctors, selectedCategory, searchTerm]);
+  }, [allDoctorsForCategories, doctors]);
 
   // Handle filter change
   const handleCategoryChange = (cat: string) => {
     setSelectedCategory(cat);
     setPage(1);
   };
-
-  // Pagination for grid mode
-  const totalPages = Math.max(1, Math.ceil(filteredDoctors.length / limit));
-  const paginatedDoctors = filteredDoctors.slice((page - 1) * limit, page * limit);
 
   return (
     <div className="px-6 sm:px-12 md:px-20 max-w-7xl mx-auto flex flex-col gap-10 pb-24">
@@ -197,16 +181,14 @@ export default function DoctorsPage() {
         <div className="space-y-8 pt-4">
           <div className="flex items-center justify-between border-b border-primary/10 pb-4">
             <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze">
-              Found {filteredDoctors.length} Expert Physicians
+              Found {totalCount} Expert Physicians
             </span>
-            {viewMode === 'grid' && (
-              <span className="text-xs font-sans text-text-muted">
-                Page {page} of {totalPages}
-              </span>
-            )}
+            <span className="text-xs font-sans text-text-muted">
+              Page {page} of {totalPages}
+            </span>
           </div>
 
-          {filteredDoctors.length === 0 ? (
+          {doctors.length === 0 ? (
             <div className="text-center py-16 text-text-secondary">
               <p className="font-display text-xl font-bold text-primary mb-2">No Physicians Match Your Filter</p>
               <p className="text-sm font-sans">Try selecting &quot;ALL&quot; or clearing your search term.</p>
@@ -217,6 +199,7 @@ export default function DoctorsPage() {
                 onClick={() => {
                   setSelectedCategory('ALL');
                   setSearchTerm('');
+                  setPage(1);
                 }}
               >
                 RESET ALL FILTERS
@@ -224,12 +207,12 @@ export default function DoctorsPage() {
             </div>
           ) : viewMode === 'carousel' ? (
             /* CAROUSEL SHOWCASE VIEW */
-            <DoctorCarousel doctors={filteredDoctors} autoPlayInterval={4000} />
+            <DoctorCarousel doctors={doctors} autoPlayInterval={4000} />
           ) : (
             /* GRID CATALOG VIEW */
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {paginatedDoctors.map((doctor, idx) => {
+                {doctors.map((doctor, idx) => {
                   const id = doctor.id || doctor._id || `doc-${idx}`;
                   const slug = doctor.slug || id;
                   const name = doctor.name || 'Ayurvedic Physician';
