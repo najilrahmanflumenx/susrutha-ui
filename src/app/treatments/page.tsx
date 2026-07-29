@@ -176,42 +176,50 @@ export default function TreatmentsPage() {
         </div>
       )}
 
-      {/* Pagination Controls */}
-      {!loading && totalPages > 1 && (
-        <div className="flex items-center justify-center gap-4 pt-8">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page === 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            icon={<ChevronLeft className="w-4 h-4" />}
-          >
-            PREVIOUS
-          </Button>
-          <div className="flex items-center gap-2">
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setPage(i + 1)}
-                className={`w-9 h-9 rounded-lg font-sans text-xs font-bold transition-all ${
-                  page === i + 1
-                    ? 'bg-gold text-white shadow-md'
-                    : 'bg-surface-card text-primary border border-primary/10 hover:bg-primary/5'
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
+      {/* Pagination Controls Footer */}
+      {!loading && (
+        <div className="flex flex-col items-center justify-center gap-4 pt-8 border-t border-primary/10 mt-8">
+          <div className="text-xs font-sans font-semibold text-text-secondary uppercase tracking-wider">
+            Showing {totalCount > 0 ? (page - 1) * itemsPerPage + 1 : 0} to{' '}
+            {Math.min(page * itemsPerPage, totalCount)} of {totalCount} Therapies
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page === totalPages}
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            icon={<ChevronRight className="w-4 h-4" />}
-          >
-            NEXT
-          </Button>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page === 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                icon={<ChevronLeft className="w-4 h-4" />}
+              >
+                PREVIOUS
+              </Button>
+              <div className="flex items-center gap-1.5">
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setPage(i + 1)}
+                    className={`w-9 h-9 rounded-lg font-sans text-xs font-bold transition-all ${
+                      page === i + 1
+                        ? 'bg-gold text-white shadow-md'
+                        : 'bg-surface-card text-primary border border-primary/10 hover:bg-primary/5'
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page >= totalPages}
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                icon={<ChevronRight className="w-4 h-4" />}
+              >
+                NEXT
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -199,109 +199,109 @@ export default function DoctorsPage() {
             <DoctorCarousel doctors={doctors} autoPlayInterval={4000} />
           ) : (
             /* GRID CATALOG VIEW */
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {doctors.map((doctor, idx) => {
-                  const id = doctor.id || doctor._id || `doc-${idx}`;
-                  const slug = doctor.slug || id;
-                  const name = doctor.name || 'Ayurvedic Physician';
-                  const designation = doctor.designation || doctor.title || 'Senior Consultant';
-                  const specialization = doctor.specialization || (doctor.specialties ? doctor.specialties[0] : 'Kayachikitsa');
-                  const expYears = doctor.experienceYears || 15;
-                  const photo = doctor.photoUrl || doctor.photo || doctor.image || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&auto=format&fit=crop&q=80';
-                  const bio = doctor.bio || 'Expert physician committed to holistic patient wellness and classical Panchakarma care.';
-                  const qualifications = Array.isArray(doctor.qualifications)
-                    ? doctor.qualifications
-                    : typeof doctor.qualifications === 'string'
-                      ? [doctor.qualifications]
-                      : ['BAMS', 'MD (Ayurveda)'];
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {doctors.map((doctor, idx) => {
+                const id = doctor.id || doctor._id || `doc-${idx}`;
+                const slug = doctor.slug || id;
+                const name = doctor.name || 'Ayurvedic Physician';
+                const designation = doctor.designation || doctor.title || 'Senior Consultant';
+                const specialization = doctor.specialization || (doctor.specialties ? doctor.specialties[0] : 'Kayachikitsa');
+                const expYears = doctor.experienceYears || 15;
+                const photo = doctor.photoUrl || doctor.photo || doctor.image || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&auto=format&fit=crop&q=80';
+                const bio = doctor.bio || 'Expert physician committed to holistic patient wellness and classical Panchakarma care.';
+                const qualifications = Array.isArray(doctor.qualifications)
+                  ? doctor.qualifications
+                  : typeof doctor.qualifications === 'string'
+                    ? [doctor.qualifications]
+                    : ['BAMS', 'MD (Ayurveda)'];
 
-                  return (
-                    <Card key={id} variant="default" className="flex flex-col justify-between p-8 group shadow-sm hover:shadow-xl transition-all">
-                      <div>
-                        <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-6 bg-slate-100 dark:bg-slate-800">
-                          <img
-                            src={photo}
-                            alt={name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                        </div>
-                        <Badge variant="gold" className="mb-3">{specialization}</Badge>
-                        <h3 className="font-display text-3xl font-bold text-primary mb-1">
-                          <Link href={`/doctors/${slug}`} className="hover:underline">
-                            {name}
-                          </Link>
-                        </h3>
-                        <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze block mb-4">
-                          {designation} • {expYears} Years Exp.
-                        </span>
-                        <p className="font-sans text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
-                          {bio}
-                        </p>
-
-                        <div className="space-y-2 mb-6 pt-4 border-t border-primary/10">
-                          <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-text-muted block">
-                            QUALIFICATIONS
-                          </span>
-                          {qualifications.map((q, qIdx) => (
-                            <div key={qIdx} className="flex items-center gap-2 text-xs font-sans text-text-primary">
-                              <Award className="w-4 h-4 text-gold shrink-0" />
-                              <span>{q}</span>
-                            </div>
-                          ))}
-                        </div>
+                return (
+                  <Card key={id} variant="default" className="flex flex-col justify-between p-8 group shadow-sm hover:shadow-xl transition-all">
+                    <div>
+                      <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-6 bg-slate-100 dark:bg-slate-800">
+                        <img
+                          src={photo}
+                          alt={name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
                       </div>
+                      <Badge variant="gold" className="mb-3">{specialization}</Badge>
+                      <h3 className="font-display text-3xl font-bold text-primary mb-1">
+                        <Link href={`/doctors/${slug}`} className="hover:underline">
+                          {name}
+                        </Link>
+                      </h3>
+                      <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze block mb-4">
+                        {designation} • {expYears} Years Exp.
+                      </span>
+                      <p className="font-sans text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
+                        {bio}
+                      </p>
 
-                      <Link href={`/booking?doctor=${encodeURIComponent(name)}`}>
-                        <Button variant="gold" className="w-full" icon={<ChevronRight className="w-4 h-4" />}>
-                          SCHEDULE CONSULTATION
-                        </Button>
-                      </Link>
-                    </Card>
-                  );
-                })}
-              </div>
+                      <div className="flex flex-wrap gap-1.5 mb-6">
+                        {qualifications.map((q, qIdx) => (
+                          <div key={qIdx} className="text-[11px] font-sans font-semibold px-2.5 py-1 rounded-md bg-surface-dark/5 text-primary border border-primary/10">
+                            {q}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
 
-              {/* Pagination Controls */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-4 pt-8">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={page === 1}
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    icon={<ChevronLeft className="w-4 h-4" />}
-                  >
-                    PREVIOUS
-                  </Button>
-                  <div className="flex items-center gap-2">
-                    {Array.from({ length: totalPages }).map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setPage(i + 1)}
-                        className={`w-9 h-9 rounded-lg font-sans text-xs font-bold transition-all ${
-                          page === i + 1
-                            ? 'bg-gold text-white shadow-md'
-                            : 'bg-surface-card text-primary border border-primary/10 hover:bg-primary/5'
-                        }`}
-                      >
-                        {i + 1}
-                      </button>
-                    ))}
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={page === totalPages}
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    icon={<ChevronRight className="w-4 h-4" />}
-                  >
-                    NEXT
-                  </Button>
-                </div>
-              )}
-            </>
+                    <Link href={`/booking?doctor=${encodeURIComponent(name)}`}>
+                      <Button variant="gold" className="w-full" icon={<ChevronRight className="w-4 h-4" />}>
+                        SCHEDULE CONSULTATION
+                      </Button>
+                    </Link>
+                  </Card>
+                );
+              })}
+            </div>
           )}
+
+          {/* Pagination Controls Footer */}
+          <div className="flex flex-col items-center justify-center gap-4 pt-8 border-t border-primary/10 mt-8">
+            <div className="text-xs font-sans font-semibold text-text-secondary uppercase tracking-wider">
+              Showing {totalCount > 0 ? (page - 1) * limit + 1 : 0} to{' '}
+              {Math.min(page * limit, totalCount)} of {totalCount} Doctors
+            </div>
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page === 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  icon={<ChevronLeft className="w-4 h-4" />}
+                >
+                  PREVIOUS
+                </Button>
+                <div className="flex items-center gap-1.5">
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setPage(i + 1)}
+                      className={`w-9 h-9 rounded-lg font-sans text-xs font-bold transition-all ${
+                        page === i + 1
+                          ? 'bg-gold text-white shadow-md'
+                          : 'bg-surface-card text-primary border border-primary/10 hover:bg-primary/5'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page >= totalPages}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  icon={<ChevronRight className="w-4 h-4" />}
+                >
+                  NEXT
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
