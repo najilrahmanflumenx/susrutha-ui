@@ -8,9 +8,6 @@ import { Breadcrumbs, PageHero, SectionHeading } from '../../components/ui';
 import { pageTitle } from '../../lib/seo';
 import { cn } from '../../lib/utils';
 import { getDoctors, getBranches, getDepartments } from '../../lib/api';
-import { doctors } from '../../data/doctors';
-import { branches } from '../../data/site';
-import { specialties as staticSpecialties } from '../../data/specialties';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -18,30 +15,9 @@ export default function DoctorsPage() {
   const [branch, setBranch] = useState('all');
   const [specialty, setSpecialty] = useState('all');
   const [day, setDay] = useState('all');
-  const [doctorList, setDoctorList] = useState<any[]>(
-    doctors.map((d) => ({
-      id: d.id,
-      slug: d.slug,
-      name: d.name,
-      qual: d.qual,
-      role: d.role,
-      image: d.image || '/images/doctor-portrait.jpg',
-      isDirector: !!d.isDirector,
-      availabilityArr: [],
-      availabilityStr: d.availability || 'Mon - Sat (OPD)',
-      specialties: d.pillars || [],
-      branchIds: d.branchIds || ['kattakada'],
-      branchCodes: d.branchIds || ['KTK'],
-      departmentId: d.specialtyIds?.[0] || 'gen',
-      departmentName: 'Ayurveda Specialist',
-    }))
-  );
-  const [branchList, setBranchList] = useState<any[]>(
-    branches.map((b) => ({ _id: b.id, name: b.name, code: b.code }))
-  );
-  const [departmentList, setDepartmentList] = useState<any[]>(
-    staticSpecialties.map((s) => ({ _id: s.id, title: s.name }))
-  );
+  const [doctorList, setDoctorList] = useState<any[]>([]);
+  const [branchList, setBranchList] = useState<any[]>([]);
+  const [departmentList, setDepartmentList] = useState<any[]>([]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -49,15 +25,15 @@ export default function DoctorsPage() {
     }
 
     getBranches().then((brs) => {
-      if (brs && Array.isArray(brs) && brs.length > 0) setBranchList(brs);
+      if (brs && Array.isArray(brs)) setBranchList(brs);
     });
 
     getDepartments().then((depts) => {
-      if (depts && Array.isArray(depts) && depts.length > 0) setDepartmentList(depts);
+      if (depts && Array.isArray(depts)) setDepartmentList(depts);
     });
 
     getDoctors().then((apiDoctors) => {
-      if (apiDoctors && Array.isArray(apiDoctors) && apiDoctors.length > 0) {
+      if (apiDoctors && Array.isArray(apiDoctors)) {
         const mapped = apiDoctors.map((d: any) => ({
           id: d._id || d.slug || d.id,
           slug: d.slug,

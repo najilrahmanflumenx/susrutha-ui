@@ -15,11 +15,6 @@ import {
 } from 'lucide-react';
 import { brand, ayurVillage } from '../data/site';
 import { ecosystemVerticals } from '../data/enrichment';
-import { getDirectors } from '../data/doctors';
-import { specialties } from '../data/specialties';
-import { packages } from '../data/packages';
-import { treatments } from '../data/treatments';
-import { articles } from '../data/content';
 import { AiSummary, Button, CardLink, FadeIn, SectionHeading, Stat } from '../components/ui';
 import InteractiveTimeline from '../components/InteractiveTimeline';
 import InteractiveFacilities from '../components/InteractiveFacilities';
@@ -31,7 +26,7 @@ import TabascoHero from '../components/TabascoHero';
 import TabascoDocumentaryStory from '../components/TabascoDocumentaryStory';
 import TreatmentGlassGrid from '../components/TreatmentGlassGrid';
 import { orgSchema } from '../lib/seo';
-import { getHomeData } from '../lib/api';
+import { getHomeData, getBlogs } from '../lib/api';
 
 function useCountUp(target: number, enabled: boolean) {
   const [value, setValue] = useState(0);
@@ -118,15 +113,20 @@ function BotanicalHeroArt() {
 }
 
 function PanchakarmaSteps() {
-  const steps = treatments.find((t) => t.id === 'panchakarma')?.procedure || [];
+  const steps = [
+    { title: 'Physician Assessment', body: 'Dosha prakriti, pulse diagnosis (Nadi pariksha) and disease root cause mapping.' },
+    { title: 'Purva Karma (Prep)', body: 'Internal oleation (Snehapana) and svedana (steam) to liquefy deep tissue toxins.' },
+    { title: 'Pradhana Karma (Cleansing)', body: 'Physician-supervised purificatory procedures tailored strictly to bodily strength.' },
+    { title: 'Paschat Karma (Aftercare)', body: 'Samsarjana krama diet rehabilitation and Rasayana tissue rejuvenation.' },
+  ];
   return (
-    <ol className="grid gap-4 md:grid-cols-5">
-      {steps.map((step, i) => (
-        <FadeIn key={step.step} delay={i * 0.05}>
-          <li className="relative h-full rounded-2xl border border-ochre/30 bg-[#1C1214]/95 p-5 shadow-glass-dark hover:border-ochre transition-colors text-ivory-50 font-body">
-            <span className="font-display text-3xl font-bold text-[#FFC86B]">{String(i + 1).padStart(2, '0')}</span>
-            <h3 className="mt-2 text-lg font-bold text-white">{step.step}</h3>
-            <p className="mt-2 text-sm text-ivory-200/90 leading-relaxed">{step.detail}</p>
+    <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {steps.map((s, idx) => (
+        <FadeIn key={s.title} delay={idx * 0.1}>
+          <li className="rounded-2xl border border-ochre/30 bg-[#1C1214]/90 p-5 shadow-glass-dark transition-all duration-300 hover:border-[#FFC86B]/60">
+            <span className="font-mono text-xs font-bold text-[#FFC86B]">0{idx + 1}</span>
+            <p className="mt-2 font-display text-lg font-bold text-ivory-50">{s.title}</p>
+            <p className="mt-1 text-xs leading-relaxed text-ivory-200/80">{s.body}</p>
           </li>
         </FadeIn>
       ))}
@@ -135,20 +135,10 @@ function PanchakarmaSteps() {
 }
 
 export default function HomePage() {
-  const [directorsList, setDirectorsList] = useState<any[]>(getDirectors());
-  const [packageList, setPackageList] = useState<any[]>(packages.slice(0, 4).map(p => ({
-    id: p.id,
-    slug: p.slug,
-    name: p.name,
-    summary: p.summary,
-    durationLabel: p.durationLabel,
-  })));
-  const [conditionsList, setConditionsList] = useState<any[]>(specialties.map(s => ({
-    id: s.id,
-    slug: s.slug,
-    name: s.shortName || s.name,
-    tagline: s.tagline,
-  })));
+  const [directorsList, setDirectorsList] = useState<any[]>([]);
+  const [packageList, setPackageList] = useState<any[]>([]);
+  const [conditionsList, setConditionsList] = useState<any[]>([]);
+  const [articlesList, setArticlesList] = useState<any[]>([]);
 
   useEffect(() => {
     document.title = `${brand.commonName} — Authentic Kerala Ayurveda Hospital · Trivandrum`;
@@ -164,8 +154,8 @@ export default function HomePage() {
       if (homeData) {
         if (homeData.doctors && homeData.doctors.length > 0) {
           const apiDirectors = homeData.doctors.filter((d: any) => d.isDirector);
-          if (apiDirectors.length > 0) {
-            setDirectorsList(apiDirectors.map((d: any) => ({
+          setDirectorsList(
+            (apiDirectors.length > 0 ? apiDirectors : homeData.doctors).map((d: any) => ({
               id: d._id || d.slug,
               slug: d.slug,
               name: d.name,
@@ -174,8 +164,8 @@ export default function HomePage() {
               image: d.photo || '/images/doctor-portrait.jpg',
               availability: typeof d.availability === 'string' ? d.availability : 'Mon - Sat (OPD)',
               pillars: d.specialties || ['General Ayurveda'],
-            })));
-          }
+            }))
+          );
         }
         if (homeData.packages && homeData.packages.length > 0) {
           setPackageList(homeData.packages.slice(0, 4).map((p: any) => ({
@@ -194,6 +184,18 @@ export default function HomePage() {
             tagline: c.shortDescription || c.category || 'Speciality Pathway',
           })));
         }
+      }
+    });
+
+    getBlogs().then((blogs) => {
+      if (blogs && Array.isArray(blogs)) {
+        setArticlesList(blogs.slice(0, 4).map((b: any) => ({
+          id: b._id || b.slug,
+          slug: b.slug,
+          title: b.title,
+          excerpt: b.summary || b.excerpt || 'Clinical article by Susrutha physicians.',
+          readTime: b.readTime || '5 min read',
+        })));
       }
     });
   }, []);
@@ -407,7 +409,7 @@ export default function HomePage() {
             </Button>
           </div>
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {articles.map((a) => (
+            {articlesList.map((a: any) => (
               <CardLink key={a.id} to={`/knowledge/${a.slug}`} title={a.title} description={a.excerpt} meta={a.readTime} />
             ))}
           </div>

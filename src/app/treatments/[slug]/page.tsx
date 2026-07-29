@@ -5,7 +5,6 @@ export const dynamic = 'force-dynamic';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { getTreatmentBySlug } from '../../../data/treatments';
 import { AiSummary, Breadcrumbs, Button, FaqList, PageHero } from '../../../components/ui';
 import { pageTitle, faqSchema } from '../../../lib/seo';
 import { getTreatmentBySlug as fetchTreatmentApi } from '../../../lib/api';
@@ -93,9 +92,6 @@ export default function TreatmentDetailPage() {
             doctorIds: apiTx.doctorIds || [],
             relatedPackageIds: [],
           });
-        } else {
-          const fallback = getTreatmentBySlug(slug);
-          if (fallback) setTreatment(fallback);
         }
         setLoading(false);
       });

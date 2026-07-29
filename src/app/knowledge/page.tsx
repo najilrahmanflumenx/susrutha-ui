@@ -4,20 +4,11 @@ import { useEffect, useState } from 'react';
 import { Breadcrumbs, CardLink, PageHero, Pagination, SkeletonCard } from '../../components/ui';
 import { pageTitle } from '../../lib/seo';
 import { getBlogs } from '../../lib/api';
-import { articles as staticArticles } from '../../data/content';
 
 const ITEMS_PER_PAGE = 6;
 
 export default function KnowledgePage() {
-  const [articleList, setArticleList] = useState<any[]>(
-    staticArticles.map((a) => ({
-      id: a.id,
-      slug: a.slug,
-      title: a.title,
-      excerpt: a.excerpt,
-      meta: `${a.readTime} · Susrutha Medical Team`,
-    }))
-  );
+  const [articleList, setArticleList] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -26,7 +17,7 @@ export default function KnowledgePage() {
     setLoading(true);
     getBlogs()
       .then((blogs) => {
-        if (blogs && Array.isArray(blogs) && blogs.length > 0) {
+        if (blogs && Array.isArray(blogs)) {
           const mapped = blogs.map((b: any) => ({
             id: b._id || b.slug,
             slug: b.slug,
@@ -35,8 +26,11 @@ export default function KnowledgePage() {
             meta: `${b.readTimeMinutes || 5} min read · ${b.authorName || 'Susrutha Medical Team'}`,
           }));
           setArticleList(mapped);
+        } else {
+          setArticleList([]);
         }
       })
+      .catch(() => setArticleList([]))
       .finally(() => setLoading(false));
   }, []);
 

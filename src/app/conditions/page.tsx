@@ -4,23 +4,14 @@ import { useEffect, useState } from 'react';
 import { Breadcrumbs, CardLink, PageHero } from '../../components/ui';
 import { pageTitle } from '../../lib/seo';
 import { getConditions } from '../../lib/api';
-import { specialties } from '../../data/specialties';
 
 export default function ConditionsPage() {
-  const [conditionList, setConditionList] = useState<any[]>(
-    specialties.map((s) => ({
-      id: s.id,
-      slug: s.slug,
-      name: s.shortName || s.name,
-      tagline: s.tagline,
-      meta: 'Speciality Pathway',
-    }))
-  );
+  const [conditionList, setConditionList] = useState<any[]>([]);
 
   useEffect(() => {
     document.title = pageTitle('Conditions & Specialities');
     getConditions().then((apiConditions) => {
-      if (apiConditions && Array.isArray(apiConditions) && apiConditions.length > 0) {
+      if (apiConditions && Array.isArray(apiConditions)) {
         const mapped = apiConditions.map((c: any) => ({
           id: c._id || c.slug,
           slug: c.slug,
@@ -29,8 +20,10 @@ export default function ConditionsPage() {
           meta: c.category || 'Speciality Pathway',
         }));
         setConditionList(mapped);
+      } else {
+        setConditionList([]);
       }
-    });
+    }).catch(() => setConditionList([]));
   }, []);
 
   return (

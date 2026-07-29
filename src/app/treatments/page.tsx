@@ -6,21 +6,12 @@ import { useEffect, useState } from 'react';
 import { Breadcrumbs, CardLink, PageHero, Pagination, SkeletonCard } from '../../components/ui';
 import { pageTitle } from '../../lib/seo';
 import { getTreatments } from '../../lib/api';
-import { treatments } from '../../data/treatments';
 import { Sparkles, Filter } from 'lucide-react';
 
 const ITEMS_PER_PAGE = 6;
 
 export default function TreatmentsPage() {
-  const localTreatmentList = treatments.map((t) => ({
-    id: t.id,
-    slug: t.slug,
-    name: t.name,
-    aiSummary: t.aiSummary,
-    category: t.category,
-    image: t.image || '/images/hero-ayurveda.jpg',
-  }));
-  const [treatmentList, setTreatmentList] = useState<any[]>(localTreatmentList);
+  const [treatmentList, setTreatmentList] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,7 +23,7 @@ export default function TreatmentsPage() {
     setLoading(true);
     getTreatments({ category: selectedCategory !== 'all' ? selectedCategory : undefined })
       .then((apiTxs) => {
-        if (apiTxs && Array.isArray(apiTxs) && apiTxs.length > 0) {
+        if (apiTxs && Array.isArray(apiTxs)) {
           const mapped = apiTxs.map((t: any) => ({
             id: t._id || t.slug,
             slug: t.slug,
@@ -42,8 +33,11 @@ export default function TreatmentsPage() {
             image: t.coverImage || t.image || '/images/hero-ayurveda.jpg',
           }));
           setTreatmentList(mapped);
+        } else {
+          setTreatmentList([]);
         }
       })
+      .catch(() => setTreatmentList([]))
       .finally(() => setLoading(false));
   }, [selectedCategory]);
 

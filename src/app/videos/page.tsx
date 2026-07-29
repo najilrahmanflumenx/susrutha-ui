@@ -63,37 +63,44 @@ export default function VideoGalleryPage() {
           ))}
         </div>
 
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5 font-body">
-          {filtered.map((v, i) => (
-            <motion.button
-              key={v.id}
-              type="button"
-              onClick={() => setActiveId(v.id)}
-              className={cn(
-                'group relative w-full break-inside-avoid overflow-hidden rounded-2xl border border-ochre/30 bg-[#1C1214] text-left shadow-glass-dark hover:border-ochre transition-all',
-                i % 3 === 0 ? 'aspect-[4/5]' : i % 3 === 1 ? 'aspect-video' : 'aspect-[5/4]',
-              )}
-              whileHover={reduce ? undefined : { y: -4 }}
-            >
-              <img
-                src={`https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`}
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#120A0B]/95 via-[#120A0B]/40 to-transparent" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#FFC86B] text-[#120A0B] shadow-lg transition-transform group-hover:scale-110">
-                  <Play className="h-6 w-6 fill-current" />
-                </span>
-              </div>
-              <div className="absolute inset-x-0 bottom-0 p-5">
-                <p className="text-[10px] uppercase tracking-[0.16em] text-[#FFC86B] font-bold">{v.category}</p>
-                <h2 className="mt-1 font-display text-xl text-white font-bold leading-snug">{v.title}</h2>
-              </div>
-            </motion.button>
-          ))}
-        </div>
+        {filtered.length > 0 ? (
+          <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5 font-body">
+            {filtered.map((v, i) => (
+              <motion.button
+                key={v.id}
+                type="button"
+                onClick={() => setActiveId(v.id)}
+                className={cn(
+                  'group relative w-full break-inside-avoid overflow-hidden rounded-2xl border border-ochre/30 bg-[#1C1214] text-left shadow-glass-dark hover:border-ochre transition-all',
+                  i % 3 === 0 ? 'aspect-[4/5]' : i % 3 === 1 ? 'aspect-video' : 'aspect-[5/4]',
+                )}
+                whileHover={reduce ? undefined : { y: -4 }}
+              >
+                <img
+                  src={`https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`}
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#120A0B]/95 via-[#120A0B]/40 to-transparent" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#FFC86B] text-[#120A0B] shadow-lg transition-transform group-hover:scale-110">
+                    <Play className="h-6 w-6 fill-current" />
+                  </span>
+                </div>
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <p className="text-[10px] uppercase tracking-[0.16em] text-[#FFC86B] font-bold">{v.category}</p>
+                  <h2 className="mt-1 font-display text-xl text-white font-bold leading-snug">{v.title}</h2>
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-3xl border border-ochre/30 bg-[#1C1214]/95 p-12 text-center shadow-glass-dark text-ivory-50 font-body">
+            <h2 className="font-display text-2xl font-bold text-white">No Videos Found</h2>
+            <p className="mt-2 text-sm text-ivory-200/90">No video recordings currently available in this category.</p>
+          </div>
+        )}
       </div>
 
       <AnimatePresence>
