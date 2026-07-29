@@ -30,6 +30,22 @@ export default function TreatmentDetailPage() {
             overview: apiTx.fullDescription || apiTx.shortDescription || 'Classical Panchakarma therapy performed under medical supervision.',
             procedure: (apiTx.procedureSteps && apiTx.procedureSteps.length > 0)
               ? apiTx.procedureSteps.map((item: any, i: number) => {
+                  // Handle JSON-stringified objects stored in DB string[] field
+                  if (typeof item === 'string') {
+                    try {
+                      const parsed = JSON.parse(item);
+                      if (parsed && typeof parsed === 'object') {
+                        return {
+                          step: typeof parsed.step === 'string' ? parsed.step : `Phase ${i + 1}`,
+                          detail: typeof parsed.detail === 'string' ? parsed.detail : parsed.step || String(item),
+                        };
+                      }
+                    } catch {
+                      // Plain string step — use it as the detail
+                    }
+                    return { step: `Phase ${i + 1}`, detail: item };
+                  }
+                  // Already an object
                   if (typeof item === 'object' && item !== null) {
                     return {
                       step: typeof item.step === 'string' ? item.step : `Phase ${i + 1}`,
