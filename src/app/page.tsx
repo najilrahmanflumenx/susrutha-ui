@@ -1,435 +1,393 @@
 'use client';
 
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowRight,
-  Leaf,
+  Play,
+  Flower,
+  Brain,
+  Droplets,
+  Heart,
+  Calendar,
+  Clock,
   ShieldCheck,
-  FlaskConical,
-  BedDouble,
+  Award,
+  Sparkles,
   MapPin,
-  Plane,
-  Globe2,
+  CheckCircle2,
+  ChevronRight
 } from 'lucide-react';
-import { brand, ayurVillage } from '../data/site';
-import { ecosystemVerticals } from '../data/enrichment';
-import { AiSummary, Button, CardLink, FadeIn, SectionHeading, Stat } from '../components/ui';
-import InteractiveTimeline from '../components/InteractiveTimeline';
-import InteractiveFacilities from '../components/InteractiveFacilities';
-import TestimonialCarousel from '../components/TestimonialCarousel';
-import AppointmentHub from '../components/AppointmentHub';
-import CinematicCursor from '../components/CinematicCursor';
-import LenisProvider from '../components/LenisProvider';
-import TabascoHero from '../components/TabascoHero';
-import TabascoDocumentaryStory from '../components/TabascoDocumentaryStory';
-import TreatmentGlassGrid from '../components/TreatmentGlassGrid';
-import { orgSchema } from '../lib/seo';
-import { getHomeData, getBlogs } from '../lib/api';
-
-function useCountUp(target: number, enabled: boolean) {
-  const [value, setValue] = useState(0);
-  const reduce = useReducedMotion();
-  useEffect(() => {
-    if (!enabled) return;
-    if (reduce) {
-      setValue(target);
-      return;
-    }
-    let frame: number;
-    const start = performance.now();
-    const duration = 1200;
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      setValue(Math.round(target * (1 - Math.pow(1 - t, 3))));
-      if (t < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [target, enabled, reduce]);
-  return value;
-}
-
-function TrustCounters() {
-  const [visible, setVisible] = useState(false);
-  const yearsLineage = useCountUp(55, visible);
-  const yearsInstitution = useCountUp(40, visible);
-  const beds = useCountUp(40, visible);
-  const branchesCount = useCountUp(2, visible);
-
-  return (
-    <div
-      ref={(el) => {
-        if (!el || visible) return;
-        const io = new IntersectionObserver(([e]) => {
-          if (e.isIntersecting) {
-            setVisible(true);
-            io.disconnect();
-          }
-        });
-        io.observe(el);
-      }}
-      className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
-    >
-      <Stat value={`~${yearsLineage}`} label="Years family Ayurveda lineage (since 1970)" />
-      <Stat value={`~${yearsInstitution}`} label="Years as Susrutha (since 1986)" />
-      <Stat value={`${beds}`} label="Bed hospital strength" />
-      <Stat value={`${branchesCount}`} label="Care locations + Ayur Village" />
-    </div>
-  );
-}
-
-function BotanicalHeroArt() {
-  const reduce = useReducedMotion();
-  return (
-    <div className="relative aspect-[4/5] sm:aspect-square lg:aspect-[5/6] overflow-hidden rounded-[2rem] bg-crimson-900 shadow-soft-lg shadow-crimson-900/20 border border-ochre/30">
-      <img
-        src="/images/hero-ayurveda.jpg"
-        alt="Calm Ayurvedic care setting with natural elements"
-        className="absolute inset-0 h-full w-full object-cover opacity-90"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-crimson-900/90 via-crimson-900/30 to-transparent" />
-      {!reduce && (
-        <>
-          <motion.div
-            className="absolute -left-6 top-10 h-28 w-28 rounded-full border border-ochre/40"
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="absolute right-8 top-16 h-16 w-16 rounded-full bg-ochre/25 blur-xl"
-            animate={{ opacity: [0.4, 0.8, 0.4] }}
-            transition={{ duration: 6, repeat: Infinity }}
-          />
-        </>
-      )}
-      <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-        <p className="font-display text-2xl font-bold text-ivory-50">Kerala Lineage. Clinical Excellence.</p>
-        <p className="mt-2 text-sm text-ochre-100/90">NABH-accredited inpatient Ayurveda hospital at Kattakada, with city OP clinic at Kowdiar.</p>
-      </div>
-    </div>
-  );
-}
-
-function PanchakarmaSteps() {
-  const steps = [
-    { title: 'Physician Assessment', body: 'Dosha prakriti, pulse diagnosis (Nadi pariksha) and disease root cause mapping.' },
-    { title: 'Purva Karma (Prep)', body: 'Internal oleation (Snehapana) and svedana (steam) to liquefy deep tissue toxins.' },
-    { title: 'Pradhana Karma (Cleansing)', body: 'Physician-supervised purificatory procedures tailored strictly to bodily strength.' },
-    { title: 'Paschat Karma (Aftercare)', body: 'Samsarjana krama diet rehabilitation and Rasayana tissue rejuvenation.' },
-  ];
-  return (
-    <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {steps.map((s, idx) => (
-        <FadeIn key={s.title} delay={idx * 0.1}>
-          <li className="rounded-2xl border border-ochre/30 bg-[#1C1214]/90 p-5 shadow-glass-dark transition-all duration-300 hover:border-[#FFC86B]/60">
-            <span className="font-mono text-xs font-bold text-[#FFC86B]">0{idx + 1}</span>
-            <p className="mt-2 font-display text-lg font-bold text-ivory-50">{s.title}</p>
-            <p className="mt-1 text-xs leading-relaxed text-ivory-200/80">{s.body}</p>
-          </li>
-        </FadeIn>
-      ))}
-    </ol>
-  );
-}
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Timeline } from '@/components/ui/Timeline';
+import { Modal } from '@/components/ui/Modal';
+import { fetchTreatments, fetchDoctors, MOCK_TREATMENTS, MOCK_DOCTORS, TreatmentItem, DoctorItem } from '@/lib/api';
+import { DoctorCarousel } from '@/components/doctors/DoctorCarousel';
+import { useApiData } from '@/hooks/useApiData';
+import { formatCurrency } from '@/lib/utils';
 
 export default function HomePage() {
-  const [directorsList, setDirectorsList] = useState<any[]>([]);
-  const [packageList, setPackageList] = useState<any[]>([]);
-  const [conditionsList, setConditionsList] = useState<any[]>([]);
-  const [articlesList, setArticlesList] = useState<any[]>([]);
+  const [selectedStep, setSelectedStep] = useState(0);
+  const { data: treatments } = useApiData<TreatmentItem[]>(fetchTreatments, MOCK_TREATMENTS);
+  const { data: doctors } = useApiData<DoctorItem[]>(fetchDoctors, MOCK_DOCTORS);
+  const [activeTreatmentModal, setActiveTreatmentModal] = useState<TreatmentItem | null>(null);
 
-  useEffect(() => {
-    document.title = `${brand.commonName} — Authentic Kerala Ayurveda Hospital · Trivandrum`;
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(orgSchema());
-    script.id = 'schema-org';
-    document.getElementById('schema-org')?.remove();
-    document.head.appendChild(script);
-
-    // Fetch live backend data asynchronously
-    getHomeData().then((homeData) => {
-      if (homeData) {
-        if (homeData.doctors && homeData.doctors.length > 0) {
-          const apiDirectors = homeData.doctors.filter((d: any) => d.isDirector);
-          setDirectorsList(
-            (apiDirectors.length > 0 ? apiDirectors : homeData.doctors).map((d: any) => ({
-              id: d._id || d.slug,
-              slug: d.slug,
-              name: d.name,
-              qual: d.qualifications || 'BAMS',
-              role: d.designation || 'Director & Senior Physician',
-              image: d.photo || '/images/doctor-portrait.jpg',
-              availability: typeof d.availability === 'string' ? d.availability : 'Mon - Sat (OPD)',
-              pillars: d.specialties || ['General Ayurveda'],
-            }))
-          );
-        }
-        if (homeData.packages && homeData.packages.length > 0) {
-          setPackageList(homeData.packages.slice(0, 4).map((p: any) => ({
-            id: p._id || p.slug,
-            slug: p.slug,
-            name: p.title || p.name,
-            summary: p.subtitle || p.overview || p.summary,
-            durationLabel: `${p.durationDays || 7} Days Programme`,
-          })));
-        }
-        if (homeData.conditions && homeData.conditions.length > 0) {
-          setConditionsList(homeData.conditions.map((c: any) => ({
-            id: c._id || c.slug,
-            slug: c.slug,
-            name: c.title || c.name,
-            tagline: c.shortDescription || c.category || 'Speciality Pathway',
-          })));
-        }
-      }
-    });
-
-    getBlogs().then((blogs) => {
-      if (blogs && Array.isArray(blogs)) {
-        setArticlesList(blogs.slice(0, 4).map((b: any) => ({
-          id: b._id || b.slug,
-          slug: b.slug,
-          title: b.title,
-          excerpt: b.summary || b.excerpt || 'Clinical article by Susrutha physicians.',
-          readTime: b.readTime || '5 min read',
-        })));
-      }
-    });
-  }, []);
+  const timelineSteps = [
+    {
+      number: '01',
+      title: 'Deep Consultation',
+      subtitle: 'Prakriti Mapping',
+      description: 'A comprehensive pulse-reading (Nadi Pariksha) and diagnostic exploration to determine your unique Vata-Pitta-Kapha constitution.',
+      icon: <Flower className="w-6 h-6" />
+    },
+    {
+      number: '02',
+      title: 'Precision Diagnosis',
+      subtitle: 'Healing Roadmap',
+      description: 'Synthesizing ancient Ayurvedic pathology with modern clinical biomarker analysis to target root-cause imbalances.',
+      icon: <Brain className="w-6 h-6" />
+    },
+    {
+      number: '03',
+      title: 'Synchronized Rituals',
+      subtitle: 'Cellular Cleansing',
+      description: 'Curated bio-purification therapies including Shirodhara, Abhyanga, and custom herbal steam infusions.',
+      icon: <Droplets className="w-6 h-6" />
+    },
+    {
+      number: '04',
+      title: 'Lifelong Vitality',
+      subtitle: 'Integration & Rejuvenation',
+      description: 'Sustainable dietetics, seasonal rasayana formulations, and daily routine protocols to maintain optimal health.',
+      icon: <Heart className="w-6 h-6" />
+    }
+  ];
 
   return (
-    <LenisProvider>
-      <div className="relative bg-[#120A0B] text-ivory-50 overflow-x-hidden selection:bg-ochre/30 selection:text-white font-body">
+    <div className="flex flex-col gap-24 sm:gap-36 pb-20 overflow-hidden">
+      {/* SECTION 1: CINEMATIC HERO */}
+      <section className="relative min-h-[85vh] flex items-center justify-center px-6 sm:px-12 text-center pt-8">
+        {/* Ambient Gradient Backdrop */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gold/10 rounded-full blur-[140px]" />
+          <div className="absolute top-10 right-10 w-96 h-96 bg-primary/10 rounded-full blur-[100px]" />
+        </div>
 
-        {/* Custom Interactive Leaf Pointer */}
-        <CinematicCursor />
+        <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
+          <Badge variant="gold" icon={<Sparkles className="w-3.5 h-3.5" />} className="mb-6 animate-fade-in">
+            ESTABLISHED 1970 • 55 YEARS OF EXCELLENCE
+          </Badge>
 
-        {/* 1. Fullscreen 4K Video Hero */}
-        <TabascoHero />
+          <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl font-medium text-primary mb-8 leading-[1.05] tracking-tight">
+            Ancient Wisdom.<br />
+            <span className="italic font-light gold-gradient-text">Modern Healing.</span>
+          </h1>
 
-        {/* 2. Signature Therapies (Primary Clinical Intent) */}
-        <section className="container-wide section-pad py-20">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between mb-12">
-            <SectionHeading
-              eyebrow="Signature Therapies"
-              title="Panchakarma & Clinical Pathways"
-              description="Supervised purificatory sequences, spine rehabilitation, and Rasayana vitality programmes delivered in dedicated male and female therapy suites."
-            />
-            <Button to="/treatments" variant="outline">
-              All Therapies
-            </Button>
-          </div>
-          <TreatmentGlassGrid />
-        </section>
+          <p className="font-sans text-base sm:text-xl text-text-secondary mb-12 max-w-2xl leading-relaxed">
+            Susrutha embodies the intersection of authentic 55-year Ayurvedic medical mastery and ultra-luxury hospitality, offering transformative journeys for body, mind, and spirit.
+          </p>
 
-        {/* 3. Trust & Heritage Counter Ribbon */}
-        <section className="relative overflow-hidden bg-[#120A0B] text-white border-t border-b border-ochre/40 py-16 font-body">
-          <div className="absolute inset-0 botanical-pattern opacity-10 pointer-events-none" aria-hidden="true" />
-          <div className="absolute -left-20 top-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-ochre/20 blur-3xl pointer-events-none" aria-hidden="true" />
-          <div className="absolute -right-20 top-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-crimson/25 blur-3xl pointer-events-none" aria-hidden="true" />
-
-          <div className="container-wide section-pad relative z-10">
-            <TrustCounters />
-            <div className="mt-10 pt-6 border-t border-ochre/25 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <p className="text-sm text-[#FDFBF7] max-w-3xl leading-relaxed font-body">
-                <span className="font-bold text-[#FFC86B]">Authentic clinical care:</span> We lead with family lineage and institutional age separately — delivering transparent, research-backed Panchakarma therapeutics.
-              </p>
-              <div className="inline-flex items-center gap-2.5 shrink-0">
-                <div className="flex h-5 w-5 items-center justify-center rounded bg-[#FCAB28]/15 border border-[#FCAB28]/50 text-[#FFC86B] font-mono text-[9px] font-black uppercase">
-                  ✓
-                </div>
-                <span className="text-xs uppercase tracking-[0.24em] font-extrabold text-[#FFC86B] font-display">
-                  NABH Accredited Hospital
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 4. Structured Care Packages */}
-        <section className="bg-[#120A0B] border-b border-ochre/25">
-          <div className="container-wide section-pad py-20">
-            <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between mb-10">
-              <SectionHeading
-                eyebrow="Care Packages"
-                title="Structured Programmes With Clear Intent"
-                description="Twelve real packages — from Tekky occupational care to 16-day hospital programmes. Tariffs on enquiry."
-              />
-              <Button to="/packages" variant="outline">
-                View All Packages
+          <div className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto">
+            <Link href="/booking" className="w-full sm:w-auto">
+              <Button variant="gold" size="lg" icon={<ArrowRight className="w-4 h-4" />}>
+                START YOUR JOURNEY
               </Button>
-            </div>
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {packageList.map((p) => (
-                <CardLink
-                  key={p.id}
-                  to={`/packages/${p.slug}`}
-                  title={p.name}
-                  description={p.summary}
-                  meta={p.durationLabel}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 5. Hospital Infrastructure & Facilities Showcase */}
-        <section className="container-wide section-pad py-20">
-          <SectionHeading
-            eyebrow="Facilities"
-            title="Infrastructure That Lets Classical Care Breathe."
-            description="Hover or select a facility — the showcase image and details update with a calm transition."
-          />
-          <div className="mt-10">
-            <InteractiveFacilities />
-          </div>
-        </section>
-
-
-
-        {/* 7. Tabasco 8-Scene Video-Driven Documentary Arc */}
-        <TabascoDocumentaryStory />
-
-        {/* 8. Legacy & Milestones Timeline */}
-        <section className="container-wide section-pad py-20">
-          <SectionHeading
-            eyebrow="Legacy"
-            title="1970 → Today"
-            description="Interactive milestones — scroll, expand and follow the institutional arc without myth-making."
-          />
-          <div className="mt-10">
-            <InteractiveTimeline compact />
-          </div>
-          <Button to="/about#timeline" variant="ghost" className="mt-6 !px-0 text-[#FFC86B] font-bold">
-            Full heritage narrative <ArrowRight className="h-4 w-4" />
-          </Button>
-        </section>
-
-
-
-      <section className="bg-[#1C1214] text-ivory-50 border-y border-ochre/30">
-        <div className="container-wide section-pad py-16">
-          <SectionHeading
-            light
-            eyebrow="Ecosystem"
-            title="More Than a Single Hospital Door"
-            description="Each vertical opens a dedicated page with services, map, gallery and enquiry."
-          />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {ecosystemVerticals.map((v) => (
-              <Link
-                key={v.id}
-                href={`/ecosystem/${v.slug}`}
-                className="group rounded-2xl border border-ochre/20 bg-white/5 p-5 hover:bg-white/10 transition-colors shadow-glass-dark"
-              >
-                <h3 className="font-display text-xl font-bold text-ivory-50">{v.shortName}</h3>
-                <p className="mt-2 text-sm text-ivory-200/80">{v.tagline}</p>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-[#FFC86B] hover:text-white">
-                  Open vertical <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </span>
-              </Link>
-            ))}
-          </div>
-          <div className="mt-8">
-            <Button to="/ecosystem" variant="secondary">
-              Ecosystem Index
-            </Button>
+            </Link>
+            <Link href="/treatments" className="w-full sm:w-auto">
+              <Button variant="secondary" size="lg" icon={<Play className="w-4 h-4 fill-current" />}>
+                EXPLORE RITUALS
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img src="/images/kerala-nature.jpg" alt="" className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-[#120A0B]/90" />
-        </div>
-        <div className="container-wide section-pad relative py-20 text-ivory-50">
-          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-            <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-[#FFC86B] font-bold inline-flex items-center gap-2">
-                <Globe2 className="h-4 w-4" /> International Patients
-              </p>
-              <h2 className="mt-4 font-display text-3xl sm:text-5xl font-bold text-balance leading-tight">
-                Kerala Medical Travel, Planned With Hospital Honesty.
-              </h2>
-              <p className="mt-5 text-ivory-200/90 leading-relaxed max-w-xl">
-                Airport-aware logistics, Ayur Village privacy ~20 km from Trivandrum International Airport, visa and interpreter coordination on enquiry, and packages directed by physicians — not spa scripts.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button to="/international-patients" variant="secondary">
-                  Open Travel Guide
-                </Button>
-                <Button to="/package-enquiry" variant="outline">
-                  Package Enquiry
-                </Button>
+      {/* SECTION 2: HERITAGE & LEGACY */}
+      <section className="px-6 sm:px-12 md:px-20">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="lg:col-span-6 flex flex-col items-start">
+            <Badge variant="mahogany" className="mb-4">OUR HERITAGE</Badge>
+            <h2 className="font-display text-4xl sm:text-5xl font-semibold text-primary mb-6 leading-tight">
+              Fifty-Five Years of Timeless Tradition
+            </h2>
+            <p className="font-sans text-text-secondary text-base sm:text-lg mb-8 leading-relaxed">
+              Founded in 1970 by Dr. Ananda Varma, Susrutha has evolved from an ancestral apothecary into a world-leading medical sanctuary. Our lineage is built on three generations of clinical rigor, botanical purity, and multi-generational trust.
+            </p>
+
+            <div className="grid grid-cols-2 gap-8 w-full mb-10 pt-4 border-t border-primary/10">
+              <div>
+                <div className="font-display text-4xl font-bold text-primary mb-1">1970</div>
+                <div className="text-xs font-sans font-bold uppercase tracking-widest text-bronze">FOUNDING YEAR</div>
+              </div>
+              <div>
+                <div className="font-display text-4xl font-bold text-primary mb-1">120K+</div>
+                <div className="text-xs font-sans font-bold uppercase tracking-widest text-bronze">HEALED SOULS</div>
               </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {[
-                { icon: Plane, t: 'Airport assistance', d: 'Realistic arrival-to-admission timing' },
-                { icon: BedDouble, t: 'Ayur Village stay', d: `${ayurVillage.cottages} private cottages` },
-                { icon: ShieldCheck, t: 'Visa guidance', d: 'Case-by-case documentation support' },
-                { icon: Leaf, t: 'Package planning', d: '5 to 16-day clinical programmes' },
-              ].map((item) => (
-                <div key={item.t} className="rounded-2xl border border-ochre/30 bg-[#1C1214]/90 backdrop-blur-md p-5 shadow-glass-dark">
-                  <item.icon className="h-5 w-5 text-[#FFC86B]" />
-                  <h3 className="mt-3 font-display text-xl font-bold text-ivory-50">{item.t}</h3>
-                  <p className="mt-1 text-sm text-ivory-200/80">{item.d}</p>
-                </div>
-              ))}
+
+            <Link href="/heritage">
+              <Button variant="outline" icon={<ArrowRight className="w-4 h-4" />}>
+                LEARN ABOUT OUR ROOTS
+              </Button>
+            </Link>
+          </div>
+
+          <div className="lg:col-span-6 relative">
+            <div className="relative rounded-[40px] overflow-hidden aspect-[4/5] shadow-2xl border-4 border-surface-card">
+              <img
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI8LVoaxSDbPGCljdyi2UpRyIkg-0862ktNI6Y2SdqNsw4Sgvi1AJq8ujtcgj2egMs-Zs-TBqpjg2TvwM6huvkciV7wbhqKQ3qmP525wcTHWf68BSuAZLzWSPky9k1auH_nkk8LlIjquAznsvHR0uVoFBA2amOUIFNhZFTXE8tYFMhFtP8v5H6AxKnaZy6XEqmMQD5V_Au1ILVIFlJALfa9lXcz4yj2RBQ8qfrvznRRnvwFPF1OwYtdPKMeyx16424BhNrTM4FDgH5"
+                alt="Ayurvedic Master sorting herbs"
+                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
+              />
+            </div>
+            {/* Quote Badge */}
+            <div className="absolute -bottom-8 -left-6 sm:-left-8 glass-panel bg-surface-card rounded-3xl p-6 sm:p-8 max-w-sm shadow-2xl border border-gold/30 hidden sm:block">
+              <p className="font-display text-lg italic text-primary leading-snug">
+                &quot;Health is not merely the absence of disease, but the vibrant presence of bodily vitality and inner bliss.&quot;
+              </p>
+              <span className="block mt-3 text-xs font-sans font-bold text-bronze uppercase tracking-wider">
+                — Dr. Ananda Varma, Founder
+              </span>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="container-wide section-pad py-20 bg-[#120A0B]">
-        <SectionHeading
-          eyebrow="Patient Voices"
-          title="Stories in Motion"
-          description="Glass cards, auto-scroll carousel, pause on hover — click any story for the full narrative."
-        />
-        <div className="mt-10">
-          <TestimonialCarousel />
+      {/* SECTION 3: HEALING JOURNEY TIMELINE */}
+      <section className="px-6 sm:px-12 md:px-20 bg-surface-elevated py-24 border-y border-primary/5">
+        <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
+          <Badge variant="gold" className="mb-4">THE SUSRUTHA METHOD</Badge>
+          <h2 className="font-display text-4xl sm:text-5xl font-semibold text-primary mb-6">
+            The Path to Wholeness
+          </h2>
+          <p className="font-sans text-text-secondary max-w-xl text-base mb-12">
+            Every guest undergoes a structured 4-step diagnostic and therapeutic journey tailored precisely to their metabolic blueprint.
+          </p>
+
+          <Timeline steps={timelineSteps} activeStep={selectedStep} onStepClick={(idx) => setSelectedStep(idx)} />
+
+          <Card variant="glass" className="mt-8 max-w-2xl text-left border-gold/30">
+            <div className="flex items-center gap-3 mb-3">
+              <Badge variant="gold">STEP {timelineSteps[selectedStep].number}</Badge>
+              <h4 className="font-display text-2xl font-bold text-primary">
+                {timelineSteps[selectedStep].title}
+              </h4>
+            </div>
+            <p className="font-sans text-text-secondary text-sm leading-relaxed">
+              {timelineSteps[selectedStep].description}
+            </p>
+          </Card>
         </div>
       </section>
 
-      <section className="bg-[#120A0B] border-t border-ochre/25">
-        <div className="container-wide section-pad py-20">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between mb-10">
-            <SectionHeading
-              eyebrow="Knowledge Centre"
-              title="Clinical Writing With Senior Physician Bylines"
-              description="Articles carry doctor bylines, clinical overviews, and patient FAQs — built for comprehensive understanding."
-            />
-            <Button to="/knowledge" variant="outline">
-              Browse Articles
-            </Button>
+      {/* SECTION 4: SIGNATURE HEALING RITUALS */}
+      <section className="px-6 sm:px-12 md:px-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-16 gap-6">
+            <div>
+              <Badge variant="mahogany" className="mb-3">CURATED THERAPIES</Badge>
+              <h2 className="font-display text-4xl sm:text-5xl font-semibold text-primary">
+                Signature Healing Rituals
+              </h2>
+            </div>
+            <Link href="/treatments">
+              <Button variant="secondary" icon={<ArrowRight className="w-4 h-4" />}>
+                VIEW ALL TREATMENTS
+              </Button>
+            </Link>
           </div>
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {articlesList.map((a: any) => (
-              <CardLink key={a.id} to={`/knowledge/${a.slug}`} title={a.title} description={a.excerpt} meta={a.readTime} />
-            ))}
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
+            {treatments.slice(0, 3).map((treatment, idx) => {
+              const id = treatment.id || treatment._id || `tr-${idx}`;
+              const title = treatment.title || treatment.name || 'Ayurvedic Treatment';
+              const image = treatment.image || treatment.coverImage || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80';
+              const price = treatment.price || 3500;
+              const duration = treatment.duration || `${treatment.durationMinutes || 60} Mins`;
+              const desc = treatment.description || treatment.shortDescription || 'Authentic classical Ayurvedic treatment.';
+              const dosha = treatment.dosha || 'Vedic Protocol';
+
+              return (
+                <Card
+                  key={id}
+                  variant="default"
+                  className="group cursor-pointer flex flex-col justify-between border-primary/10 hover:border-gold/50"
+                  onClick={() => setActiveTreatmentModal(treatment)}
+                >
+                  <div>
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6">
+                      <img
+                        src={image}
+                        alt={title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute top-4 left-4">
+                        <Badge variant="gold">{dosha}</Badge>
+                      </div>
+                    </div>
+
+                    <span className="text-xs font-sans font-bold uppercase tracking-widest text-bronze mb-2 block">
+                      {treatment.category || 'Therapy'}
+                    </span>
+                    <h3 className="font-display text-2xl font-bold text-primary mb-3">
+                      {title}
+                    </h3>
+                    <p className="font-sans text-text-secondary text-sm line-clamp-2 leading-relaxed mb-6">
+                      {desc}
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-primary/10 flex items-center justify-between text-xs font-sans font-semibold text-primary">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-4 h-4 text-gold" /> {duration}
+                    </span>
+                    <span className="font-display text-lg font-bold text-primary">
+                      {formatCurrency(price)}
+                    </span>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      <section className="border-t border-ochre/25 bg-[#120A0B]">
-        <div className="container-wide section-pad py-20">
-          <SectionHeading
-            eyebrow="Care Desk"
-            title="Book Appointment · Package Enquiry · Contact · Feedback"
-            description="Direct consultation booking & package planning with Susrutha’s clinical team — with location details and quick actions."
-          />
-          <div className="mt-10">
-            <AppointmentHub />
+      {/* SECTION 5: WHY CHOOSE US (BENTO GRID) */}
+      <section className="px-6 sm:px-12 md:px-20 bg-primary text-surface py-24 rounded-[48px] mx-4 sm:mx-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-2xl mb-16">
+            <Badge variant="gold" className="mb-4">THE SUSRUTHA DIFFERENCE</Badge>
+            <h2 className="font-display text-4xl sm:text-5xl font-semibold text-surface mb-6">
+              Crafting an Ecosystem of Total Wellness
+            </h2>
+            <p className="font-sans text-surface/70 text-base">
+              We blend ancient clinical protocols with modern luxury hospitality to restore harmony to your mind, body, and soul.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="glass-panel-dark p-8 rounded-[32px] flex flex-col justify-between hover:border-gold transition-all">
+              <ShieldCheck className="w-10 h-10 text-gold mb-6" />
+              <div>
+                <h4 className="font-display text-2xl font-bold text-surface mb-3">Evidence-Based</h4>
+                <p className="font-sans text-surface/70 text-xs leading-relaxed">
+                  Integrating clinical pulse diagnostics with contemporary medical research for verifiable outcomes.
+                </p>
+              </div>
+            </div>
+
+            <div className="glass-panel-dark p-8 rounded-[32px] flex flex-col justify-between hover:border-gold transition-all">
+              <Sparkles className="w-10 h-10 text-gold mb-6" />
+              <div>
+                <h4 className="font-display text-2xl font-bold text-surface mb-3">Pure Sourcing</h4>
+                <p className="font-sans text-surface/70 text-xs leading-relaxed">
+                  100% organic, hand-harvested medicinal herbs distilled from our private Himalayan botanical gardens.
+                </p>
+              </div>
+            </div>
+
+            <div className="glass-panel-dark p-8 rounded-[32px] flex flex-col justify-between hover:border-gold transition-all">
+              <Award className="w-10 h-10 text-gold mb-6" />
+              <div>
+                <h4 className="font-display text-2xl font-bold text-surface mb-3">Ultra-Luxury</h4>
+                <p className="font-sans text-surface/70 text-xs leading-relaxed">
+                  Peaceful sanctuary retreats crafted with natural stone, wood, and serene architectural design.
+                </p>
+              </div>
+            </div>
+
+            <div className="glass-panel-dark p-8 rounded-[32px] flex flex-col justify-between hover:border-gold transition-all">
+              <Heart className="w-10 h-10 text-gold mb-6" />
+              <div>
+                <h4 className="font-display text-2xl font-bold text-surface mb-3">Master Lineage</h4>
+                <p className="font-sans text-surface/70 text-xs leading-relaxed">
+                  55+ years of accumulated medicinal wisdom passed through three generations of master physicians.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* SECTION 6: MEET OUR DOCTORS */}
+      <section className="px-6 sm:px-12 md:px-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <Badge variant="mahogany" className="mb-3">MEDICAL LEADERSHIP</Badge>
+            <h2 className="font-display text-4xl sm:text-5xl font-semibold text-primary mb-4">
+              The Custodians of Wisdom
+            </h2>
+            <p className="font-sans text-text-secondary text-sm">
+              Meet our team of world-renowned Ayurvedic physicians dedicated to your personal health transformation.
+            </p>
+          </div>
+
+          <DoctorCarousel doctors={doctors} autoPlayInterval={4000} />
+        </div>
+      </section>
+
+      {/* TREATMENT DETAIL MODAL */}
+      {activeTreatmentModal && (
+        <Modal
+          isOpen={!!activeTreatmentModal}
+          onClose={() => setActiveTreatmentModal(null)}
+          title={activeTreatmentModal.title || activeTreatmentModal.name || 'Therapy Detail'}
+          maxWidth="xl"
+        >
+          <div className="flex flex-col gap-6">
+            <div className="relative aspect-video rounded-2xl overflow-hidden">
+              <img
+                src={activeTreatmentModal.image || activeTreatmentModal.coverImage || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'}
+                alt={activeTreatmentModal.title || activeTreatmentModal.name || 'Treatment'}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <div className="flex items-center justify-between border-b border-primary/10 pb-4">
+              <div>
+                <span className="text-xs font-sans font-bold uppercase tracking-widest text-bronze">
+                  {activeTreatmentModal.category || 'Panchakarma'}
+                </span>
+                <div className="font-display text-2xl font-bold text-primary">
+                  {formatCurrency(activeTreatmentModal.price || 3500)}
+                </div>
+              </div>
+              <Badge variant="gold">{activeTreatmentModal.duration || `${activeTreatmentModal.durationMinutes || 60} Mins`}</Badge>
+            </div>
+
+            <p className="font-sans text-text-secondary text-sm leading-relaxed">
+              {activeTreatmentModal.description || activeTreatmentModal.fullDescription || activeTreatmentModal.shortDescription}
+            </p>
+
+            <div>
+              <h5 className="text-xs font-sans font-bold uppercase tracking-wider text-primary mb-3">
+                KEY THERAPEUTIC BENEFITS
+              </h5>
+              <div className="space-y-2">
+                {(activeTreatmentModal.benefits || ['Cellular Detoxification', 'Nervous System Relaxation', 'Metabolic Reset']).map((benefit, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs font-sans text-text-primary">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <span>{benefit}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-primary/10 flex justify-end gap-4">
+              <Button variant="ghost" onClick={() => setActiveTreatmentModal(null)}>
+                CLOSE
+              </Button>
+              <Link href={`/booking?treatment=${encodeURIComponent(activeTreatmentModal.title || activeTreatmentModal.name || '')}`}>
+                <Button variant="gold" icon={<ArrowRight className="w-4 h-4" />}>
+                  BOOK THIS RITUAL
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
-    </LenisProvider>
   );
 }
-

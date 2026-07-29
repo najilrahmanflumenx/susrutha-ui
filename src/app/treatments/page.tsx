@@ -1,140 +1,213 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
-import { useEffect, useState } from 'react';
-import { Breadcrumbs, CardLink, PageHero, Pagination, SkeletonCard } from '../../components/ui';
-import { pageTitle } from '../../lib/seo';
-import { getTreatments } from '../../lib/api';
-import { Sparkles, Filter } from 'lucide-react';
-
-const ITEMS_PER_PAGE = 6;
+import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
+import { ArrowRight, Loader2, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Badge, Chip } from '@/components/ui/Badge';
+import { TreatmentCardSkeleton } from '@/components/ui/Skeleton';
+import { fetchTreatments, MOCK_TREATMENTS, TreatmentItem } from '@/lib/api';
+import { useApiData } from '@/hooks/useApiData';
+import { formatCurrency } from '@/lib/utils';
 
 export default function TreatmentsPage() {
-  const [treatmentList, setTreatmentList] = useState<any[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedFilter, setSelectedFilter] = useState('ALL');
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 12;
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      document.title = pageTitle('Treatments & Therapies');
-    }
-    setLoading(true);
-    getTreatments({ category: selectedCategory !== 'all' ? selectedCategory : undefined })
-      .then((apiTxs) => {
-        if (apiTxs && Array.isArray(apiTxs)) {
-          const mapped = apiTxs.map((t: any) => ({
-            id: t._id || t.slug,
-            slug: t.slug,
-            name: t.title || t.name,
-            aiSummary: t.shortDescription || t.fullDescription || t.aiSummary,
-            category: t.category || 'Panchakarma Therapy',
-            image: t.coverImage || t.image || '/images/hero-ayurveda.jpg',
-          }));
-          setTreatmentList(mapped);
-        } else {
-          setTreatmentList([]);
+  const { data: treatments, loading } = useApiData<TreatmentItem[]>(fetchTreatments, MOCK_TREATMENTS);
+
+  // Dynamically extract and merge unique categories case-insensitively from available data
+  const availableCategories = useMemo(() => {
+    if (!treatments || treatments.length === 0) return ['ALL'];
+
+    const categoryMap = new Map<string, string>(); // lowercase -> display string
+    treatments.forEach((t) => {
+      const cat = (t.category || t.dosha || '').trim();
+      if (cat) {
+        const lowerKey = cat.toLowerCase();
+        if (!categoryMap.has(lowerKey)) {
+          // Capitalize cleanly or keep original title case
+          const cleanDisplay = cat.charAt(0).toUpperCase() + cat.slice(1);
+          categoryMap.set(lowerKey, cleanDisplay);
         }
-      })
-      .catch(() => setTreatmentList([]))
-      .finally(() => setLoading(false));
-  }, [selectedCategory]);
+      }
+    });
 
-  // Dynamically derive unique categories from actual treatment data (case-insensitive deduplicated)
-  const categories = [
-    'all',
-    ...Array.from(
-      new Map(
-        treatmentList.map((t) => [t.category.toLowerCase(), t.category])
-      ).values()
-    ),
-  ];
+    return ['ALL', ...Array.from(categoryMap.values())];
+  }, [treatments]);
 
-  const filteredList =
-    selectedCategory === 'all'
-      ? treatmentList
-      : treatmentList.filter(
-          (t) => t.category.toLowerCase() === selectedCategory.toLowerCase()
-        );
+  // Filter treatments by selected category
+  const filteredTreatments = useMemo(() => {
+    if (selectedFilter === 'ALL') return treatments;
+    const filterKey = selectedFilter.toLowerCase();
+    return treatments.filter((t) => {
+      const cat = (t.category || t.dosha || '').toLowerCase();
+      return cat === filterKey || cat.includes(filterKey);
+    });
+  }, [treatments, selectedFilter]);
 
-  const totalPages = Math.ceil(filteredList.length / ITEMS_PER_PAGE);
-  const paginatedList = filteredList.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  // Reset page to 1 when filter changes
+  const handleFilterChange = (cat: string) => {
+    setSelectedFilter(cat);
+    setPage(1);
+  };
+
+  // Pagination slicing
+  const totalPages = Math.max(1, Math.ceil(filteredTreatments.length / itemsPerPage));
+  const paginatedTreatments = filteredTreatments.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
 
   return (
-    <div className="font-body min-h-screen bg-[#120A0B] text-[#FDFBF7]">
-      <PageHero
-        eyebrow="Therapies & Protocols"
-        title="Classical Ayurvedic Therapies & Procedures"
-        description="Detailed clinical overview, indications, procedure steps, safety guidelines, and consulting specialist doctor assignments for each therapy."
-      />
-      <div className="container-wide section-pad py-16">
-        <Breadcrumbs items={[{ label: 'Treatments & Therapies' }]} />
+    <div className="px-6 sm:px-12 md:px-20 max-w-7xl mx-auto flex flex-col gap-12 pb-24">
+      {/* Header */}
+      <div className="text-center max-w-3xl mx-auto pt-8">
+        <Badge variant="gold" className="mb-4" icon={<Sparkles className="w-3.5 h-3.5" />}>
+          AUTHENTIC AYURVEDIC THERAPIES
+        </Badge>
+        <h1 className="font-display text-4xl sm:text-6xl font-semibold text-primary mb-6">
+          Signature Healing Rituals
+        </h1>
+        <p className="font-sans text-text-secondary text-base leading-relaxed">
+          Every therapy at Susrutha is prescribed by our senior physicians and prepared fresh using 100% organic botanical oils, rare herbs, and authentic Vedic protocols.
+        </p>
+      </div>
 
-        {/* Category Filter Tabs */}
-        <div className="my-8 flex flex-wrap items-center gap-2.5">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#FFC86B] mr-2">
-            <Filter className="h-4 w-4 text-[#FFC86B]" /> Filter Category:
-          </span>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              onClick={() => {
-                setSelectedCategory(cat);
-                setCurrentPage(1);
-              }}
-              className={`rounded-full px-5 py-2 text-xs font-bold capitalize transition-all duration-300 ${
-                selectedCategory === cat
-                  ? 'bg-[#FFC86B] text-[#120A0B] shadow-ochre-glow'
-                  : 'bg-[#1C1214] border border-ochre/30 text-white hover:border-[#FFC86B] hover:text-[#FFC86B]'
-              }`}
-            >
-              {cat === 'all' ? 'All Therapies' : cat}
-            </button>
+      {/* Dynamic Available Categories Filter Chips */}
+      <div className="flex justify-center items-center gap-3 flex-wrap">
+        {availableCategories.map((cat) => (
+          <Chip
+            key={cat}
+            active={selectedFilter.toLowerCase() === cat.toLowerCase()}
+            onClick={() => handleFilterChange(cat)}
+          >
+            {cat}
+          </Chip>
+        ))}
+      </div>
+
+      {/* Loading state with Skeletons */}
+      {loading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <TreatmentCardSkeleton key={i} />
           ))}
         </div>
+      )}
 
-        {loading ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
+      {/* Results Header */}
+      {!loading && (
+        <div className="flex justify-between items-center border-b border-primary/10 pb-4">
+          <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze">
+            Showing {filteredTreatments.length} Available Therapies
+          </span>
+          <span className="text-xs font-sans text-text-muted">
+            Page {page} of {totalPages}
+          </span>
+        </div>
+      )}
+
+      {/* Grid */}
+      {!loading && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {paginatedTreatments.map((treatment, idx) => {
+            const id = treatment.id || treatment._id || `tr-${idx}`;
+            const slug = treatment.slug || id;
+            const title = treatment.title || treatment.name || 'Ayurvedic Treatment';
+            const image = treatment.image || treatment.coverImage || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&auto=format&fit=crop&q=80';
+            const price = treatment.price || 3500;
+            const desc = treatment.description || treatment.shortDescription || 'Authentic classical Ayurvedic treatment.';
+            const dosha = treatment.dosha || treatment.category || 'Vedic Protocol';
+
+            return (
+              <Card key={id} variant="default" className="flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all">
+                <div>
+                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-slate-100 dark:bg-slate-800">
+                    <img
+                      src={image}
+                      alt={title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute top-4 left-4">
+                      <Badge variant="gold">{dosha}</Badge>
+                    </div>
+                  </div>
+
+                  <span className="text-xs font-sans font-bold uppercase tracking-widest text-bronze mb-2 block">
+                    {treatment.category || 'Therapy'}
+                  </span>
+                  <h3 className="font-display text-2xl font-bold text-primary mb-3">
+                    <Link href={`/treatments/${slug}`} className="hover:underline">
+                      {title}
+                    </Link>
+                  </h3>
+                  <p className="font-sans text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
+                    {desc}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-primary/10 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-text-muted block">
+                      INVESTMENT
+                    </span>
+                    <span className="font-display text-xl font-bold text-primary">
+                      {formatCurrency(price)}
+                    </span>
+                  </div>
+                  <Link href={`/booking?treatment=${encodeURIComponent(title)}`}>
+                    <Button variant="gold" size="sm" icon={<ArrowRight className="w-4 h-4" />}>
+                      RESERVE
+                    </Button>
+                  </Link>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Pagination Controls */}
+      {!loading && totalPages > 1 && (
+        <div className="flex items-center justify-center gap-4 pt-8">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === 1}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            icon={<ChevronLeft className="w-4 h-4" />}
+          >
+            PREVIOUS
+          </Button>
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalPages }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i + 1)}
+                className={`w-9 h-9 rounded-lg font-sans text-xs font-bold transition-all ${
+                  page === i + 1
+                    ? 'bg-gold text-white shadow-md'
+                    : 'bg-surface-card text-primary border border-primary/10 hover:bg-primary/5'
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
           </div>
-        ) : paginatedList.length > 0 ? (
-          <>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {paginatedList.map((t) => (
-                <CardLink
-                  key={t.id}
-                  to={`/treatments/${t.slug}`}
-                  title={t.name}
-                  description={t.aiSummary}
-                  meta={t.category}
-                  image={t.image}
-                />
-              ))}
-            </div>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={(p) => setCurrentPage(p)}
-            />
-          </>
-        ) : (
-          <div className="rounded-3xl border border-ochre/30 bg-[#1C1214]/95 p-12 text-center shadow-glass-dark text-ivory-50 font-body">
-            <Sparkles className="h-8 w-8 text-[#FFC86B] mx-auto mb-3" />
-            <h2 className="font-display text-2xl font-bold text-white">No Therapies Found</h2>
-            <p className="mt-2 text-sm text-ivory-200/90">No therapies match the selected category criteria.</p>
-          </div>
-        )}
-      </div>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            icon={<ChevronRight className="w-4 h-4" />}
+          >
+            NEXT
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
-
-
-

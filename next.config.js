@@ -2,16 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'lh3.googleusercontent.com',
       },
       {
-        protocol: 'http',
-        hostname: '**',
-      },
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      }
     ],
   },
 };

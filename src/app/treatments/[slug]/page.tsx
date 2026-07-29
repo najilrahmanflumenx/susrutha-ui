@@ -1,236 +1,119 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
-import { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { AiSummary, Breadcrumbs, Button, FaqList, PageHero } from '../../../components/ui';
-import { pageTitle, faqSchema } from '../../../lib/seo';
-import { getTreatmentBySlug as fetchTreatmentApi } from '../../../lib/api';
+import { ArrowLeft, Clock, ShieldCheck, CheckCircle2, Calendar, Sparkles } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { fetchTreatmentBySlug, MOCK_TREATMENTS, TreatmentItem } from '@/lib/api';
+import { useApiData } from '@/hooks/useApiData';
+import { formatCurrency } from '@/lib/utils';
 
 export default function TreatmentDetailPage() {
   const params = useParams();
   const slug = (params?.slug as string) || '';
-  const [treatment, setTreatment] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (slug) {
-      fetchTreatmentApi(slug).then((apiTx) => {
-        if (apiTx) {
-          setTreatment({
-            id: apiTx._id || apiTx.slug,
-            slug: apiTx.slug,
-            name: apiTx.title || apiTx.name,
-            category: apiTx.category || 'Panchakarma Therapy',
-            malayalam: apiTx.malayalam || 'ആയുർവേദ ചികിത്സ',
-            aiSummary: apiTx.shortDescription || apiTx.fullDescription || 'Therapeutic Ayurvedic procedure.',
-            overview: apiTx.fullDescription || apiTx.shortDescription || 'Classical Panchakarma therapy performed under medical supervision.',
-            procedure: (apiTx.procedureSteps && apiTx.procedureSteps.length > 0)
-              ? apiTx.procedureSteps.map((item: any, i: number) => {
-                  // Handle JSON-stringified objects stored in DB string[] field
-                  if (typeof item === 'string') {
-                    try {
-                      const parsed = JSON.parse(item);
-                      if (parsed && typeof parsed === 'object') {
-                        return {
-                          step: typeof parsed.step === 'string' ? parsed.step : `Phase ${i + 1}`,
-                          detail: typeof parsed.detail === 'string' ? parsed.detail : parsed.step || String(item),
-                        };
-                      }
-                    } catch {
-                      // Plain string step — use it as the detail
-                    }
-                    return { step: `Phase ${i + 1}`, detail: item };
-                  }
-                  // Already an object
-                  if (typeof item === 'object' && item !== null) {
-                    return {
-                      step: typeof item.step === 'string' ? item.step : `Phase ${i + 1}`,
-                      detail: typeof item.detail === 'string' ? item.detail : (typeof item.step === 'string' ? item.step : String(item)),
-                    };
-                  }
-                  return { step: `Phase ${i + 1}`, detail: String(item) };
-                })
-              : [
-                  { step: 'Snehan (Oliation)', detail: 'Application of warm medicated herbal oil to prepare tissues.' },
-                  { step: 'Swedana (Sudation)', detail: 'Herbal steam therapy to loosen deep-seated toxins.' },
-                  { step: 'Main Procedure', detail: 'Core therapeutic procedure administered by trained therapists.' },
-                  { step: 'Paschat Karma (Aftercare)', detail: 'Post-treatment rest, warm bath, and soothing dietary regimen.' },
-                ],
-            benefits: Array.isArray(apiTx.benefits) && apiTx.benefits.length > 0
-              ? apiTx.benefits.map((b: any) => typeof b === 'string' ? b : (b.detail || b.title || String(b)))
-              : ['Relieves muscle stiffness', 'Improves blood circulation', 'Promotes deep relaxation'],
-            whoNeeds: Array.isArray(apiTx.indications) && apiTx.indications.length > 0
-              ? apiTx.indications.map((b: any) => typeof b === 'string' ? b : (b.detail || b.title || String(b)))
-              : ['Chronic pain', 'Vata imbalances', 'Stress and fatigue'],
-            preparation: Array.isArray(apiTx.preparation) && apiTx.preparation.length > 0
-              ? apiTx.preparation.map((x: any) => typeof x === 'string' ? x : String(x))
-              : ['Fast 2 hours prior to therapy', 'Inform doctor of any active allergies'],
-            aftercare: Array.isArray(apiTx.aftercare) && apiTx.aftercare.length > 0
-              ? apiTx.aftercare.map((x: any) => typeof x === 'string' ? x : String(x))
-              : ['Drink warm water post-treatment', 'Avoid cold winds and direct fan exposure'],
-            safety: Array.isArray(apiTx.safety) && apiTx.safety.length > 0
-              ? apiTx.safety.map((x: any) => typeof x === 'string' ? x : String(x))
-              : ['Supervised by BAMS physicians', 'Therapy discontinued if fever occurs'],
-            avoid: Array.isArray(apiTx.contraindications) && apiTx.contraindications.length > 0
-              ? apiTx.contraindications.map((b: any) => typeof b === 'string' ? b : (b.detail || b.title || String(b)))
-              : ['Acute fever', 'Severe skin infections', 'Indigestion'],
-            faqs: Array.isArray(apiTx.faqs) && apiTx.faqs.length > 0
-              ? apiTx.faqs.map((f: any) => ({ q: f.q || f.question, a: f.a || f.answer }))
-              : [
-                  { q: 'Is a doctor consultation mandatory before treatment?', a: 'Yes, all therapies are prescribed following a detailed physician diagnostic examination.' },
-                  { q: 'What is the recommended duration?', a: `${apiTx.recommendedDays || 7} consecutive days for optimal clinical results.` },
-                ],
-            duration: `${apiTx.durationMinutes || 60} Minutes Session (${apiTx.recommendedDays || 7} Days Course)`,
-            conditions: Array.isArray(apiTx.conditions) && apiTx.conditions.length > 0
-              ? apiTx.conditions.map((c: any) => typeof c === 'string' ? c : String(c))
-              : Array.isArray(apiTx.indications) && apiTx.indications.length > 0
-              ? apiTx.indications.map((b: any) => typeof b === 'string' ? b : String(b))
-              : ['Arthritis', 'Panchakarma Detox', 'Stress Relief'],
-            doctorIds: apiTx.doctorIds || [],
-            relatedPackageIds: [],
-          });
-        }
-        setLoading(false);
-      });
-    }
-  }, [slug]);
+  const { data: treatment, loading } = useApiData<TreatmentItem>(
+    () => fetchTreatmentBySlug(slug),
+    MOCK_TREATMENTS[0],
+    [slug]
+  );
 
-  useEffect(() => {
-    if (!treatment || typeof window === 'undefined') return;
-    document.title = pageTitle(treatment.name);
-    document.getElementById('schema-faq-tx')?.remove();
-    const el = document.createElement('script');
-    el.type = 'application/ld+json';
-    el.id = 'schema-faq-tx';
-    el.text = JSON.stringify(faqSchema(treatment.faqs));
-    document.head.appendChild(el);
-  }, [treatment]);
+  const title = treatment.title || treatment.name || 'Ayurvedic Treatment';
+  const category = treatment.category || 'Panchakarma';
+  const duration = treatment.duration || `${treatment.durationMinutes || 60} Mins`;
+  const price = treatment.price || 3500;
+  const desc = treatment.fullDescription || treatment.description || treatment.shortDescription || 'Authentic classical Ayurvedic treatment.';
+  const image = treatment.image || treatment.coverImage || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80';
+  const benefits = treatment.benefits?.length ? treatment.benefits : ['Cellular Detoxification', 'Deep Nervous Relaxation', 'Vitality Reset'];
+  const indications = treatment.indications?.length ? treatment.indications : ['Chronic Stress', 'Insomnia', 'Fatigue', 'Joint Pain'];
 
-  if (!treatment) {
-    if (loading) {
-      return (
-        <div className="container-wide section-pad py-20 text-center font-body min-h-screen bg-[#120A0B] text-[#FDFBF7]">
-          <p className="text-[#FFC86B]">Loading therapy details...</p>
-        </div>
-      );
-    }
-    return (
-      <div className="container-wide section-pad py-20 font-body min-h-screen bg-[#120A0B] text-[#FDFBF7]">
-        <h1 className="font-display text-3xl font-bold text-white">Treatment not found</h1>
-        <p className="text-ivory-300 mt-2">The requested therapy procedure is not available in the database.</p>
-        <Button to="/treatments" className="mt-6">All treatments</Button>
-      </div>
-    );
-  }
-
-  const docs: any[] = [];
   return (
-    <div className="font-body min-h-screen bg-[#120A0B] text-[#FDFBF7]">
-      <PageHero eyebrow={treatment.category} title={treatment.name} description={treatment.malayalam ? `${treatment.malayalam} · Physician-directed therapy` : 'Physician-directed therapy'}>
-        <Button to="/book" variant="primary">Book consultation</Button>
-      </PageHero>
-      <div className="container-wide section-pad py-16">
-        <Breadcrumbs items={[{ label: 'Treatments', to: '/treatments' }, { label: treatment.name }]} />
+    <div className="px-6 sm:px-12 md:px-20 max-w-7xl mx-auto flex flex-col gap-12 pb-24 pt-8">
+      {/* Back Button */}
+      <div>
+        <Link href="/treatments">
+          <Button variant="ghost" size="sm" icon={<ArrowLeft className="w-4 h-4" />}>
+            Back to Therapies
+          </Button>
+        </Link>
+      </div>
 
-        <div className="grid gap-10 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-10">
-            <AiSummary text={treatment.aiSummary} reviewedBy={docs[0]?.name} />
-            <section className="prose-sus">
-              <h2 className="font-display text-3xl font-bold text-white">What it is</h2>
-              <p className="text-ivory-200/90 leading-relaxed text-base sm:text-lg">{treatment.overview}</p>
-            </section>
+      {/* Hero Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+          <img src={image} alt={title} className="w-full h-full object-cover" />
+          <div className="absolute top-6 left-6">
+            <Badge variant="gold">{category}</Badge>
+          </div>
+        </div>
 
-            <section>
-              <h2 className="font-display text-3xl font-bold text-white mb-6">Procedure Sequence</h2>
-              <ol className="grid gap-4 sm:grid-cols-2">
-                {treatment.procedure.map((step: any, i: number) => {
-                  const stepTitle = typeof step === 'string' ? `Phase ${i + 1}` : (typeof step?.step === 'string' ? step.step : `Phase ${i + 1}`);
-                  const stepDetail = typeof step === 'string' ? step : (typeof step?.detail === 'string' ? step.detail : (typeof step?.step === 'string' ? step.step : ''));
-                  return (
-                    <li key={i} className="rounded-3xl border border-ochre/30 border-t-2 border-t-[#FFC86B] bg-[#1C1214]/95 p-6 shadow-2xl backdrop-blur-2xl">
-                      <span className="text-xs text-[#FFC86B] font-bold uppercase tracking-wider">Phase {i + 1}</span>
-                      <h3 className="mt-1 font-display text-xl font-bold text-white">{stepTitle}</h3>
-                      <p className="mt-2 text-sm text-ivory-200/90 leading-relaxed font-body">{stepDetail}</p>
-                    </li>
-                  );
-                })}
-              </ol>
-            </section>
+        <div className="flex flex-col gap-6">
+          <Badge variant="gold" className="w-fit">{treatment.dosha || 'Vedic Protocol'}</Badge>
+          <h1 className="font-display text-4xl sm:text-5xl font-bold text-primary">
+            {title}
+          </h1>
+          <p className="font-sans text-text-secondary text-base leading-relaxed">
+            {desc}
+          </p>
 
-            <section className="grid sm:grid-cols-2 gap-6">
-              <div className="rounded-3xl border border-ochre/30 bg-[#1C1214]/95 p-6 shadow-2xl backdrop-blur-2xl">
-                <h2 className="font-display text-2xl font-bold text-white">Clinical Benefits</h2>
-                <ul className="mt-3 space-y-2 text-sm text-ivory-200/90 list-disc pl-5">
-                  {treatment.benefits.map((b: any, idx: number) => <li key={idx}>{typeof b === 'string' ? b : String(b)}</li>)}
-                </ul>
+          <div className="flex items-center gap-6 py-4 border-y border-primary/10">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-widest text-text-muted block mb-1">DURATION</span>
+              <div className="flex items-center gap-2 text-primary font-bold">
+                <Clock className="w-4 h-4" />
+                <span>{duration}</span>
               </div>
-              <div className="rounded-3xl border border-ochre/30 bg-[#1C1214]/95 p-6 shadow-2xl backdrop-blur-2xl">
-                <h2 className="font-display text-2xl font-bold text-white">Who May Need It</h2>
-                <ul className="mt-3 space-y-2 text-sm text-ivory-200/90 list-disc pl-5">
-                  {treatment.whoNeeds.map((b: any, idx: number) => <li key={idx}>{typeof b === 'string' ? b : String(b)}</li>)}
-                </ul>
-              </div>
-            </section>
-
-            <section className="grid sm:grid-cols-2 gap-6">
-              <div className="rounded-3xl bg-[#240809]/90 border border-ochre/30 border-t-2 border-t-[#FCAB28] p-6 shadow-2xl backdrop-blur-2xl">
-                <h3 className="font-display text-xl font-bold text-white">Preparation Protocol</h3>
-                <ul className="mt-3 space-y-1 text-sm text-ivory-200/90 list-disc pl-5">
-                  {treatment.preparation.map((x: any, idx: number) => <li key={idx}>{typeof x === 'string' ? x : String(x)}</li>)}
-                </ul>
-              </div>
-              <div className="rounded-3xl bg-[#240809]/90 border border-ochre/30 border-t-2 border-t-[#FCAB28] p-6 shadow-2xl backdrop-blur-2xl">
-                <h3 className="font-display text-xl font-bold text-white">Recovery & Aftercare</h3>
-                <ul className="mt-3 space-y-1 text-sm text-ivory-200/90 list-disc pl-5">
-                  {treatment.aftercare.map((x: any, idx: number) => <li key={idx}>{typeof x === 'string' ? x : String(x)}</li>)}
-                </ul>
-              </div>
-            </section>
-
-            <section className="rounded-3xl border border-ochre/40 bg-[#240809]/90 p-7 shadow-2xl backdrop-blur-2xl">
-              <h2 className="font-display text-2xl font-bold text-white">Safety & Contraindications</h2>
-              <div className="mt-4 grid sm:grid-cols-2 gap-6 text-sm text-ivory-200">
-                <div>
-                  <p className="text-xs uppercase tracking-wider font-bold text-[#FCAB28] mb-2">Physician Safety Directives</p>
-                  <ul className="space-y-1 list-disc pl-5 font-medium">{treatment.safety.map((x: any, idx: number) => <li key={idx}>{typeof x === 'string' ? x : String(x)}</li>)}</ul>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-wider font-bold text-[#C22626] mb-2">Use Caution / Contraindications</p>
-                  <ul className="space-y-1 list-disc pl-5 font-medium">{treatment.avoid.map((x: any, idx: number) => <li key={idx}>{typeof x === 'string' ? x : String(x)}</li>)}</ul>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="font-display text-3xl font-bold text-white mb-6">Frequently Asked Questions</h2>
-              <FaqList items={treatment.faqs} />
-            </section>
+            </div>
+            <div className="h-8 w-px bg-primary/10" />
+            <div>
+              <span className="text-xs font-bold uppercase tracking-widest text-text-muted block mb-1">INVESTMENT</span>
+              <span className="font-display text-2xl font-bold text-primary">{formatCurrency(price)}</span>
+            </div>
           </div>
 
-          <aside className="space-y-6">
-            <div className="rounded-3xl border border-ochre/30 border-t-2 border-t-[#FCAB28] bg-[#240809]/90 p-6 shadow-2xl backdrop-blur-2xl">
-              <p className="text-xs uppercase tracking-wider font-bold text-[#FCAB28]">Session Duration & Course</p>
-              <p className="mt-2 text-sm text-white font-bold leading-relaxed">{treatment.duration}</p>
-            </div>
-            <div className="rounded-3xl border border-ochre/30 bg-[#240809]/90 p-6 shadow-2xl backdrop-blur-2xl">
-              <p className="text-xs uppercase tracking-wider font-bold text-[#FCAB28]">Target Clinical Conditions</p>
-              <ul className="mt-3 space-y-1 text-sm text-ivory-200/90">
-                {treatment.conditions.map((c: any, idx: number) => <li key={idx} className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#FCAB28]" />
-                  <span>{typeof c === 'string' ? c : String(c)}</span>
-                </li>)}
-              </ul>
-            </div>
-            <div className="rounded-3xl border border-ochre/30 bg-[#240809]/90 p-6 shadow-2xl backdrop-blur-2xl">
-              <Button to="/book" variant="primary" className="w-full">
-                Book Consultation
+          <div className="flex items-center gap-4 pt-2">
+            <Link href={`/booking?treatment=${encodeURIComponent(title)}`} className="w-full sm:w-auto">
+              <Button variant="gold" size="lg" className="w-full" icon={<Calendar className="w-5 h-5" />}>
+                Book Consultation & Therapy
               </Button>
-            </div>
-          </aside>
+            </Link>
+          </div>
         </div>
+      </div>
+
+      {/* Indications & Benefits */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
+        <Card variant="glass" className="p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <Sparkles className="w-6 h-6 text-bronze" />
+            <h3 className="font-display text-2xl font-bold text-primary">Key Benefits</h3>
+          </div>
+          <ul className="flex flex-col gap-4">
+            {benefits.map((benefit, i) => (
+              <li key={i} className="flex items-center gap-3 text-text-secondary text-sm">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <span>{benefit}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <Card variant="glass" className="p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <ShieldCheck className="w-6 h-6 text-bronze" />
+            <h3 className="font-display text-2xl font-bold text-primary">Recommended For</h3>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {indications.map((ind, i) => (
+              <span key={i} className="px-4 py-2 rounded-full bg-primary/5 text-primary text-xs font-semibold">
+                {ind}
+              </span>
+            ))}
+          </div>
+        </Card>
       </div>
     </div>
   );
