@@ -20,3 +20,13 @@ export function formatDate(dateString: string): string {
     year: 'numeric',
   });
 }
+
+export function resolveImageUrl(url?: string): string {
+  if (!url || typeof url !== 'string') return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
+    return url;
+  }
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+  const serverOrigin = apiBase.replace(/\/api\/v1\/?$/, '').replace(/\/+$/, '');
+  return `${serverOrigin}${url.startsWith('/') ? '' : '/'}${url}`;
+}

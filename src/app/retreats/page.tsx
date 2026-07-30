@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge, Chip } from '@/components/ui/Badge';
 import { CarePackageItem, fetchCarePackages } from '@/lib/api';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, resolveImageUrl } from '@/lib/utils';
 
 export default function RetreatsPage() {
   const [selectedFilter, setSelectedFilter] = useState('ALL');
@@ -135,7 +135,8 @@ export default function RetreatsPage() {
               const price = retreat.price;
               const overview = retreat.overview || retreat.subtitle;
               const inclusions = retreat.inclusions;
-              const image = retreat.bannerImage;
+              const rawImg = retreat.image || retreat.bannerImage || retreat.coverImage || (Array.isArray(retreat.galleryImages) ? retreat.galleryImages[0] : '');
+              const image = resolveImageUrl(rawImg);
 
               return (
                 <Card key={id} variant="default" className="flex flex-col justify-between p-8 group shadow-sm hover:shadow-xl transition-all">

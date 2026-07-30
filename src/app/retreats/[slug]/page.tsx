@@ -18,13 +18,14 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { CarePackageItem, fetchCarePackageBySlug } from '@/lib/api';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, resolveImageUrl } from '@/lib/utils';
 
 export default function RetreatDetailPage() {
   const params = useParams();
   const [pkg, setPkg] = useState<CarePackageItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [slug, setSlug] = useState<string>('');
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   useEffect(() => {
     const rawSlug = (params?.slug as string) || (typeof window !== 'undefined' ? window.location.pathname.split('/').pop() : '');
@@ -76,7 +77,16 @@ export default function RetreatDetailPage() {
   const id = pkg.id || pkg._id || '';
   const price = pkg.price;
   const duration = pkg.durationDays ? `${pkg.durationDays}-Day Retreat` : null;
-  const image = pkg.bannerImage;
+
+  const rawImages = [
+    pkg.image,
+    pkg.bannerImage,
+    pkg.coverImage,
+    ...(Array.isArray(pkg.galleryImages) ? pkg.galleryImages : []),
+  ].filter((img): img is string => Boolean(img && typeof img === 'string'));
+
+  const resolvedImages = Array.from(new Set(rawImages.map((url) => resolveImageUrl(url)))).filter(Boolean);
+  const activeImage = resolvedImages[activeImageIndex] || resolvedImages[0] || '';
 
   return (
     <div className="px-6 sm:px-12 md:px-20 max-w-6xl mx-auto flex flex-col gap-10 py-10 pb-24">
@@ -94,16 +104,16 @@ export default function RetreatDetailPage() {
       {/* Main Detail Header Card */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         {/* Cover Image & Quick Highlights */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
+        <div className="lg:col-span-7 flex flex-col gap-4">
           <div className="relative aspect-[16/10] rounded-3xl overflow-hidden shadow-2xl bg-slate-950 border border-primary/10">
-            {image ? (
-              <img src={image} alt={pkg.title} className="w-full h-full object-cover" />
+            {activeImage ? (
+              <img src={activeImage} alt={pkg.title} className="w-full h-full object-cover transition-all duration-500" />
             ) : (
               <div className="w-full h-full flex items-center justify-center bg-primary/5">
                 <span className="text-text-muted text-xs font-sans">No image available</span>
               </div>
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 pointer-events-none" />
             {duration && (
               <div className="absolute top-4 left-4 z-10">
                 <span className="backdrop-blur-md bg-black/60 text-gold text-xs font-sans font-bold uppercase tracking-widest px-4 py-2 rounded-full border border-gold/40 shadow-lg">
@@ -112,6 +122,24 @@ export default function RetreatDetailPage() {
               </div>
             )}
           </div>
+
+          {/* Gallery Thumbnails */}
+          {resolvedImages.length > 1 && (
+            <div className="flex items-center gap-3 overflow-x-auto pb-2 pt-1">
+              {resolvedImages.map((imgUrl, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setActiveImageIndex(idx)}
+                  className={`relative w-20 h-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
+                    activeImageIndex === idx ? 'border-gold scale-105 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img src={imgUrl} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Info & Booking Sidebar */}

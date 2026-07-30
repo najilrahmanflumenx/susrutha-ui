@@ -115,6 +115,9 @@ export interface CarePackageItem {
   targetAilments?: string[];
   price?: number;
   bannerImage?: string;
+  image?: string;
+  coverImage?: string;
+  galleryImages?: string[];
   isFeatured?: boolean;
   assignedBranchIds?: any[];
 }
