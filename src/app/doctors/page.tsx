@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge, Chip } from '@/components/ui/Badge';
 import { DoctorItem, fetchDoctors } from '@/lib/api';
 import { DoctorCarousel } from '@/components/doctors/DoctorCarousel';
+import { DoctorScheduleWidget } from '@/components/doctors/DoctorScheduleWidget';
 import { DoctorCardSkeleton, EmptyState } from '@/components/ui/Skeleton';
 
 export default function DoctorsPage() {
@@ -305,6 +306,11 @@ export default function DoctorsPage() {
           </div>
         </div>
       )}
+
+      {/* OPD Doctor Availability Schedule Widget */}
+      <div className="pt-12 border-t border-primary/10">
+        <DoctorScheduleWidget />
+      </div>
     </div>
   );
 }

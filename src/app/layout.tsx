@@ -2,6 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Navbar } from '@/components/navigation/Navbar';
 import { Footer } from '@/components/navigation/Footer';
+import { WhatsAppWidget } from '@/components/navigation/WhatsAppWidget';
+import { MobileStickyBar } from '@/components/navigation/MobileStickyBar';
 
 export const metadata: Metadata = {
   title: 'Susrutha | Ancient Wisdom. Modern Healing.',
@@ -22,6 +24,8 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-grow pt-24 sm:pt-28">{children}</main>
         <Footer />
+        <WhatsAppWidget />
+        <MobileStickyBar />
       </body>
     </html>
   );

@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge, Chip } from '@/components/ui/Badge';
 import { fetchEcosystemPillars, EcosystemItem } from '@/lib/api';
+import { RoomFacilitiesGrid } from '@/components/facilities/RoomFacilitiesGrid';
 
 export default function PublicEcosystemPage() {
   const [pillars, setPillars] = useState<EcosystemItem[]>([]);
@@ -129,12 +130,15 @@ export default function PublicEcosystemPage() {
       )}
 
       {!loading && filteredPillars.length === 0 && (
-        <div className="text-center py-20 flex flex-col items-center gap-4">
-          <Sparkles className="w-12 h-12 text-gold opacity-40" />
-          <p className="font-display text-2xl text-primary/50">No facility units published yet</p>
-          <p className="font-sans text-text-muted text-sm">Check back soon or contact our medical team for campus details.</p>
+        <div className="text-center py-16 bg-surface-card rounded-3xl border border-primary/10">
+          <p className="font-sans text-text-secondary text-sm">No specialized facility units found.</p>
         </div>
       )}
+
+      {/* Inpatient Room Accommodations & Ayur Village Section */}
+      <div className="pt-12 border-t border-primary/10">
+        <RoomFacilitiesGrid />
+      </div>
     </div>
   );
 }
