@@ -259,7 +259,7 @@ export async function fetchTreatments(options: FetchOptions & { all?: boolean } 
   try {
     const params: any = {
       page: options.page || 1,
-      limit: options.all ? 1000 : options.limit || 50,
+      limit: options.limit || 12,
     };
     if (options.all) params.all = 'true';
     if (options.category && options.category !== 'ALL') params.category = options.category;
@@ -270,7 +270,7 @@ export async function fetchTreatments(options: FetchOptions & { all?: boolean } 
     const meta = response.data?.meta || { total: data.length, page: params.page, limit: params.limit, totalPages: Math.ceil(data.length / params.limit) || 1 };
     return { data, meta };
   } catch (error) {
-    return { data: [], meta: { total: 0, page: 1, limit: 50, totalPages: 1 } };
+    return { data: [], meta: { total: 0, page: 1, limit: 12, totalPages: 1 } };
   }
 }
 
@@ -287,7 +287,7 @@ export async function fetchDoctors(options: FetchOptions & { all?: boolean } = {
   try {
     const params: any = {
       page: options.page || 1,
-      limit: options.all ? 1000 : options.limit || 50,
+      limit: options.limit || 12,
     };
     if (options.all) params.all = 'true';
     if (options.category && options.category !== 'ALL') params.category = options.category;
@@ -298,7 +298,7 @@ export async function fetchDoctors(options: FetchOptions & { all?: boolean } = {
     const meta = response.data?.meta || { total: data.length, page: params.page, limit: params.limit, totalPages: Math.ceil(data.length / params.limit) || 1 };
     return { data, meta };
   } catch (error) {
-    return { data: [], meta: { total: 0, page: 1, limit: 50, totalPages: 1 } };
+    return { data: [], meta: { total: 0, page: 1, limit: 12, totalPages: 1 } };
   }
 }
 
@@ -356,13 +356,13 @@ export async function fetchCarePackageBySlug(slug: string): Promise<CarePackageI
 }
 
 // Array List Helpers for hook compatibility
-export async function fetchTreatmentsList(options: FetchOptions = { all: true }): Promise<TreatmentItem[]> {
-  const res = await fetchTreatments({ all: true, ...options });
+export async function fetchTreatmentsList(options: FetchOptions = { limit: 12 }): Promise<TreatmentItem[]> {
+  const res = await fetchTreatments({ limit: 12, ...options });
   return res.data;
 }
 
-export async function fetchDoctorsList(options: FetchOptions = { all: true }): Promise<DoctorItem[]> {
-  const res = await fetchDoctors({ all: true, ...options });
+export async function fetchDoctorsList(options: FetchOptions = { limit: 12 }): Promise<DoctorItem[]> {
+  const res = await fetchDoctors({ limit: 12, ...options });
   return res.data;
 }
 
