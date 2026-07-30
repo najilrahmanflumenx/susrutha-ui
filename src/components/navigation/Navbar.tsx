@@ -82,39 +82,38 @@ export const Navbar: React.FC = () => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Main navigation items (Logo acts as HOME)
+  // Main navigation items customer sees first
   const primaryNavLinks = [
-    { name: 'Departments', href: '/departments' },
     { name: 'Treatments', href: '/treatments' },
-    { name: 'Conditions', href: '/conditions' },
     { name: 'Packages', href: '/retreats' },
     { name: 'Doctors', href: '/doctors' },
-    { name: 'Branches', href: '/locations' },
+    { name: 'Facilities', href: '/ecosystem' },
+    { name: 'Contact', href: '/contact' },
   ];
 
   // Secondary items inside "MORE" dropdown
   const secondaryNavLinks = [
-    { name: 'Facilities', href: '/ecosystem', icon: Building2, desc: 'Herbal garden, pharmacy & research' },
+    { name: 'Departments', href: '/departments', icon: Building2, desc: 'Specialty clinical divisions' },
+    { name: 'Conditions', href: '/conditions', icon: Sparkles, desc: 'Ailments & health conditions treated' },
     { name: 'Media Gallery', href: '/gallery', icon: Sparkles, desc: 'Photo albums & video walkthroughs' },
-    { name: 'Press & Trust', href: '/media-coverage', icon: Newspaper, desc: 'News features & accreditations' },
-    { name: 'Reviews', href: '/testimonials', icon: Quote, desc: 'Patient stories, ratings & reviews' },
+    { name: 'Press & Accreditations', href: '/media-coverage', icon: Newspaper, desc: 'NABH certs & news features' },
+    { name: 'Patient Reviews', href: '/testimonials', icon: Quote, desc: 'Patient stories, ratings & reviews' },
+    { name: 'Ayurvedic Journal', href: '/journal', icon: BookOpen, desc: 'Articles & health insights' },
+    { name: 'Heritage & Legacy', href: '/heritage', icon: History, desc: '55-Year clinical hospital story' },
     { name: 'FAQs & Help', href: '/faqs', icon: HelpCircle, desc: 'Common questions & patient guide' },
-    { name: 'Blog', href: '/journal', icon: BookOpen, desc: 'Ayurvedic articles & health insights' },
-    { name: 'Heritage', href: '/heritage', icon: History, desc: '55-Year clinical legacy & story' },
-    { name: 'Contact', href: '/contact', icon: PhoneCall, desc: 'Reach out to hospital branches' },
   ];
 
   const allNavLinksMobile = [
     { name: 'Home', href: '/' },
     ...primaryNavLinks,
-    { name: 'Facilities', href: '/ecosystem' },
+    { name: 'Departments', href: '/departments' },
+    { name: 'Conditions', href: '/conditions' },
     { name: 'Media Gallery', href: '/gallery' },
     { name: 'Press & Trust', href: '/media-coverage' },
     { name: 'Reviews', href: '/testimonials' },
     { name: 'FAQs', href: '/faqs' },
     { name: 'Blog', href: '/journal' },
     { name: 'Heritage', href: '/heritage' },
-    { name: 'Contact', href: '/contact' },
   ];
 
   return (
@@ -172,7 +171,7 @@ export const Navbar: React.FC = () => {
             </button>
 
             {isMoreDropdownOpen && (
-              <div className="absolute top-full right-0 mt-3 w-64 rounded-2xl glass-panel bg-surface/95 backdrop-blur-xl border border-primary/15 shadow-2xl p-2 z-50 animate-fade-in space-y-1">
+              <div className="absolute top-full right-0 mt-3 w-72 sm:w-80 rounded-2xl bg-white dark:bg-slate-900 border border-gold/30 shadow-[0_25px_60px_rgba(0,0,0,0.4)] p-2.5 z-[100] animate-in fade-in zoom-in-95 duration-200 space-y-1">
                 {secondaryNavLinks.map((sub) => {
                   const Icon = sub.icon;
                   const isSubActive = pathname === sub.href;
@@ -182,16 +181,22 @@ export const Navbar: React.FC = () => {
                       href={sub.href}
                       onClick={() => setIsMoreDropdownOpen(false)}
                       className={cn(
-                        'flex items-start gap-3 p-3 rounded-xl transition-all duration-200 group',
-                        isSubActive ? 'bg-primary/10 text-primary font-bold' : 'hover:bg-primary/5 text-text-secondary hover:text-primary'
+                        'flex items-start gap-3 p-2.5 rounded-xl transition-all duration-200 group border border-transparent',
+                        isSubActive
+                          ? 'bg-gold/15 border-gold/30 text-primary font-bold'
+                          : 'hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-slate-200 dark:hover:border-slate-700'
                       )}
                     >
-                      <div className="p-2 rounded-lg bg-primary/5 group-hover:bg-gold group-hover:text-primary text-gold transition-colors shrink-0">
+                      <div className="p-2 rounded-lg bg-gold/10 group-hover:bg-gold text-gold group-hover:text-white transition-colors shrink-0">
                         <Icon className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-xs font-sans font-bold tracking-wider">{sub.name}</div>
-                        <div className="text-[10px] text-text-muted font-sans leading-tight mt-0.5">{sub.desc}</div>
+                        <div className="text-xs font-sans font-bold tracking-wider text-slate-900 dark:text-slate-100 group-hover:text-gold transition-colors">
+                          {sub.name}
+                        </div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 font-sans leading-tight mt-0.5">
+                          {sub.desc}
+                        </div>
                       </div>
                     </Link>
                   );
