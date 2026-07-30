@@ -262,32 +262,34 @@ function BookingContent() {
 
       {/* Primary Branch Location Selector Bar */}
       {branches.length > 0 && (
-        <Card variant="glass" className="p-4 sm:p-6 border-gold/30 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-card">
-          <div className="flex items-center gap-3">
+        <Card variant="glass" className="p-4 sm:p-6 border-gold/30 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-surface-card overflow-hidden">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className="w-10 h-10 rounded-full bg-gold/10 text-gold-dark flex items-center justify-center shrink-0">
               <MapPin className="w-5 h-5" />
             </div>
-            <div>
+            <div className="min-w-0 flex-1">
               <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-text-muted block">
                 SELECT HOSPITAL BRANCH
               </span>
-              <span className="font-display text-lg font-bold text-primary">
+              <span className="font-display text-base sm:text-lg font-bold text-primary truncate block" title={activeBranch?.name}>
                 {activeBranch?.name || 'All Branches'}
               </span>
             </div>
           </div>
 
-          <select
-            value={selectedBranchId}
-            onChange={(e) => setSelectedBranchId(e.target.value)}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-primary/20 bg-background text-sm font-sans font-semibold text-primary focus:outline-none focus:ring-2 focus:ring-gold"
-          >
-            {branches.map((b) => (
-              <option key={b._id || b.id} value={b._id || b.id}>
-                {b.name} ({b.code || 'BRANCH'})
-              </option>
-            ))}
-          </select>
+          <div className="shrink-0 w-full md:w-80">
+            <select
+              value={selectedBranchId}
+              onChange={(e) => setSelectedBranchId(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-xl border border-primary/20 bg-background text-xs sm:text-sm font-sans font-semibold text-primary focus:outline-none focus:ring-2 focus:ring-gold truncate"
+            >
+              {branches.map((b) => (
+                <option key={b._id || b.id} value={b._id || b.id}>
+                  {b.name} ({b.code || 'BRANCH'})
+                </option>
+              ))}
+            </select>
+          </div>
         </Card>
       )}
 
@@ -356,7 +358,7 @@ function BookingContent() {
                 Choose {bookingMode === 'PACKAGE' ? 'Care Package' : 'Treatment Therapy'}
               </h3>
               {activeBranch && (
-                <span className="text-xs font-sans text-gold-dark font-semibold">
+                <span className="text-xs font-sans text-gold-dark font-semibold truncate max-w-xs sm:max-w-md block" title={activeBranch.name}>
                   Showing available items at {activeBranch.name}
                 </span>
               )}

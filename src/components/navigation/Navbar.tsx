@@ -23,7 +23,9 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { cn } from '@/lib/utils';
-import { globalSearch, GlobalSearchResult } from '@/lib/api';
+import { globalSearch, GlobalSearchResult, fetchSiteSettings } from '@/lib/api';
+import { useApiData } from '@/hooks/useApiData';
+import { AnnouncementBar } from './AnnouncementBar';
 
 export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -35,6 +37,10 @@ export const Navbar: React.FC = () => {
   const [isSearching, setIsSearching] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+
+  const { data: siteSettings } = useApiData<Record<string, any>>(fetchSiteSettings, {});
+  const announcement = siteSettings?.ANNOUNCEMENT || siteSettings?.ANNOUNCEMENT_BAR || {};
+  const general = siteSettings?.GENERAL || siteSettings?.GENERAL_SETTINGS || {};
 
   useEffect(() => {
     const handleScroll = () => {
@@ -118,9 +124,17 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <AnnouncementBar
+          text={announcement.text}
+          link={announcement.link}
+          isEnabled={announcement.isEnabled !== false}
+        />
+      </div>
       <header
         className={cn(
-          'fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 rounded-full flex items-center justify-between px-4 sm:px-8 py-2.5',
+          'fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-500 rounded-full flex items-center justify-between px-4 sm:px-8 py-2.5',
+          announcement.text && announcement.isEnabled !== false ? 'top-10 sm:top-12' : 'top-3 sm:top-4',
           isScrolled
             ? 'w-[95%] sm:w-[94%] max-w-7xl glass-panel shadow-2xl border-primary/20 bg-surface/90 py-2 sm:py-2.5'
             : 'w-[96%] max-w-7xl bg-surface/75 backdrop-blur-md border border-primary/10 shadow-lg'

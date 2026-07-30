@@ -57,11 +57,10 @@ export default function PublicDepartmentsPage() {
   }, [departments, searchTerm]);
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen bg-background">
       {/* Hero Header Section */}
-      <div className="relative pt-32 sm:pt-36 pb-16 px-6 sm:px-12 md:px-20 overflow-hidden border-b border-primary/10 bg-gradient-to-b from-primary/5 via-surface to-surface">
+      <div className="relative pt-36 sm:pt-40 pb-16 px-6 sm:px-12 md:px-20 overflow-hidden border-b border-primary/10 bg-gradient-to-b from-sand/40 via-background to-background">
         {/* Ambient Decorative Glows */}
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-1/2 right-10 w-72 h-72 bg-primary/5 rounded-full blur-2xl pointer-events-none" />
 
         <div className="max-w-4xl mx-auto text-center space-y-5 relative z-10">

@@ -3,9 +3,17 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, Globe, Mail, Phone } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { fetchSiteSettings } from '@/lib/api';
+import { useApiData } from '@/hooks/useApiData';
 
 export const Footer: React.FC = () => {
+  const { data: siteSettings } = useApiData<Record<string, any>>(fetchSiteSettings, {});
+  const general = siteSettings?.GENERAL || siteSettings?.GENERAL_SETTINGS || {};
+  const social = siteSettings?.SOCIAL || {};
+
+  const email = general.email || general.mainEmail || 'info@susruthaayurveda.com';
+  const phone = general.phone || general.emergencyHotline || '+91 96566 56736';
+
   return (
     <footer className="w-full rounded-t-[48px] bg-primary text-surface px-6 sm:px-12 md:px-20 py-20 mt-32 flex flex-col justify-between relative overflow-hidden border-t border-gold/20 shadow-2xl">
       {/* Background Decorative Element */}
@@ -23,27 +31,31 @@ export const Footer: React.FC = () => {
               />
             </Link>
             <p className="text-text-muted font-sans text-sm leading-relaxed max-w-md mb-8">
-              Crafting multi-generational legacies of health, vitality, and inner tranquility through the authentic, scientific wisdom of Susrutha Ayurveda.
+              {general.tagline || 'Crafting multi-generational legacies of health, vitality, and inner tranquility through the authentic, scientific wisdom of Susrutha Ayurveda.'}
             </p>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-wrap">
+            {social.facebook && (
+              <a
+                href={social.facebook}
+                target="_blank"
+                rel="noreferrer"
+                className="w-11 h-11 rounded-full border border-surface/20 flex items-center justify-center text-surface hover:bg-gold hover:text-primary hover:border-gold transition-all duration-300"
+                aria-label="Facebook"
+              >
+                <Globe className="w-5 h-5" />
+              </a>
+            )}
             <a
-              href="#"
-              className="w-11 h-11 rounded-full border border-surface/20 flex items-center justify-center text-surface hover:bg-gold hover:text-primary hover:border-gold transition-all duration-300"
-              aria-label="Website"
-            >
-              <Globe className="w-5 h-5" />
-            </a>
-            <a
-              href="mailto:contact@susrutha.org"
+              href={`mailto:${email}`}
               className="w-11 h-11 rounded-full border border-surface/20 flex items-center justify-center text-surface hover:bg-gold hover:text-primary hover:border-gold transition-all duration-300"
               aria-label="Email"
             >
               <Mail className="w-5 h-5" />
             </a>
             <a
-              href="tel:+919876543210"
+              href={`tel:${phone.replace(/\s+/g, '')}`}
               className="w-11 h-11 rounded-full border border-surface/20 flex items-center justify-center text-surface hover:bg-gold hover:text-primary hover:border-gold transition-all duration-300"
               aria-label="Phone"
             >
