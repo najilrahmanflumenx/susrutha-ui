@@ -117,55 +117,59 @@ export default function JournalPage() {
               ? new Date(blog.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })
               : '';
             return (
-              <Card key={id} variant="default" className="flex flex-col group shadow-sm hover:shadow-xl transition-all overflow-hidden p-0">
+              <Card key={id} variant="default" className="flex flex-col group border border-primary/10 dark:border-white/10 rounded-3xl shadow-lg hover:shadow-[0_20px_50px_rgba(212,175,55,0.2)] hover:-translate-y-2 hover:border-gold/50 transition-all duration-500 overflow-hidden p-0 bg-surface-card relative">
                 {/* Cover image */}
-                <div className="relative aspect-[16/9] overflow-hidden">
+                <div className="relative aspect-[16/9] overflow-hidden bg-slate-950">
                   {blog.coverImage ? (
                     <img
                       src={blog.coverImage}
                       alt={blog.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out opacity-90 group-hover:opacity-100"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-primary/5 aspect-[16/9]">
                       <span className="text-text-muted text-xs font-sans">No image</span>
                     </div>
                   )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
                   {blog.category && (
-                    <div className="absolute top-4 left-4">
-                      <Badge variant="gold" icon={<Tag className="w-3 h-3" />}>{blog.category}</Badge>
+                    <div className="absolute top-4 left-4 z-10">
+                      <span className="backdrop-blur-md bg-black/50 text-gold text-[10px] font-sans font-bold uppercase tracking-widest px-3.5 py-1.5 rounded-full border border-gold/30 shadow-md">
+                        {blog.category}
+                      </span>
                     </div>
                   )}
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-col gap-3 p-6 flex-1">
-                  <div className="flex items-center gap-3 text-[10px] font-sans font-bold uppercase tracking-widest text-text-muted">
-                    {date && <span>{date}</span>}
-                    {blog.readTime && (
-                      <>
-                        <span>·</span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" /> {blog.readTime} min read
-                        </span>
-                      </>
+                <div className="flex flex-col gap-3 p-6 flex-1 justify-between">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-3 text-[10px] font-sans font-bold uppercase tracking-widest text-text-muted">
+                      {date && <span>{date}</span>}
+                      {blog.readTime && (
+                        <>
+                          <span>·</span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-gold" /> {blog.readTime} min read
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    <h3 className="font-display text-xl font-bold text-primary group-hover:text-gold transition-colors duration-300 leading-snug line-clamp-2">
+                      <Link href={`/journal/${slug}`}>
+                        {blog.title}
+                      </Link>
+                    </h3>
+                    {blog.excerpt && (
+                      <p className="font-sans text-text-secondary text-sm leading-relaxed line-clamp-3">
+                        {blog.excerpt}
+                      </p>
                     )}
                   </div>
-                  <h3 className="font-display text-xl font-bold text-primary leading-snug">
-                    <Link href={`/journal/${slug}`} className="hover:underline">
-                      {blog.title}
-                    </Link>
-                  </h3>
-                  {blog.excerpt && (
-                    <p className="font-sans text-text-secondary text-sm leading-relaxed line-clamp-3">
-                      {blog.excerpt}
-                    </p>
-                  )}
-                  <div className="mt-auto pt-4 border-t border-primary/10">
-                    <Link href={`/journal/${slug}`}>
-                      <Button variant="ghost" size="sm" icon={<ArrowRight className="w-4 h-4" />}>
-                        READ ARTICLE
-                      </Button>
+                  <div className="mt-4 pt-4 border-t border-primary/10 flex items-center justify-between text-xs font-bold font-sans text-gold group-hover:text-amber-600 transition-colors">
+                    <Link href={`/journal/${slug}`} className="flex items-center justify-between w-full">
+                      <span>Read Full Article</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </div>
                 </div>

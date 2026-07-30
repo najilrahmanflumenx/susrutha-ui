@@ -207,11 +207,15 @@ export interface VideoItem {
   category?: string;
   description?: string;
   youtubeId?: string;
+  youtubeUrl?: string;
+  videoUrl?: string;
+  videoHost?: string;
   url?: string;
   thumbnailUrl?: string;
   duration?: string;
   isFeatured?: boolean;
   sortOrder?: number;
+  status?: string;
 }
 
 export interface AffiliationItem {
@@ -530,16 +534,6 @@ export async function fetchFacilities(options: FetchOptions = {}): Promise<Facil
 
 // ─── Videos ───────────────────────────────────────────────────────────────────
 
-export interface VideoItem {
-  _id?: string;
-  id?: string;
-  title: string;
-  youtubeId?: string;
-  videoUrl?: string;
-  thumbnailUrl?: string;
-  description?: string;
-  status?: string;
-}
 
 export async function fetchVideos(options: FetchOptions = {}): Promise<VideoItem[]> {
   try {
