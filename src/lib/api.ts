@@ -343,6 +343,15 @@ export async function fetchCarePackages(options: FetchOptions & { days?: string 
   }
 }
 
+export async function fetchCarePackageBySlug(slug: string): Promise<CarePackageItem | null> {
+  try {
+    const response = await api.get(`/public/packages/${slug}`);
+    return response.data?.data || null;
+  } catch (error) {
+    return null;
+  }
+}
+
 // Array List Helpers for hook compatibility
 export async function fetchTreatmentsList(options: FetchOptions = { all: true }): Promise<TreatmentItem[]> {
   const res = await fetchTreatments({ all: true, ...options });
