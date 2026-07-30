@@ -24,20 +24,20 @@ export default function DoctorDetailPage({ params }: { params: { slug: string } 
     return <div className="min-h-screen flex items-center justify-center">Loading Doctor Profile...</div>;
   }
 
-  const name = doctor.name || 'Ayurvedic Physician';
-  const designation = doctor.designation || doctor.title || 'Senior Consultant';
-  const specialization = doctor.specialization || (doctor.specialties ? doctor.specialties[0] : 'Kaya Chikitsa');
-  const expYears = doctor.experienceYears || 15;
-  const photo = doctor.image || doctor.photoUrl || doctor.photo || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80';
-  const bio = doctor.bio || 'Expert physician committed to holistic patient wellness and classical Panchakarma care.';
-  const fee = doctor.consultationFee || 500;
-  const specialties = doctor.specialties?.length ? doctor.specialties : ['Panchakarma Detoxification', 'Spine & Joint Care', 'Metabolic Rejuvenation'];
-  const languages = doctor.languagesSpoken?.length ? doctor.languagesSpoken : ['Malayalam', 'English', 'Hindi'];
+  const name = doctor.name;
+  const designation = doctor.designation || doctor.title;
+  const specialization = doctor.specialization || doctor.specialties?.[0];
+  const expYears = doctor.experienceYears;
+  const photo = doctor.image || doctor.photoUrl || doctor.photo;
+  const bio = doctor.bio;
+  const fee = doctor.consultationFee;
+  const specialties = doctor.specialties?.length ? doctor.specialties : [];
+  const languages = doctor.languagesSpoken?.length ? doctor.languagesSpoken : [];
   const qualifications = Array.isArray(doctor.qualifications)
     ? doctor.qualifications
     : typeof doctor.qualifications === 'string'
       ? [doctor.qualifications]
-      : ['BAMS', 'MD (Ayurveda)'];
+      : [];
 
   return (
     <div className="px-6 sm:px-12 md:px-20 max-w-7xl mx-auto flex flex-col gap-12 pb-24 pt-8">
@@ -92,7 +92,7 @@ export default function DoctorDetailPage({ params }: { params: { slug: string } 
           <div className="pt-4 border-t border-primary/10 flex items-center justify-between">
             <div>
               <span className="text-xs font-bold uppercase tracking-widest text-text-muted block mb-1">CONSULTATION FEE</span>
-              <span className="font-display text-2xl font-bold text-primary">{formatCurrency(fee)}</span>
+              <span className="font-display text-2xl font-bold text-primary">{formatCurrency(fee || 0)}</span>
             </div>
 
             <Link href={`/booking?doctor=${encodeURIComponent(name)}`}>

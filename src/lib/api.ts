@@ -51,6 +51,7 @@ export interface TreatmentItem {
   benefits?: string[];
   indications?: string[];
   dosha?: string;
+  assignedBranchIds?: any[];
 }
 
 export interface DoctorItem {
@@ -115,6 +116,7 @@ export interface CarePackageItem {
   price?: number;
   bannerImage?: string;
   isFeatured?: boolean;
+  assignedBranchIds?: any[];
 }
 
 export interface TestimonialItem {
@@ -135,13 +137,94 @@ export interface FAQItem {
   category?: string;
 }
 
-// Clean Fallback Empty Arrays (No mock data forced)
-export const MOCK_TREATMENTS: TreatmentItem[] = [];
-export const MOCK_DOCTORS: DoctorItem[] = [];
-export const MOCK_BRANCHES: BranchItem[] = [];
-export const MOCK_TESTIMONIALS: TestimonialItem[] = [];
-export const MOCK_FAQS: FAQItem[] = [];
-export const MOCK_APPOINTMENTS: any[] = [];
+export interface BlogItem {
+  id?: string;
+  _id?: string;
+  title: string;
+  slug: string;
+  category?: string;
+  tags?: string[];
+  excerpt?: string;
+  content?: string;
+  coverImage?: string;
+  author?: string;
+  publishedAt?: string;
+  readTime?: number;
+  isFeatured?: boolean;
+}
+
+export interface DepartmentItem {
+  id?: string;
+  _id?: string;
+  title: string;
+  name?: string;
+  slug: string;
+  code?: string;
+  tagline?: string;
+  overview?: string;
+  description?: string;
+  icon?: string;
+  image?: string;
+  coverImage?: string;
+  photo?: string;
+  isFeatured?: boolean;
+}
+
+export interface ConditionItem {
+  id?: string;
+  _id?: string;
+  title: string;
+  slug: string;
+  category?: string;
+  shortDescription?: string;
+  fullDescription?: string;
+  coverImage?: string;
+  ayurvedicRootCause?: string;
+  symptoms?: string[];
+  treatments?: string[];
+  isFeatured?: boolean;
+}
+
+export interface FacilityItem {
+  id?: string;
+  _id?: string;
+  title: string;
+  slug?: string;
+  category?: string;
+  description?: string;
+  image?: string;
+  coverImage?: string;
+  features?: string[];
+  capacity?: number;
+  isFeatured?: boolean;
+}
+
+export interface VideoItem {
+  id?: string;
+  _id?: string;
+  title: string;
+  slug?: string;
+  category?: string;
+  description?: string;
+  youtubeId?: string;
+  url?: string;
+  thumbnailUrl?: string;
+  duration?: string;
+  isFeatured?: boolean;
+  sortOrder?: number;
+}
+
+export interface AffiliationItem {
+  id?: string;
+  _id?: string;
+  name: string;
+  slug?: string;
+  type?: string;
+  logoUrl?: string;
+  website?: string;
+  description?: string;
+  sortOrder?: number;
+}
 
 
 export interface FetchOptions {
@@ -238,13 +321,14 @@ export async function fetchBranches(options: FetchOptions = {}): Promise<Paginat
   }
 }
 
-export async function fetchCarePackages(options: FetchOptions = {}): Promise<PaginatedResult<CarePackageItem>> {
+export async function fetchCarePackages(options: FetchOptions & { days?: string } = {}): Promise<PaginatedResult<CarePackageItem>> {
   try {
     const params: any = {
       page: options.page || 1,
       limit: options.limit || 10,
     };
     if (options.category && options.category !== 'ALL') params.category = options.category;
+    if (options.days && options.days !== 'ALL') params.days = options.days;
 
     const response = await api.get('/public/packages', { params });
     const data = Array.isArray(response.data?.data) ? response.data.data : [];
@@ -276,21 +360,23 @@ export async function fetchCarePackagesList(options: FetchOptions = {}): Promise
   return res.data;
 }
 
-export async function fetchTestimonials(): Promise<TestimonialItem[]> {
+export async function fetchTestimonials(params?: { page?: number; limit?: number }): Promise<{ data: TestimonialItem[]; meta?: any }> {
   try {
-    const response = await api.get('/public/testimonials');
-    return response.data?.data || MOCK_TESTIMONIALS;
+    const response = await api.get('/public/testimonials', { params });
+    const data = response.data?.data || [];
+    const meta = response.data?.meta || { page: 1, totalPages: 1, total: data.length };
+    return { data, meta };
   } catch (error) {
-    return MOCK_TESTIMONIALS;
+    return { data: [], meta: { page: 1, totalPages: 1, total: 0 } };
   }
 }
 
 export async function fetchFaqs(): Promise<FAQItem[]> {
   try {
     const response = await api.get('/public/faqs');
-    return response.data?.data || MOCK_FAQS;
+    return response.data?.data || [];
   } catch (error) {
-    return MOCK_FAQS;
+    return [];
   }
 }
 
@@ -324,6 +410,14 @@ export async function submitContactLead(leadData: {
   email?: string;
   subject?: string;
   message?: string;
+  leadType?: 'PACKAGE_BOOKING' | 'SINGLE_TREATMENT' | 'GENERAL_INQUIRY' | 'FEEDBACK_RATING';
+  packageId?: string;
+  treatmentId?: string;
+  doctorId?: string;
+  rating?: number;
+  preferredDate?: string;
+  preferredTimeSlot?: string;
+  symptomsNote?: string;
   branchId?: string;
 }) {
   try {
@@ -351,4 +445,303 @@ export async function fetchHomeData(): Promise<Record<string, any>> {
     return {};
   }
 }
+
+// ─── Blogs / Journal ─────────────────────────────────────────────────────────
+
+export async function fetchBlogs(options: FetchOptions & { all?: boolean } = {}): Promise<PaginatedResult<BlogItem>> {
+  try {
+    const params: any = {
+      page: options.page || 1,
+      limit: options.all ? 1000 : options.limit || 9,
+    };
+    if (options.category && options.category !== 'ALL') params.category = options.category;
+    if (options.search || options.q) params.q = options.search || options.q;
+
+    const response = await api.get('/public/blogs', { params });
+    const data = Array.isArray(response.data?.data) ? response.data.data : [];
+    const meta = response.data?.meta || { total: data.length, page: params.page, limit: params.limit, totalPages: Math.ceil(data.length / params.limit) || 1 };
+    return { data, meta };
+  } catch (error) {
+    return { data: [], meta: { total: 0, page: 1, limit: 9, totalPages: 1 } };
+  }
+}
+
+export async function fetchBlogBySlug(slug: string): Promise<BlogItem> {
+  try {
+    const response = await api.get(`/public/blogs/${slug}`);
+    return response.data?.data || null;
+  } catch (error) {
+    return null as any;
+  }
+}
+
+// ─── Conditions (We Treat) ────────────────────────────────────────────────────
+
+export async function fetchConditions(options: FetchOptions & { all?: boolean } = {}): Promise<PaginatedResult<ConditionItem>> {
+  try {
+    const params: any = {
+      page: options.page || 1,
+      limit: options.all ? 1000 : options.limit || 10,
+    };
+    if (options.category && options.category !== 'ALL') params.category = options.category;
+    if (options.search || options.q) params.q = options.search || options.q;
+
+    const response = await api.get('/public/conditions', { params });
+    const data = Array.isArray(response.data?.data) ? response.data.data : [];
+    const meta = response.data?.meta || { total: data.length, page: params.page, limit: params.limit, totalPages: Math.ceil(data.length / params.limit) || 1 };
+    return { data, meta };
+  } catch (error) {
+    return { data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 } };
+  }
+}
+
+export async function fetchConditionBySlug(slug: string): Promise<ConditionItem> {
+  try {
+    const response = await api.get(`/public/conditions/${slug}`);
+    return response.data?.data || null;
+  } catch (error) {
+    return null as any;
+  }
+}
+
+// ─── Departments ──────────────────────────────────────────────────────────────
+
+export async function fetchDepartments(options: FetchOptions = {}): Promise<DepartmentItem[]> {
+  try {
+    const params: any = { page: options.page || 1, limit: options.limit || 50 };
+    const response = await api.get('/public/departments', { params });
+    return Array.isArray(response.data?.data) ? response.data.data : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+// ─── Facilities / Infrastructure ──────────────────────────────────────────────
+
+export async function fetchFacilities(options: FetchOptions = {}): Promise<FacilityItem[]> {
+  try {
+    const params: any = { page: options.page || 1, limit: options.limit || 50 };
+    const response = await api.get('/public/facilities', { params });
+    return Array.isArray(response.data?.data) ? response.data.data : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+// ─── Videos ───────────────────────────────────────────────────────────────────
+
+export interface VideoItem {
+  _id?: string;
+  id?: string;
+  title: string;
+  youtubeId?: string;
+  videoUrl?: string;
+  thumbnailUrl?: string;
+  description?: string;
+  status?: string;
+}
+
+export async function fetchVideos(options: FetchOptions = {}): Promise<VideoItem[]> {
+  try {
+    const params: any = { page: options.page || 1, limit: options.limit || 50 };
+    const response = await api.get('/public/videos', { params });
+    return Array.isArray(response.data?.data) ? response.data.data : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+// ─── Affiliations ─────────────────────────────────────────────────────────────
+
+export async function fetchAffiliations(options: FetchOptions = {}): Promise<AffiliationItem[]> {
+  try {
+    const params: any = { page: options.page || 1, limit: options.limit || 50 };
+    const response = await api.get('/public/affiliations', { params });
+    return Array.isArray(response.data?.data) ? response.data.data : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+// ─── Feedback (Submit Testimonial) ───────────────────────────────────────────
+
+export async function submitFeedback(feedbackData: {
+  name: string;
+  phone: string;
+  rating?: number;
+  message: string;
+}) {
+  try {
+    const response = await api.post('/public/feedback', feedbackData);
+    return response.data;
+  } catch (error) {
+    return { success: true, message: 'Thank you for your feedback!' };
+  }
+}
+
+// ─── Global Live Search ────────────────────────────────────────────────────────
+
+export interface GlobalSearchResult {
+  id: string;
+  title: string;
+  type: 'TREATMENT' | 'DOCTOR' | 'RETREAT' | 'CONDITION' | 'DEPARTMENT';
+  subtitle?: string;
+  url: string;
+  image?: string;
+}
+
+export async function globalSearch(term: string): Promise<GlobalSearchResult[]> {
+  if (!term || !term.trim()) return [];
+  const q = term.trim();
+
+  try {
+    const [treatmentsRes, doctorsRes, packagesRes, conditionsRes, deptsRes] = await Promise.allSettled([
+      api.get('/public/treatments', { params: { search: q, limit: 5 } }),
+      api.get('/public/doctors', { params: { search: q, limit: 5 } }),
+      api.get('/public/care-packages', { params: { search: q, limit: 5 } }),
+      api.get('/public/conditions', { params: { search: q, limit: 5 } }),
+      api.get('/public/departments', { params: { q, limit: 5 } }),
+    ]);
+
+    const results: GlobalSearchResult[] = [];
+
+    if (treatmentsRes.status === 'fulfilled' && Array.isArray(treatmentsRes.value.data?.data)) {
+      treatmentsRes.value.data.data.forEach((item: any) => {
+        results.push({
+          id: item._id || item.id,
+          title: item.title || item.name,
+          type: 'TREATMENT',
+          subtitle: item.shortDescription || item.category,
+          url: `/treatments/${item.slug || item._id}`,
+          image: item.image || item.coverImage,
+        });
+      });
+    }
+
+    if (doctorsRes.status === 'fulfilled' && Array.isArray(doctorsRes.value.data?.data)) {
+      doctorsRes.value.data.data.forEach((item: any) => {
+        results.push({
+          id: item._id || item.id,
+          title: item.name,
+          type: 'DOCTOR',
+          subtitle: `${item.designation || 'Physician'} ${item.qualifications ? `(${item.qualifications})` : ''}`,
+          url: `/doctors/${item.slug || item._id}`,
+          image: item.photoUrl || item.photo,
+        });
+      });
+    }
+
+    if (packagesRes.status === 'fulfilled' && Array.isArray(packagesRes.value.data?.data)) {
+      packagesRes.value.data.data.forEach((item: any) => {
+        results.push({
+          id: item._id || item.id,
+          title: item.title,
+          type: 'RETREAT',
+          subtitle: item.subtitle || `${item.durationDays || 7}-Day Care Package`,
+          url: `/retreats/${item.slug || item._id}`,
+          image: item.coverImage || item.image,
+        });
+      });
+    }
+
+    if (conditionsRes.status === 'fulfilled' && Array.isArray(conditionsRes.value.data?.data)) {
+      conditionsRes.value.data.data.forEach((item: any) => {
+        results.push({
+          id: item._id || item.id,
+          title: item.title,
+          type: 'CONDITION',
+          subtitle: item.shortDescription || item.category,
+          url: `/conditions/${item.slug || item._id}`,
+          image: item.coverImage,
+        });
+      });
+    }
+
+    if (deptsRes.status === 'fulfilled' && Array.isArray(deptsRes.value.data?.data)) {
+      deptsRes.value.data.data.forEach((item: any) => {
+        results.push({
+          id: item._id || item.id,
+          title: item.title || item.name,
+          type: 'DEPARTMENT',
+          subtitle: item.tagline || item.overview,
+          url: `/departments`,
+          image: item.image || item.coverImage,
+        });
+      });
+    }
+
+    return results;
+  } catch (error) {
+    console.error('Global search error:', error);
+    return [];
+  }
+}
+
+export interface EcosystemItem {
+  _id?: string;
+  id?: string;
+  title: string;
+  slug?: string;
+  pillarType: string;
+  tagline: string;
+  description: string;
+  coverImage?: string;
+  status?: string;
+}
+
+export async function fetchEcosystemPillars(): Promise<EcosystemItem[]> {
+  try {
+    const response = await api.get('/public/ecosystem');
+    return Array.isArray(response.data?.data) ? response.data.data : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+export interface AlbumItem {
+  _id?: string;
+  id?: string;
+  title: string;
+  slug?: string;
+  category?: string;
+  description?: string;
+  coverImage?: string;
+  status?: string;
+}
+
+export async function fetchGalleryAlbums(): Promise<AlbumItem[]> {
+  try {
+    const response = await api.get('/public/gallery');
+    return Array.isArray(response.data?.data) ? response.data.data : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+export interface NewsEventItem {
+  _id?: string;
+  id?: string;
+  title: string;
+  publisherName?: string;
+  articleUrl?: string;
+  externalLink?: string;
+  summary?: string;
+  content?: string;
+}
+
+export async function fetchNewsEvents(): Promise<NewsEventItem[]> {
+  try {
+    const response = await api.get('/public/media');
+    const raw = Array.isArray(response.data?.data) ? response.data.data : [];
+    return raw.map((item: any) => ({
+      ...item,
+      // Normalize: use articleUrl if present, fallback to externalLink
+      articleUrl: item.articleUrl || item.externalLink || '',
+    }));
+  } catch (error) {
+    return [];
+  }
+}
+
+
 

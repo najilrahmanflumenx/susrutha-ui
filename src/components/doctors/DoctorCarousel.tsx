@@ -104,40 +104,52 @@ export function DoctorCarousel({ doctors, autoPlayInterval = 4000 }: DoctorCarou
                 {slideDoctors.map((doctor, docIdx) => {
                   const id = doctor.id || doctor._id || `doc-${slideIdx}-${docIdx}`;
                   const slug = doctor.slug || id;
-                  const name = doctor.name || 'Ayurvedic Physician';
-                  const designation = doctor.designation || doctor.title || 'Senior Consultant';
-                  const specialization = doctor.specialization || (doctor.specialties ? doctor.specialties[0] : 'Panchakarma');
-                  const expYears = doctor.experienceYears || 15;
-                  const photo = doctor.photoUrl || doctor.photo || doctor.image || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&auto=format&fit=crop&q=80';
-                  const bio = doctor.bio || 'Expert physician committed to holistic patient wellness and classical Panchakarma care.';
+                  const name = doctor.name;
+                  const designation = doctor.designation || doctor.title;
+                  const specialization = doctor.specialization || doctor.specialties?.[0];
+                  const expYears = doctor.experienceYears;
+                  const photo = doctor.photoUrl || doctor.photo || doctor.image;
+                  const bio = doctor.bio;
 
                   return (
                     <Card key={id} variant="default" className="flex flex-col justify-between p-7 group shadow-sm hover:shadow-xl transition-all duration-300">
                       <div>
                         <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-6 bg-slate-100 dark:bg-slate-800">
-                          <img
-                            src={photo}
-                            alt={name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                          />
+                          {photo ? (
+                            <img
+                              src={photo}
+                              alt={name || ''}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-primary/5">
+                              <span className="text-text-muted text-xs font-sans">No photo</span>
+                            </div>
+                          )}
                         </div>
-                        <Badge variant="gold" className="mb-2 uppercase text-[10px] tracking-wider font-bold">
-                          {specialization}
-                        </Badge>
+                        {specialization && (
+                          <Badge variant="gold" className="mb-2 uppercase text-[10px] tracking-wider font-bold">
+                            {specialization}
+                          </Badge>
+                        )}
                         <h3 className="font-display text-2xl font-bold text-primary mb-1 leading-snug">
                           <Link href={`/doctors/${slug}`} className="hover:underline">
                             {name}
                           </Link>
                         </h3>
-                        <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze block mb-3">
-                          {designation} • {expYears} Yrs Exp.
-                        </span>
-                        <p className="font-sans text-text-secondary text-xs leading-relaxed line-clamp-3 mb-6">
-                          {bio}
-                        </p>
+                        {(designation || expYears != null) && (
+                          <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze block mb-3">
+                            {[designation, expYears != null ? `${expYears} Yrs Exp.` : null].filter(Boolean).join(' • ')}
+                          </span>
+                        )}
+                        {bio && (
+                          <p className="font-sans text-text-secondary text-xs leading-relaxed line-clamp-3 mb-6">
+                            {bio}
+                          </p>
+                        )}
                       </div>
 
-                      <Link href={`/booking?doctor=${encodeURIComponent(name)}`}>
+                      <Link href={`/booking?doctor=${encodeURIComponent(name || '')}`}>
                         <Button variant="gold" className="w-full" size="sm" icon={<ChevronRightIcon className="w-4 h-4" />}>
                           CONSULT DOCTOR
                         </Button>

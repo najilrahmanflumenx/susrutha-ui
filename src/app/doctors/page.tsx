@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge, Chip } from '@/components/ui/Badge';
 import { DoctorItem, fetchDoctors } from '@/lib/api';
 import { DoctorCarousel } from '@/components/doctors/DoctorCarousel';
-import { DoctorCardSkeleton } from '@/components/ui/Skeleton';
+import { DoctorCardSkeleton, EmptyState } from '@/components/ui/Skeleton';
 
 export default function DoctorsPage() {
   const [doctors, setDoctors] = useState<DoctorItem[]>([]);
@@ -178,22 +178,11 @@ export default function DoctorsPage() {
           </div>
 
           {doctors.length === 0 ? (
-            <div className="text-center py-16 text-text-secondary">
-              <p className="font-display text-xl font-bold text-primary mb-2">No Physicians Match Your Filter</p>
-              <p className="text-sm font-sans">Try selecting &quot;ALL&quot; or clearing your search term.</p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-4"
-                onClick={() => {
-                  setSelectedCategory('ALL');
-                  setSearchTerm('');
-                  setPage(1);
-                }}
-              >
-                RESET ALL FILTERS
-              </Button>
-            </div>
+            <EmptyState
+              title="No Physicians Found"
+              description="Try resetting filters or clearing the search term."
+              action={<Button variant="outline" size="sm" onClick={() => { setSelectedCategory('ALL'); setSearchTerm(''); setPage(1); }}>RESET ALL FILTERS</Button>}
+            />
           ) : viewMode === 'carousel' ? (
             /* CAROUSEL SHOWCASE VIEW */
             <DoctorCarousel doctors={doctors} autoPlayInterval={4000} />
@@ -203,51 +192,63 @@ export default function DoctorsPage() {
               {doctors.map((doctor, idx) => {
                 const id = doctor.id || doctor._id || `doc-${idx}`;
                 const slug = doctor.slug || id;
-                const name = doctor.name || 'Ayurvedic Physician';
-                const designation = doctor.designation || doctor.title || 'Senior Consultant';
-                const specialization = doctor.specialization || (doctor.specialties ? doctor.specialties[0] : 'Kayachikitsa');
-                const expYears = doctor.experienceYears || 15;
-                const photo = doctor.photoUrl || doctor.photo || doctor.image || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&auto=format&fit=crop&q=80';
-                const bio = doctor.bio || 'Expert physician committed to holistic patient wellness and classical Panchakarma care.';
+                const name = doctor.name;
+                const designation = doctor.designation || doctor.title;
+                const specialization = doctor.specialization || doctor.specialties?.[0];
+                const expYears = doctor.experienceYears;
+                const photo = doctor.photoUrl || doctor.photo || doctor.image;
+                const bio = doctor.bio;
                 const qualifications = Array.isArray(doctor.qualifications)
                   ? doctor.qualifications
                   : typeof doctor.qualifications === 'string'
                     ? [doctor.qualifications]
-                    : ['BAMS', 'MD (Ayurveda)'];
+                    : [];
 
                 return (
                   <Card key={id} variant="default" className="flex flex-col justify-between p-8 group shadow-sm hover:shadow-xl transition-all">
                     <div>
                       <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-6 bg-slate-100 dark:bg-slate-800">
-                        <img
-                          src={photo}
-                          alt={name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
+                        {photo ? (
+                          <img
+                            src={photo}
+                            alt={name || ''}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-primary/5">
+                            <span className="text-text-muted text-xs font-sans">No photo</span>
+                          </div>
+                        )}
                       </div>
-                      <Badge variant="gold" className="mb-3">{specialization}</Badge>
+                      {specialization && <Badge variant="gold" className="mb-3">{specialization}</Badge>}
                       <h3 className="font-display text-3xl font-bold text-primary mb-1">
                         <Link href={`/doctors/${slug}`} className="hover:underline">
                           {name}
                         </Link>
                       </h3>
-                      <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze block mb-4">
-                        {designation} • {expYears} Years Exp.
-                      </span>
-                      <p className="font-sans text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
-                        {bio}
-                      </p>
+                      {(designation || expYears != null) && (
+                        <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze block mb-4">
+                          {[designation, expYears != null ? `${expYears} Years Exp.` : null].filter(Boolean).join(' • ')}
+                        </span>
+                      )}
+                      {bio && (
+                        <p className="font-sans text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
+                          {bio}
+                        </p>
+                      )}
 
-                      <div className="flex flex-wrap gap-1.5 mb-6">
-                        {qualifications.map((q, qIdx) => (
-                          <div key={qIdx} className="text-[11px] font-sans font-semibold px-2.5 py-1 rounded-md bg-surface-dark/5 text-primary border border-primary/10">
-                            {q}
-                          </div>
-                        ))}
-                      </div>
+                      {qualifications.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-6">
+                          {qualifications.map((q, qIdx) => (
+                            <div key={qIdx} className="text-[11px] font-sans font-semibold px-2.5 py-1 rounded-md bg-surface-dark/5 text-primary border border-primary/10">
+                              {q}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
-                    <Link href={`/booking?doctor=${encodeURIComponent(name)}`}>
+                    <Link href={`/booking?doctor=${encodeURIComponent(name || '')}`}>
                       <Button variant="gold" className="w-full" icon={<ChevronRight className="w-4 h-4" />}>
                         SCHEDULE CONSULTATION
                       </Button>

@@ -165,7 +165,7 @@ export const InfiniteSelect: React.FC<InfiniteSelectProps> = ({
             </div>
 
             {/* Options List */}
-            <div ref={listRef} onScroll={handleScroll} className="max-h-56 overflow-y-auto p-2 space-y-1">
+            <div ref={listRef} onScroll={handleScroll} className="max-h-64 sm:max-h-72 overflow-y-auto p-2 space-y-1">
               {filteredItems.length === 0 && !isLoading ? (
                 <div className="p-4 text-center text-xs font-sans text-text-muted">No matching items found</div>
               ) : (

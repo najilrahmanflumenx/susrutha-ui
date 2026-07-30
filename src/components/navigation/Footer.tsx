@@ -61,22 +61,37 @@ export const Footer: React.FC = () => {
             <ul className="space-y-3 font-sans text-xs font-semibold tracking-wider">
               <li>
                 <Link href="/treatments" className="text-surface/70 hover:text-gold transition-colors">
-                  Signature Rituals
+                  Treatments
+                </Link>
+              </li>
+              <li>
+                <Link href="/departments" className="text-surface/70 hover:text-gold transition-colors">
+                  Departments
                 </Link>
               </li>
               <li>
                 <Link href="/retreats" className="text-surface/70 hover:text-gold transition-colors">
-                  Sanctuary Retreats
+                  Packages
                 </Link>
               </li>
               <li>
                 <Link href="/doctors" className="text-surface/70 hover:text-gold transition-colors">
-                  Our Doctors
+                  Doctors
                 </Link>
               </li>
               <li>
-                <Link href="/heritage" className="text-surface/70 hover:text-gold transition-colors">
-                  55-Year Lineage
+                <Link href="/locations" className="text-surface/70 hover:text-gold transition-colors">
+                  Branches
+                </Link>
+              </li>
+              <li>
+                <Link href="/testimonials" className="text-surface/70 hover:text-gold transition-colors">
+                  Ratings & Reviews
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-surface/70 hover:text-gold transition-colors">
+                  Contact & Feedback
                 </Link>
               </li>
             </ul>

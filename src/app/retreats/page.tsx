@@ -13,43 +13,24 @@ export default function RetreatsPage() {
   const [selectedFilter, setSelectedFilter] = useState('ALL');
   const [page, setPage] = useState(1);
   const [packages, setPackages] = useState<CarePackageItem[]>([]);
+  const [allPackages, setAllPackages] = useState<CarePackageItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const itemsPerPage = 10;
 
-  const fallbackRetreats: CarePackageItem[] = [
-    {
-      id: 'ret-1',
-      title: '7-Day Panchakarma Purification',
-      slug: '7-day-panchakarma-purification',
-      subtitle: 'Complete 5-Phase Body & Mind Detoxification',
-      durationDays: 7,
-      overview: 'An immersive 7-day cellular cleansing retreat nestled in our peaceful hospital sanctuary in Kattakada.',
-      inclusions: [
-        'Daily Physician Pulse Diagnostics',
-        'Custom Sattvic Meals by Executive Chefs',
-        'Morning Pranayama & Yoga sessions',
-        'Private Inpatient Cottage Accommodation'
-      ],
-      price: 45000
-    },
-    {
-      id: 'ret-2',
-      title: '14-Day Rasayana Rejuvenation',
-      slug: '14-day-rasayana-rejuvenation',
-      subtitle: 'Long-term Immunity & Vitality Regeneration',
-      durationDays: 14,
-      overview: 'Deep Panchakarma bio-purification and Rasayana anti-aging protocol surrounded by lush medicinal botanical gardens.',
-      inclusions: [
-        'Complete 5-Phase Panchakarma Therapy',
-        'Private Ayurvedic Herbalist Consultations',
-        'Herbal Steam & Kayakalpa Treatments',
-        'Executive Inpatient Pavilion Stay'
-      ],
-      price: 85000
+  // Fetch all packages once on mount to derive unique duration chips
+  useEffect(() => {
+    async function loadAllPackages() {
+      try {
+        const res = await fetchCarePackages({ page: 1, limit: 1000 });
+        setAllPackages(res.data);
+      } catch {
+        setAllPackages([]);
+      }
     }
-  ];
+    loadAllPackages();
+  }, []);
 
   useEffect(() => {
     async function loadPackages() {
@@ -58,13 +39,13 @@ export default function RetreatsPage() {
         const res = await fetchCarePackages({
           page,
           limit: itemsPerPage,
-          category: selectedFilter,
+          days: selectedFilter,
         });
-        setPackages(res.data.length > 0 ? res.data : fallbackRetreats);
-        setTotalPages(res.meta.totalPages);
-        setTotalCount(res.meta.total || res.data.length);
+        setPackages(res.data);
+        setTotalPages(res.meta?.totalPages || 1);
+        setTotalCount(res.meta?.total || res.data.length);
       } catch (err) {
-        setPackages(fallbackRetreats);
+        setPackages([]);
       } finally {
         setLoading(false);
       }
@@ -72,10 +53,27 @@ export default function RetreatsPage() {
     loadPackages();
   }, [page, selectedFilter]);
 
-  // Extract unique duration / category chips dynamically
+  const filteredPackages = useMemo(() => {
+    if (selectedFilter === 'ALL') return packages;
+    const numDays = parseInt(selectedFilter.replace(/\D/g, ''), 10);
+    if (!isNaN(numDays)) {
+      return packages.filter(
+        (pkg) => pkg.durationDays === numDays || pkg.title.toLowerCase().includes(`${numDays}-day`)
+      );
+    }
+    return packages;
+  }, [packages, selectedFilter]);
+
+  // Derive unique duration chips from actual fetched data
   const availableFilters = useMemo(() => {
-    return ['ALL', '7-Day', '14-Day', '21-Day'];
-  }, []);
+    const daysSet = new Set<number>();
+    allPackages.forEach((pkg) => {
+      if (pkg.durationDays) daysSet.add(pkg.durationDays);
+    });
+    const sorted = Array.from(daysSet).sort((a, b) => a - b);
+    return ['ALL', ...sorted.map((d) => `${d}-Day`)];
+  }, [allPackages]);
+
 
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
@@ -121,63 +119,71 @@ export default function RetreatsPage() {
         <>
           <div className="flex justify-between items-center border-b border-primary/10 pb-4">
             <span className="text-xs font-sans font-bold uppercase tracking-wider text-bronze">
-              Showing {totalCount} Curated Care Packages
+              Showing {filteredPackages.length} Curated Care Packages
             </span>
             <span className="text-xs font-sans text-text-muted">
               Page {page} of {totalPages}
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {packages.map((retreat, idx) => {
+          {filteredPackages.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              {filteredPackages.map((retreat, idx) => {
               const id = retreat.id || retreat._id || `pkg-${idx}`;
-              const title = retreat.title || 'Inpatient Ayurveda Package';
-              const duration = retreat.durationDays ? `${retreat.durationDays}-Day Retreat` : '7-Day Sanctuary';
-              const price = retreat.price || 45000;
-              const overview = retreat.overview || retreat.subtitle || 'Authentic inpatient Ayurveda therapy program.';
-              const inclusions = retreat.inclusions?.length ? retreat.inclusions : [
-                'Daily Doctor Diagnostics & Pulse Reading',
-                'Sattvic Diet & Organic Cuisine',
-                'Herbal Steam & Oil Therapies',
-                'Luxury Cottage Accommodation'
-              ];
-              const image = retreat.bannerImage || (idx % 2 === 0
-                ? 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&auto=format&fit=crop&q=80'
-                : 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&auto=format&fit=crop&q=80');
+              const title = retreat.title;
+              const duration = retreat.durationDays ? `${retreat.durationDays}-Day Retreat` : null;
+              const price = retreat.price;
+              const overview = retreat.overview || retreat.subtitle;
+              const inclusions = retreat.inclusions;
+              const image = retreat.bannerImage;
 
               return (
                 <Card key={id} variant="default" className="flex flex-col justify-between p-8 group shadow-sm hover:shadow-xl transition-all">
                   <div>
                     <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 bg-slate-100 dark:bg-slate-800">
-                      <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      <div className="absolute top-4 left-4">
-                        <Badge variant="gold">{duration}</Badge>
-                      </div>
-                    </div>
-                    <h3 className="font-display text-3xl font-bold text-primary mb-3">{title}</h3>
-                    <p className="font-sans text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
-                      {overview}
-                    </p>
-                    <div className="space-y-2 mb-8 pt-4 border-t border-primary/10">
-                      {inclusions.map((feat, i) => (
-                        <div key={i} className="flex items-center gap-2 text-xs font-sans text-text-primary">
-                          <CheckCircle2 className="w-4 h-4 text-gold shrink-0" />
-                          <span>{feat}</span>
+                      {image ? (
+                        <img src={image} alt={title || ''} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-primary/5">
+                          <span className="text-text-muted text-xs font-sans">No image</span>
                         </div>
-                      ))}
+                      )}
+                      {duration && (
+                        <div className="absolute top-4 left-4">
+                          <Badge variant="gold">{duration}</Badge>
+                        </div>
+                      )}
                     </div>
+                    {title && <h3 className="font-display text-3xl font-bold text-primary mb-3">{title}</h3>}
+                    {overview && (
+                      <p className="font-sans text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
+                        {overview}
+                      </p>
+                    )}
+                    {inclusions && inclusions.length > 0 && (
+                      <div className="space-y-2 mb-8 pt-4 border-t border-primary/10">
+                        {inclusions.map((feat, i) => (
+                          <div key={i} className="flex items-center gap-2 text-xs font-sans text-text-primary">
+                            <CheckCircle2 className="w-4 h-4 text-gold shrink-0" />
+                            <span>{feat}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <div className="pt-6 border-t border-primary/10 flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-text-muted block">
-                        ALL-INCLUSIVE STAY
-                      </span>
-                      <span className="font-display text-2xl font-bold text-primary">{formatCurrency(price)}</span>
-                    </div>
-                    <Link href={`/booking?package=${encodeURIComponent(title)}`}>
+                    {price != null ? (
+                      <div>
+                        <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-text-muted block">
+                          ALL-INCLUSIVE STAY
+                        </span>
+                        <span className="font-display text-2xl font-bold text-primary">{formatCurrency(price)}</span>
+                      </div>
+                    ) : <div />}
+                    <Link href={`/booking?package=${encodeURIComponent(retreat._id || retreat.id || id)}`}>
                       <Button variant="gold" icon={<ArrowRight className="w-4 h-4" />}>
-                        RESERVE STAY
+                        RESERVE PACKAGE
                       </Button>
                     </Link>
                   </div>
@@ -185,6 +191,16 @@ export default function RetreatsPage() {
               );
             })}
           </div>
+          ) : (
+            <div className="text-center py-20 flex flex-col items-center gap-4">
+              <Sparkles className="w-12 h-12 text-gold opacity-40" />
+              <p className="font-display text-2xl text-primary/50">No {selectedFilter} packages found</p>
+              <p className="font-sans text-text-muted text-sm">Try selecting a different duration or click &quot;ALL&quot; to view all retreats.</p>
+              <Button variant="gold" onClick={() => setSelectedFilter('ALL')}>
+                VIEW ALL RETREATS
+              </Button>
+            </div>
+          )}
 
           {/* Pagination Controls */}
           {totalPages > 1 && (

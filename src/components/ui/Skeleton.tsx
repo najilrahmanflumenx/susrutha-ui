@@ -51,6 +51,20 @@ export const TreatmentCardSkeleton: React.FC = () => {
   );
 };
 
+export const DepartmentCardSkeleton: React.FC = () => {
+  return (
+    <div className="p-6 rounded-3xl border border-primary/10 bg-surface-card flex flex-col justify-between space-y-6">
+      <div className="space-y-4">
+        <Skeleton className="w-full h-48 rounded-2xl" />
+        <Skeleton className="w-20 h-5 rounded-full" />
+        <Skeleton className="w-3/4 h-7 rounded-xl" />
+        <Skeleton className="w-full h-12 rounded-xl" />
+      </div>
+      <Skeleton className="w-full h-10 rounded-xl" />
+    </div>
+  );
+};
+
 export const LocationCardSkeleton: React.FC = () => {
   return (
     <div className="p-8 rounded-3xl border border-primary/10 bg-surface-card flex flex-col justify-between space-y-6">
@@ -82,14 +96,17 @@ export const LoadingState: React.FC<{ text?: string }> = ({
 interface EmptyStateProps {
   title?: string;
   description?: string;
+  message?: string;
   action?: React.ReactNode;
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
   title = 'No Records Found',
-  description = 'There are currently no items to display in this view.',
+  description,
+  message = 'There are currently no items to display in this view.',
   action,
 }) => {
+  const displayMsg = description || message;
   return (
     <div className="flex flex-col items-center justify-center p-12 text-center glass-panel rounded-[32px] border border-primary/10">
       <div className="w-16 h-16 rounded-full bg-primary/5 text-primary flex items-center justify-center mb-4">
@@ -99,7 +116,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         {title}
       </h4>
       <p className="text-sm font-sans text-text-secondary max-w-sm mb-6">
-        {description}
+        {displayMsg}
       </p>
       {action}
     </div>

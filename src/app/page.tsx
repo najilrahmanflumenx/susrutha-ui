@@ -23,7 +23,19 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Timeline } from '@/components/ui/Timeline';
 import { Modal } from '@/components/ui/Modal';
-import { fetchTreatmentsList, fetchDoctorsList, fetchSiteSettings, TreatmentItem, DoctorItem } from '@/lib/api';
+import {
+  fetchTreatmentsList,
+  fetchDoctorsList,
+  fetchSiteSettings,
+  fetchAffiliations,
+  fetchConditions,
+  fetchBlogs,
+  TreatmentItem,
+  DoctorItem,
+  AffiliationItem,
+  ConditionItem,
+  BlogItem
+} from '@/lib/api';
 import { DoctorCarousel } from '@/components/doctors/DoctorCarousel';
 import { useApiData } from '@/hooks/useApiData';
 import { formatCurrency } from '@/lib/utils';
@@ -33,6 +45,11 @@ export default function HomePage() {
   const { data: treatments } = useApiData<TreatmentItem[]>(fetchTreatmentsList, []);
   const { data: doctors } = useApiData<DoctorItem[]>(fetchDoctorsList, []);
   const { data: siteSettings } = useApiData<Record<string, any>>(fetchSiteSettings, {});
+  const { data: affiliations } = useApiData<AffiliationItem[]>(fetchAffiliations, []);
+  const { data: conditionsRes } = useApiData<{ data: ConditionItem[] }>(fetchConditions as any, { data: [] } as any);
+  const { data: blogsRes } = useApiData<{ data: BlogItem[] }>(fetchBlogs as any, { data: [] } as any);
+  const conditions = Array.isArray(conditionsRes?.data) ? conditionsRes.data : [];
+  const blogs = Array.isArray(blogsRes?.data) ? blogsRes.data : [];
   const [activeTreatmentModal, setActiveTreatmentModal] = useState<TreatmentItem | null>(null);
 
   const heroSettings = siteSettings?.HERO || {};
@@ -109,7 +126,7 @@ export default function HomePage() {
             </Link>
             <Link href={heroSettings.secondaryCtaLink || '/treatments'} className="w-full sm:w-auto">
               <Button variant="secondary" size="lg" icon={<Play className="w-4 h-4 fill-current" />}>
-                {heroSettings.secondaryCtaText || 'EXPLORE RITUALS'}
+                {heroSettings.secondaryCtaText || 'EXPLORE TREATMENTS'}
               </Button>
             </Link>
           </div>
@@ -201,7 +218,7 @@ export default function HomePage() {
             <div>
               <Badge variant="mahogany" className="mb-3">CURATED THERAPIES</Badge>
               <h2 className="font-display text-4xl sm:text-5xl font-semibold text-primary">
-                Signature Healing Rituals
+                Specialty Treatments
               </h2>
             </div>
             <Link href="/treatments">
@@ -265,6 +282,57 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* CONDITIONS WE TREAT PREVIEW */}
+      {conditions && conditions.length > 0 && (
+        <section className="px-6 sm:px-12 md:px-20 py-16 bg-surface-elevated border-y border-primary/5">
+          <div className="max-w-7xl mx-auto flex flex-col gap-10">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">
+              <div>
+                <Badge variant="gold" className="mb-3">ROOT-CAUSE HEALING</Badge>
+                <h2 className="font-display text-4xl sm:text-5xl font-semibold text-primary">
+                  Conditions We Specialize In
+                </h2>
+              </div>
+              <Link href="/conditions">
+                <Button variant="outline" icon={<ArrowRight className="w-4 h-4" />}>
+                  VIEW ALL CONDITIONS
+                </Button>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {conditions.slice(0, 4).map((cond, i) => (
+                <Card key={cond.id || cond._id || i} variant="default" className="flex flex-col justify-between p-6 hover:shadow-lg transition-all border-primary/10 group">
+                  <div className="flex flex-col gap-3">
+                    <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-bronze">
+                      {cond.category || 'Specialty Care'}
+                    </span>
+                    <h3 className="font-display font-bold text-xl text-primary group-hover:text-gold transition-colors">
+                      {cond.title}
+                    </h3>
+                    {cond.ayurvedicRootCause && (
+                      <span className="text-xs font-sans italic text-text-muted">
+                        Root Cause: {cond.ayurvedicRootCause}
+                      </span>
+                    )}
+                    <p className="font-sans text-xs text-text-secondary line-clamp-3 leading-relaxed">
+                      {cond.shortDescription}
+                    </p>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-primary/10">
+                    <Link href={`/conditions/${cond.slug || cond.id || cond._id}`} className="inline-flex items-center gap-1 text-xs font-sans font-bold text-gold hover:text-primary transition-colors">
+                      <span>LEARN MORE</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* SECTION 5: WHY CHOOSE US (BENTO GRID) */}
       <section className="px-6 sm:px-12 md:px-20 bg-primary text-surface py-24 rounded-[48px] mx-4 sm:mx-8">
@@ -340,6 +408,55 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ACCREDITATIONS & TRUST BAR */}
+      {affiliations && affiliations.length > 0 && (
+        <section className="py-16 bg-surface-elevated border-y border-primary/10">
+          <div className="px-6 sm:px-12 md:px-20 max-w-7xl mx-auto flex flex-col items-center gap-8">
+            <div className="text-center max-w-xl">
+              <Badge variant="gold" className="mb-3" icon={<Award className="w-3.5 h-3.5" />}>
+                TRUST & ACCREDITATIONS
+              </Badge>
+              <h3 className="font-display text-3xl font-bold text-primary">
+                Recognized for Excellence
+              </h3>
+            </div>
+
+            {/* Featured Grid (Max 6) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
+              {affiliations.slice(0, 6).map((aff, i) => (
+                <div
+                  key={aff.id || aff._id || i}
+                  className="glass-panel p-5 rounded-2xl border border-primary/10 flex items-center gap-4 hover:border-gold/50 transition-all bg-surface-card"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-gold/10 text-gold flex items-center justify-center shrink-0">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-display font-bold text-primary text-sm truncate">
+                      {aff.name}
+                    </span>
+                    {aff.type && (
+                      <span className="font-sans text-[10px] uppercase font-semibold text-bronze tracking-wider">
+                        {aff.type}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* See All Button */}
+            {affiliations.length > 6 && (
+              <Link href="/affiliations">
+                <Button variant="outline" size="sm" icon={<ArrowRight className="w-4 h-4" />}>
+                  SEE ALL ({affiliations.length}) ACCREDITATIONS & PARTNERS
+                </Button>
+              </Link>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* TREATMENT DETAIL MODAL */}
       {activeTreatmentModal && (
         <Modal
@@ -393,7 +510,7 @@ export default function HomePage() {
               </Button>
               <Link href={`/booking?treatment=${encodeURIComponent(activeTreatmentModal.title || activeTreatmentModal.name || '')}`}>
                 <Button variant="gold" icon={<ArrowRight className="w-4 h-4" />}>
-                  BOOK THIS RITUAL
+                  BOOK THIS TREATMENT
                 </Button>
               </Link>
             </div>

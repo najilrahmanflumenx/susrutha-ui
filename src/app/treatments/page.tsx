@@ -6,7 +6,7 @@ import { ArrowRight, Loader2, ChevronLeft, ChevronRight, Sparkles } from 'lucide
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge, Chip } from '@/components/ui/Badge';
-import { TreatmentCardSkeleton } from '@/components/ui/Skeleton';
+import { TreatmentCardSkeleton, EmptyState } from '@/components/ui/Skeleton';
 import { fetchTreatments, TreatmentItem } from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
 
@@ -75,7 +75,7 @@ export default function TreatmentsPage() {
           AUTHENTIC AYURVEDIC THERAPIES
         </Badge>
         <h1 className="font-display text-4xl sm:text-6xl font-semibold text-primary mb-6">
-          Signature Healing Rituals
+          Ayurvedic Treatments & Therapies
         </h1>
         <p className="font-sans text-text-secondary text-base leading-relaxed">
           Every therapy at Susrutha is prescribed by our senior physicians and prepared fresh using 100% organic botanical oils, rare herbs, and authentic Vedic protocols.
@@ -118,66 +118,91 @@ export default function TreatmentsPage() {
 
       {/* Grid */}
       {!loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {treatments.map((treatment, idx) => {
-            const id = treatment.id || treatment._id || `tr-${idx}`;
-            const slug = treatment.slug || id;
-            const title = treatment.title || treatment.name || 'Ayurvedic Treatment';
-            const image = treatment.image || treatment.coverImage || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&auto=format&fit=crop&q=80';
-            const price = treatment.price || 3500;
-            const desc = treatment.description || treatment.shortDescription || 'Authentic classical Ayurvedic treatment.';
-            const dosha = treatment.dosha || treatment.category || 'Vedic Protocol';
+        <>
+          {!loading && treatments.length === 0 ? (
+            <EmptyState
+              title="No Treatments Available"
+              description="We couldn't find any therapies matching your criteria."
+            />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {treatments.map((treatment, idx) => {
+                const id = treatment.id || treatment._id || `tr-${idx}`;
+                const slug = treatment.slug || id;
+                const title = treatment.title || treatment.name;
+                const image = treatment.image || treatment.coverImage;
+                const price = treatment.price;
+                const desc = treatment.description || treatment.shortDescription;
+                const dosha = treatment.dosha || treatment.category;
 
-            return (
-              <Card key={id} variant="default" className="flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all">
-                <div>
-                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-slate-100 dark:bg-slate-800">
-                    <img
-                      src={image}
-                      alt={title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <Badge variant="gold">{dosha}</Badge>
+                return (
+                  <Card key={id} variant="default" className="flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all">
+                    <div>
+                      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-slate-100 dark:bg-slate-800">
+                        {image ? (
+                          <img
+                            src={image}
+                            alt={title || ''}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-primary/5">
+                            <span className="text-text-muted text-xs font-sans">No image</span>
+                          </div>
+                        )}
+                        {dosha && (
+                          <div className="absolute top-4 left-4">
+                            <Badge variant="gold">{dosha}</Badge>
+                          </div>
+                        )}
+                      </div>
+
+                      {treatment.category && (
+                        <span className="text-xs font-sans font-bold uppercase tracking-widest text-bronze mb-2 block">
+                          {treatment.category}
+                        </span>
+                      )}
+                      <h3 className="font-display text-2xl font-bold text-primary mb-3">
+                        <Link href={`/treatments/${slug}`} className="hover:underline">
+                          {title}
+                        </Link>
+                      </h3>
+                      {desc && (
+                        <p className="font-sans text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
+                          {desc}
+                        </p>
+                      )}
                     </div>
-                  </div>
 
-                  <span className="text-xs font-sans font-bold uppercase tracking-widest text-bronze mb-2 block">
-                    {treatment.category || 'Therapy'}
-                  </span>
-                  <h3 className="font-display text-2xl font-bold text-primary mb-3">
-                    <Link href={`/treatments/${slug}`} className="hover:underline">
-                      {title}
-                    </Link>
-                  </h3>
-                  <p className="font-sans text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
-                    {desc}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-primary/10 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-text-muted block">
-                      INVESTMENT
-                    </span>
-                    <span className="font-display text-xl font-bold text-primary">
-                      {formatCurrency(price)}
-                    </span>
-                  </div>
-                  <Link href={`/booking?treatment=${encodeURIComponent(title)}`}>
-                    <Button variant="gold" size="sm" icon={<ArrowRight className="w-4 h-4" />}>
-                      RESERVE
-                    </Button>
-                  </Link>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
+                    <div className="pt-4 border-t border-primary/10 flex items-center justify-between">
+                      {price != null ? (
+                        <div>
+                          <span className="text-[10px] font-sans font-bold uppercase tracking-widest text-text-muted block">
+                            INVESTMENT
+                          </span>
+                          <span className="font-display text-xl font-bold text-primary">
+                            {formatCurrency(price)}
+                          </span>
+                        </div>
+                      ) : (
+                        <div />
+                      )}
+                      <Link href={`/booking?treatment=${encodeURIComponent(title || '')}`}>
+                        <Button variant="gold" size="sm" icon={<ArrowRight className="w-4 h-4" />}>
+                          RESERVE
+                        </Button>
+                      </Link>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
 
       {/* Pagination Controls Footer */}
-      {!loading && (
+      {(!loading && treatments.length > 0) ? (
         <div className="flex flex-col items-center justify-center gap-4 pt-8 border-t border-primary/10 mt-8">
           <div className="text-xs font-sans font-semibold text-text-secondary uppercase tracking-wider">
             Showing {totalCount > 0 ? (page - 1) * itemsPerPage + 1 : 0} to{' '}
@@ -221,7 +246,7 @@ export default function TreatmentsPage() {
             </div>
           )}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

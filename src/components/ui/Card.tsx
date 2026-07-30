@@ -16,7 +16,7 @@ export const Card: React.FC<CardProps> = ({
   className,
   ...props
 }) => {
-  const baseStyles = 'rounded-[32px] p-6 sm:p-8 transition-all duration-500 relative overflow-hidden';
+  const baseStyles = 'rounded-[32px] p-6 sm:p-8 transition-all duration-500 relative';
 
   const variants = {
     default: 'bg-surface-card border border-primary/5 shadow-sm',
