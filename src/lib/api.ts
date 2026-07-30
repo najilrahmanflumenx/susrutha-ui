@@ -592,7 +592,7 @@ export async function globalSearch(term: string): Promise<GlobalSearchResult[]> 
     const [treatmentsRes, doctorsRes, packagesRes, conditionsRes, deptsRes] = await Promise.allSettled([
       api.get('/public/treatments', { params: { search: q, limit: 5 } }),
       api.get('/public/doctors', { params: { search: q, limit: 5 } }),
-      api.get('/public/care-packages', { params: { search: q, limit: 5 } }),
+      api.get('/public/packages', { params: { search: q, limit: 5 } }),
       api.get('/public/conditions', { params: { search: q, limit: 5 } }),
       api.get('/public/departments', { params: { q, limit: 5 } }),
     ]);
