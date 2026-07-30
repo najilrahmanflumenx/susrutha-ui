@@ -209,7 +209,7 @@ export default function PublicMediaCoveragePage() {
               <div className="flex flex-col gap-4">
                 {activeArticle.summary && (
                   <div className="border-l-4 border-gold bg-primary/5 p-5 rounded-r-2xl font-sans text-base text-primary/90 font-medium italic leading-relaxed shadow-xs">
-                    "{activeArticle.summary}"
+                    &ldquo;{activeArticle.summary}&rdquo;
                   </div>
                 )}
                 {activeArticle.content && (
