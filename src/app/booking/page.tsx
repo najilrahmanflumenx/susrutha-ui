@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Calendar as CalendarIcon, Clock, User, CheckCircle2, ArrowRight, Loader2, Sparkles, Building2, PackageCheck, Stethoscope, MapPin } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
@@ -23,7 +23,7 @@ import {
 import { useApiData } from '@/hooks/useApiData';
 import { formatCurrency } from '@/lib/utils';
 
-export default function BookingPage() {
+function BookingContent() {
   const searchParams = useSearchParams();
 
   // Mode: 'PACKAGE' or 'TREATMENT'
@@ -589,5 +589,17 @@ export default function BookingPage() {
         )}
       </Card>
     </div>
+  );
+}
+
+export default function BookingPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    }>
+      <BookingContent />
+    </Suspense>
   );
 }
