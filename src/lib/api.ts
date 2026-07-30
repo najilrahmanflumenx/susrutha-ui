@@ -589,12 +589,22 @@ export async function globalSearch(term: string): Promise<GlobalSearchResult[]> 
   const q = term.trim();
 
   try {
+    // High-efficiency single backend search call
+    const res = await api.get('/public/search', { params: { q } });
+    if (res.data?.data && Array.isArray(res.data.data)) {
+      return res.data.data;
+    }
+  } catch (error) {
+    // Fallback parallel queries if unified search endpoint is unavailable
+  }
+
+  try {
     const [treatmentsRes, doctorsRes, packagesRes, conditionsRes, deptsRes] = await Promise.allSettled([
       api.get('/public/treatments', { params: { search: q, limit: 5 } }),
       api.get('/public/doctors', { params: { search: q, limit: 5 } }),
       api.get('/public/packages', { params: { search: q, limit: 5 } }),
       api.get('/public/conditions', { params: { search: q, limit: 5 } }),
-      api.get('/public/departments', { params: { q, limit: 5 } }),
+      api.get('/public/departments', { params: { search: q, limit: 5 } }),
     ]);
 
     const results: GlobalSearchResult[] = [];
@@ -665,8 +675,7 @@ export async function globalSearch(term: string): Promise<GlobalSearchResult[]> 
     }
 
     return results;
-  } catch (error) {
-    console.error('Global search error:', error);
+  } catch (err) {
     return [];
   }
 }
